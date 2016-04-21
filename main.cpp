@@ -1,27 +1,24 @@
+/**
+ * Main entry point.
+ */
 
-#include <iostream>
-#include <fstream>
-#include <stdexcept>
+#include "stdinclude.h"
+#include "data_reader.h"
 
-using namespace std;
+class Foo : public DataConsumer {
 
-
-void load_data_from_file(string filename)
-{
-    ifstream csv_file(filename);
-
-    if(csv_file.fail()) {
-        throw runtime_error(string("File \"") + filename + "\" does not exist.");
+    virtual void addInt(int val, string::size_type len) override {
+        cout << val << " ";
     }
 
-    string line;
-    while(getline(csv_file, line)) {
-        cout << line << endl;
+    virtual void endRow() override {
+        cout << endl;
     }
-}
+};
 
 int main() {
-    load_data_from_file("test_data/t1.txt");
+    Foo foo;
+    DataReader::read_file("test_data/t1.txt", foo);
 
     return 0;
 }

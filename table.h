@@ -12,12 +12,17 @@ enum CellType {
 
 struct Cell {
     virtual CellType getType() const = 0;
+
+    virtual std::ostream& display(std::ostream &stream) const = 0;
 };
+
+std::ostream& operator<<(std::ostream &stream, const Cell &cell);
 
 struct NilCell : Cell {
     virtual CellType getType() const {
         return NULL_CELL;
     }
+    virtual std::ostream& display(std::ostream &stream) const;
 };
 
 struct RealCell : Cell {
@@ -28,36 +33,37 @@ struct RealCell : Cell {
     virtual CellType getType() const {
         return REAL_CELL;
     }
+    virtual std::ostream& display(std::ostream &stream) const;
 };
 
 class Column {
     vector<unique_ptr<Cell>> cells;
 
+    /**
+     * Display-related information:
+     */
+    size_t max_str_len = 4;
+    const int extra_padding = 3;
+
 public:
-    size_t max_str_len = 0;
-
-    Column(size_t nil_cells = 0) {
-        for(size_t i = 0; i < nil_cells; i++)
-            addNilCell();
+    Column(size_t null_cells = 0) {
+        for(size_t i = 0; i < null_cells; i++)
+            addNullCell();
     }
 
-    void addCell(unique_ptr<Cell> cell) {
-        cells.push_back(move(cell));
-    }
+    void addCell(unique_ptr<Cell> cell);
+    void addNullCell();
+    void addRealCell(real val, size_t len);
+    const Cell& getCell(const size_t row) const;
 
-    void addNilCell() {
-        addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new NilCell() )));
-    }
+    int cell_width();
 
-    void addRealCell(real val, size_t len) {
-        max_str_len = max(max_str_len, len);
-        addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new RealCell(val) )));
-    }
+    static vector<size_t> generate_indices(size_t count);
 
-    const Cell& getCell(const size_t row) const {
-        return *cells.at(row).get();
-    }
+    std::ostream& display(std::ostream &stream = cout);
 };
+
+std::ostream &operator<<(std::ostream& stream, Column& column);
 
 class Table : public DataConsumer {
     size_t row_count = 0;
@@ -67,7 +73,7 @@ class Table : public DataConsumer {
     // Represents current column; used for construction
     size_t cur_col = 0;
 
-    void addColumn() {
+    inline void addColumn() {
         cols.push_back(unique_ptr<Column>(new Column(row_count - 1)));
     }
 
@@ -79,15 +85,21 @@ public:
     inline size_t getRowCount() { return row_count; }
     inline size_t getColCount() { return col_count; }
 
-    Column& getColumn(const size_t col) {
-        return *cols.at(col).get();
+    Column& getColumn(const size_t col);
+
+    inline Column& operator[](const size_t col) {
+        return getColumn(col);
     }
 
-    const Cell& getCell(const size_t col, const size_t row) {
+    inline const Cell& getCell(const size_t col, const size_t row) {
         return getColumn(col).getCell(row);
     }
 
-    std::ostream& display(std::ostream &stream = cout);
+    std::ostream& display(std::ostream &stream, vector<size_t> column_indices);
+
+    inline std::ostream& display(std::ostream &stream = cout) {
+        return display(stream, Column::generate_indices(col_count));
+    }
 };
 
 std::ostream& operator<<(std::ostream &stream, Table &table);

@@ -1,10 +1,12 @@
 /*
+ *
  * STL header files to include everywhere.
  */
 
 #ifndef VECTORCALC_STDINCLUDE_H
 #define VECTORCALC_STDINCLUDE_H
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <iomanip>

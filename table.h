@@ -10,21 +10,30 @@ enum CellType {
     REAL_CELL
 };
 
+/*
+ * Stores the value of a cell in a column.
+ */
 struct Cell {
-    virtual CellType getType() const = 0;
-
-    virtual std::ostream& display(std::ostream &stream) const = 0;
-};
-
-std::ostream& operator<<(std::ostream &stream, const Cell &cell);
-
-struct NilCell : Cell {
+    /*
+     * By default, a Cell is NULL.
+     */
     virtual CellType getType() const {
         return NULL_CELL;
     }
+
+    /*
+     * Operations against a NULL cell result in another NULL.
+     */
+    virtual unique_ptr<Cell> operator+(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
+    virtual unique_ptr<Cell> operator-(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
+    virtual unique_ptr<Cell> operator*(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
+    virtual unique_ptr<Cell> operator/(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
     virtual std::ostream& display(std::ostream &stream) const;
 };
 
+/*
+ * This Cell stores a real number.
+ */
 struct RealCell : Cell {
     const real val;
 
@@ -33,8 +42,17 @@ struct RealCell : Cell {
     virtual CellType getType() const {
         return REAL_CELL;
     }
+
+    virtual unique_ptr<Cell> operator+(const Cell &other) const;
+    virtual unique_ptr<Cell> operator-(const Cell &other) const;
+    virtual unique_ptr<Cell> operator*(const Cell &other) const;
+    virtual unique_ptr<Cell> operator/(const Cell &other) const;
     virtual std::ostream& display(std::ostream &stream) const;
 };
+
+std::ostream& operator<<(std::ostream &stream, const Cell &cell);
+
+vector<size_t> generate_indices(size_t count);
 
 class Column {
     vector<unique_ptr<Cell>> cells;
@@ -54,12 +72,17 @@ public:
     void addCell(unique_ptr<Cell> cell);
     void addNullCell();
     void addRealCell(real val, size_t len);
+
+    unique_ptr<Column> operator+(const Column& other) const;
+    unique_ptr<Column> operator-(const Column& other) const;
+    unique_ptr<Column> operator*(const Column& other) const;
+    unique_ptr<Column> operator/(const Column& other) const;
+    void validateEqualSize(const Column &other) const;
+
     const Cell& getCell(const size_t row) const;
+    const size_t getSize() const;
 
     int cell_width();
-
-    static vector<size_t> generate_indices(size_t count);
-
     std::ostream& display(std::ostream &stream = cout);
 };
 
@@ -98,7 +121,7 @@ public:
     std::ostream& display(std::ostream &stream, vector<size_t> column_indices);
 
     inline std::ostream& display(std::ostream &stream = cout) {
-        return display(stream, Column::generate_indices(col_count));
+        return display(stream, generate_indices(col_count));
     }
 };
 

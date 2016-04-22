@@ -73,11 +73,12 @@ public:
     void addNullCell();
     void addRealCell(real val, size_t len);
 
+    void validateEqualSize(const Column &other) const;
+    unique_ptr<Column> applyOp(const Column& other, function<unique_ptr<Cell>(const Cell&, const Cell&)> op) const;
     unique_ptr<Column> operator+(const Column& other) const;
     unique_ptr<Column> operator-(const Column& other) const;
     unique_ptr<Column> operator*(const Column& other) const;
     unique_ptr<Column> operator/(const Column& other) const;
-    void validateEqualSize(const Column &other) const;
 
     const Cell& getCell(const size_t row) const;
     const size_t getSize() const;

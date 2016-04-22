@@ -74,45 +74,34 @@ vector<size_t> generate_indices(size_t count) {
     return column_indexes;
 }
 
-unique_ptr<Column> Column::operator+(const Column &other) const {
+void Column::validateEqualSize(const Column &other) const {
+    if(getSize() != other.getSize())
+        throw logic_error("Cannot add columns of different length");
+}
+
+unique_ptr<Column> Column::applyOp(const Column &other, function<unique_ptr<Cell>(const Cell&, const Cell&)> op) const {
     validateEqualSize(other);
     unique_ptr<Column> result = unique_ptr<Column>(new Column);
     for(size_t i = 0; i < getSize(); i++) {
-        result->addCell(getCell(i) + other.getCell(i));
+        result->addCell( op(getCell(i), other.getCell(i)) );
     }
     return result;
+}
+
+unique_ptr<Column> Column::operator+(const Column &other) const {
+    return applyOp(other, [](const Cell& a, const Cell& b) { return a + b; });
 }
 
 unique_ptr<Column> Column::operator-(const Column &other) const {
-    validateEqualSize(other);
-    unique_ptr<Column> result = unique_ptr<Column>(new Column);
-    for(size_t i = 0; i < getSize(); i++) {
-        result->addCell(getCell(i) - other.getCell(i));
-    }
-    return result;
+    return applyOp(other, [](const Cell& a, const Cell& b) { return a - b; });
 }
 
 unique_ptr<Column> Column::operator*(const Column &other) const {
-    validateEqualSize(other);
-    unique_ptr<Column> result = unique_ptr<Column>(new Column);
-    for(size_t i = 0; i < getSize(); i++) {
-        result->addCell(getCell(i) * other.getCell(i));
-    }
-    return result;
+    return applyOp(other, [](const Cell& a, const Cell& b) { return a * b; });
 }
 
 unique_ptr<Column> Column::operator/(const Column &other) const {
-    validateEqualSize(other);
-    unique_ptr<Column> result = unique_ptr<Column>(new Column);
-    for(size_t i = 0; i < getSize(); i++) {
-        result->addCell(getCell(i) / other.getCell(i));
-    }
-    return result;
-}
-
-void Column::validateEqualSize(const Column &other) const {
-    if(getSize() != other.getSize())
-        throw logic_error("");
+    return applyOp(other, [](const Cell& a, const Cell& b) { return a / b; });
 }
 
 const Cell &Column::getCell(const size_t row) const {

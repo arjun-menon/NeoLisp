@@ -9,6 +9,6 @@
 int main() {
     Table table;
     DataReader::read_file("test_data/t1.txt", table);
-    table.display();
+    cout << table;
     return 0;
 }

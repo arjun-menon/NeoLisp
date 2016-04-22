@@ -16,18 +16,18 @@ void DataReader::process_file(const string &filename) {
 
 void DataReader::process_line(const string &line) {
     bool did_add_item = false;
-    const char* int_pattern = "-1234567890";
+    const char* num_start_chars = "-1234567890";
 
     size_t pos = 0;
     while(pos < line.size()) {
-        pos = line.find_first_of(int_pattern, pos);
+        pos = line.find_first_of(num_start_chars, pos);
         if(pos == string::npos)
             break;
 
-        string::size_type num_len;
-        int val;
+        size_t num_len;
+        real val;
         try {
-            val = stoi(line.c_str() + pos, &num_len);
+            val = stof(line.c_str() + pos, &num_len);
         } catch (invalid_argument) {
             pos++;
             continue;
@@ -38,7 +38,7 @@ void DataReader::process_line(const string &line) {
             did_add_item = true;
         }
 
-        dataConsumer.addInt(val, num_len);
+        dataConsumer.addReal(val, num_len);
 
         pos += num_len;
     }

@@ -6,8 +6,8 @@
 #define VECTORCALC_TABLE_H
 
 enum CellType {
-    NIL,
-    INT
+    NULL_CELL,
+    REAL_CELL
 };
 
 struct Cell {
@@ -16,23 +16,25 @@ struct Cell {
 
 struct NilCell : Cell {
     virtual CellType getType() const {
-        return NIL;
+        return NULL_CELL;
     }
 };
 
-struct IntCell : Cell {
-    const int int_val;
+struct RealCell : Cell {
+    const real val;
 
-    IntCell(int int_val) : int_val(int_val) {}
+    RealCell(real val) : val(val) {}
 
     virtual CellType getType() const {
-        return INT;
+        return REAL_CELL;
     }
 };
 
 class Column {
-public:
     vector<unique_ptr<Cell>> cells;
+
+public:
+    size_t max_str_len = 0;
 
     Column(size_t nil_cells = 0) {
         for(size_t i = 0; i < nil_cells; i++)
@@ -47,8 +49,9 @@ public:
         addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new NilCell() )));
     }
 
-    void addIntCell(int val, string::size_type len) {
-        addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new IntCell(val) )));
+    void addRealCell(real val, size_t len) {
+        max_str_len = max(max_str_len, len);
+        addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new RealCell(val) )));
     }
 
     const Cell& getCell(const size_t row) const {
@@ -57,7 +60,6 @@ public:
 };
 
 class Table : public DataConsumer {
-private:
     size_t row_count = 0;
     size_t col_count = 0;
     vector<unique_ptr<Column>> cols;
@@ -70,25 +72,9 @@ private:
     }
 
 public:
-    virtual void startRow() override {
-        row_count++;
-    }
-
-    virtual void addInt(int val, string::size_type len) override {
-        if(col_count <= cur_col) {
-            addColumn();
-            col_count++;
-        }
-
-        getColumn(cur_col++).addIntCell(val, len);
-    }
-
-    virtual void endRow() override {
-        while(cur_col < col_count)
-            getColumn(cur_col++).addNilCell();
-
-        cur_col = 0;
-    }
+    virtual void startRow() override;
+    virtual void addReal(real val, size_t len) override;
+    virtual void endRow() override;
 
     inline size_t getRowCount() { return row_count; }
     inline size_t getColCount() { return col_count; }
@@ -101,26 +87,9 @@ public:
         return getColumn(col).getCell(row);
     }
 
-    std::ostream& display(std::ostream &stream = cout) {
-        for(size_t row = 0; row < row_count; row++) {
-            for(size_t col = 0; col < col_count; col++) {
-                const Cell& cell = getCell(col, row);
-                if(cell.getType() == NIL) {
-                    stream << "_ ";
-                }
-                else if(cell.getType() == INT) {
-                    const IntCell& intCell = dynamic_cast<const IntCell&>(cell);
-                    stream << intCell.int_val << " ";
-                }
-            }
-            stream << endl;
-        }
-        return stream;
-    }
+    std::ostream& display(std::ostream &stream = cout);
 };
 
-std::ostream& operator<<(std::ostream &stream, Table &table) {
-    return table.display(stream);
-}
+std::ostream& operator<<(std::ostream &stream, Table &table);
 
 #endif //VECTORCALC_TABLE_H

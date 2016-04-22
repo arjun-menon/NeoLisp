@@ -2,27 +2,77 @@
 
 static const int extra_padding = 3;
 
-Column::Column(size_t null_cells) {
+Column::Column(size_t null_cells) :
+        realMin(new Cell()), realMax(new Cell()),
+        realAvg(new Cell()), realMedian(new Cell()) {
     for(size_t i = 0; i < null_cells; i++)
         addNullCell();
 }
 
+// Update the min. as real numbers are added
+void Column::updateRealMin(real newVal) {
+    if(realMin->getType() == NULL_CELL) {
+        realMin = newRealCell(newVal);
+    }
+    else if(realMin->getType() == REAL_CELL) {
+        realMin = newRealCell(min(dynamic_cast<RealCell *>(realMin.get())->val, newVal));
+    }
+}
+
+// Update the max. as real numbers are added
+void Column::updateRealMax(real newVal) {
+    if(realMax->getType() == NULL_CELL) {
+        realMax = newRealCell(newVal);
+    }
+    else if(realMax->getType() == REAL_CELL) {
+        realMax = newRealCell(max(dynamic_cast<RealCell *>(realMax.get())->val, newVal));
+    }
+}
+
+// Update the average as real numbers are added
+void Column::updateRealAverage(real newVal) {
+    if(realAvg->getType() == NULL_CELL) {
+        realAvg = newRealCell(newVal);
+    }
+    else if(realAvg->getType() == REAL_CELL) {
+        real oldAvg = dynamic_cast<RealCell *>(realAvg.get())->val;
+        real newAvg = (oldAvg * realCount + newVal) / (realCount + 1);
+        realAvg = newRealCell(newAvg);
+    }
+}
+
+void Column::updateRealStatistics(real newVal) {
+    // Update statistics on real value cells
+    updateRealMin(newVal);
+    updateRealMax(newVal);
+    updateRealAverage(newVal);
+    realCount++;
+}
+
 void Column::addCell(unique_ptr<Cell> cell) {
+    if(cell->getType() == REAL_CELL) {
+        updateRealStatistics(dynamic_cast<RealCell*>(cell.get())->val);
+    }
+
     cells.push_back(move(cell));
-}
-
-void Column::addNullCell() {
-    addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new Cell() )));
-}
-
-void Column::addRealCell(real val, size_t len) {
-    max_str_len = max(max_str_len, len);
-    addCell(unique_ptr<Cell>(dynamic_cast<Cell *>( new RealCell(val) )));
 }
 
 void Column::validateEqualSize(const Column &other) const {
     if(getSize() != other.getSize())
         throw logic_error("Cannot add columns of different length");
+}
+
+unique_ptr<Cell> Column::newRealCell(real val) {
+    return unique_ptr<Cell>(dynamic_cast<Cell *>(new RealCell(val)));
+}
+
+void Column::addNullCell() {
+    addCell(unique_ptr<Cell>(new Cell()));
+}
+
+void Column::addRealCell(real val, size_t len) {
+    max_str_len = max(max_str_len, len);
+    addCell(newRealCell(val));
 }
 
 unique_ptr<Column> Column::applyOp(const Column &other, function<unique_ptr<Cell>(const Cell&, const Cell&)> op) const {
@@ -56,10 +106,6 @@ const Cell &Column::getCell(const size_t row) const {
     else
         throw out_of_range(string("Requested row ") + to_string(row) +
                            " does not exist. Number of rows = " + to_string(cells.size()));
-}
-
-const size_t Column::getSize() const {
-    return cells.size();
 }
 
 int Column::cell_width() const {

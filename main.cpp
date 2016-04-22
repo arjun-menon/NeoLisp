@@ -10,9 +10,8 @@ int main() {
     Table table;
     DataReader::read_file("test_data/t1.txt", table);
     cout << "table" << endl << table << endl;
+    cout << table[3].getMin() << endl;
     table.display(cout, {1, 3});
-    const Column &c1 = table[1];
-    const Column &c3 = table[3];
-    cout << endl << *(c1 / c3) << endl;
+    cout << endl << *(table[1] + table[3]) << endl;
     return 0;
 }

@@ -4,21 +4,11 @@
 
 #include "stdinclude.h"
 #include "data_reader.h"
-
-class Foo : public DataConsumer {
-
-    virtual void addInt(int val, string::size_type len) override {
-        cout << val << " ";
-    }
-
-    virtual void endRow() override {
-        cout << endl;
-    }
-};
+#include "table.h"
 
 int main() {
-    Foo foo;
-    DataReader::read_file("test_data/t1.txt", foo);
-
+    Table table;
+    DataReader::read_file("test_data/t1.txt", table);
+    table.display();
     return 0;
 }

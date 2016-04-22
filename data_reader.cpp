@@ -10,15 +10,12 @@ void DataReader::process_file(const string &filename) {
 
     string line;
     while(getline(csv_file, line)) {
-        dataConsumer.startRow();
-
         process_line(line);
-
-        dataConsumer.endRow();
     }
 }
 
 void DataReader::process_line(const string &line) {
+    bool did_add_item = false;
     const char* int_pattern = "-1234567890";
 
     size_t pos = 0;
@@ -36,8 +33,17 @@ void DataReader::process_line(const string &line) {
             continue;
         }
 
+        if (!did_add_item) {
+            dataConsumer.startRow();
+            did_add_item = true;
+        }
+
         dataConsumer.addInt(val, num_len);
 
         pos += num_len;
+    }
+
+    if(did_add_item) {
+        dataConsumer.endRow();
     }
 }

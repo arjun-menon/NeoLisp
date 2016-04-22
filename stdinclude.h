@@ -1,5 +1,5 @@
 /*
- * Master header file included everywhere.
+ * STL header files to include everywhere.
  */
 
 #ifndef VECTORCALC_STDINCLUDE_H
@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <list>
 
 using namespace std;

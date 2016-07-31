@@ -1,3 +1,7 @@
+/*
+ * A cell in the table is represented by the `Cell` class here.
+ * A concrete implementation of Cell is provided by `RealCell`.
+ */
 
 #ifndef VECTORCALC_CELL_H
 #define VECTORCALC_CELL_H
@@ -8,7 +12,7 @@ enum CellType {
 };
 
 /*
- * Stores the value of a cell in a column.
+ * Pure virtual interface representing a generic cell.
  */
 struct Cell {
     /*
@@ -28,7 +32,7 @@ struct Cell {
 };
 
 /*
- * This Cell stores a real number.
+ * Cell that stores a real number (double).
  */
 struct RealCell : Cell {
     const real val;

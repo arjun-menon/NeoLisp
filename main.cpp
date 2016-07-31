@@ -1,10 +1,4 @@
-/**
- * Main entry point.
- */
-
 #include "stdinclude.h"
-#include "data_reader.h"
-#include "table.h"
 
 int main() {
     Table table;

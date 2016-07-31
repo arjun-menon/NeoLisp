@@ -1,6 +1,4 @@
-
 #include "stdinclude.h"
-#include "data_reader.h"
 
 void DataReader::process_file(const string &filename) {
     ifstream csv_file(filename);

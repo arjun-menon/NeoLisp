@@ -17,28 +17,28 @@ std::ostream& RealCell::display(std::ostream &stream) const {
 }
 
 unique_ptr<Cell> RealCell::operator+(const Cell &other) const {
-    if(other.isPresent() == PRESENT)
+    if(other.isPresent())
         return unique_ptr<Cell>(dynamic_cast<Cell *>(new RealCell(val + dynamic_cast<const RealCell&>(other).val)));
     else
         return other + *this;
 }
 
 unique_ptr<Cell> RealCell::operator-(const Cell &other) const {
-    if(other.isPresent() == PRESENT)
+    if(other.isPresent())
         return unique_ptr<Cell>(dynamic_cast<Cell *>(new RealCell(val - dynamic_cast<const RealCell&>(other).val)));
     else
         return other + *this;
 }
 
 unique_ptr<Cell> RealCell::operator*(const Cell &other) const {
-    if(other.isPresent() == PRESENT)
+    if(other.isPresent())
         return unique_ptr<Cell>(dynamic_cast<Cell *>(new RealCell(val * dynamic_cast<const RealCell&>(other).val)));
     else
         return other + *this;
 }
 
 unique_ptr<Cell> RealCell::operator/(const Cell &other) const {
-    if(other.isPresent() == PRESENT)
+    if(other.isPresent())
         return unique_ptr<Cell>(dynamic_cast<Cell *>(new RealCell(val / dynamic_cast<const RealCell&>(other).val)));
     else
         return other + *this;

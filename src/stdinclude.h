@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <numeric>
 #include <fstream>
 #include <iomanip>

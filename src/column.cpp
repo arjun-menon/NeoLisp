@@ -11,30 +11,30 @@ Column::Column(size_t null_cells) :
 
 // Update the min. as real numbers are added
 void Column::updateRealMin(real newVal) {
-    if(realMin->getType() == NULL_CELL) {
+    if(realMin->isPresent() == ABSENT) {
         realMin = newRealCell(newVal);
     }
-    else if(realMin->getType() == REAL_CELL) {
+    else if(realMin->isPresent() == PRESENT) {
         realMin = newRealCell(min(dynamic_cast<RealCell *>(realMin.get())->val, newVal));
     }
 }
 
 // Update the max. as real numbers are added
 void Column::updateRealMax(real newVal) {
-    if(realMax->getType() == NULL_CELL) {
+    if(realMax->isPresent() == ABSENT) {
         realMax = newRealCell(newVal);
     }
-    else if(realMax->getType() == REAL_CELL) {
+    else if(realMax->isPresent() == PRESENT) {
         realMax = newRealCell(max(dynamic_cast<RealCell *>(realMax.get())->val, newVal));
     }
 }
 
 // Update the average as real numbers are added
 void Column::updateRealAverage(real newVal) {
-    if(realAvg->getType() == NULL_CELL) {
+    if(realAvg->isPresent() == ABSENT) {
         realAvg = newRealCell(newVal);
     }
-    else if(realAvg->getType() == REAL_CELL) {
+    else if(realAvg->isPresent() == PRESENT) {
         real oldAvg = dynamic_cast<RealCell *>(realAvg.get())->val;
         real newAvg = (oldAvg * realCount + newVal) / (realCount + 1);
         realAvg = newRealCell(newAvg);
@@ -50,7 +50,7 @@ void Column::updateRealStatistics(real newVal) {
 }
 
 void Column::addCell(unique_ptr<Cell> cell) {
-    if(cell->getType() == REAL_CELL) {
+    if(cell->isPresent() == PRESENT) {
         updateRealStatistics(dynamic_cast<RealCell*>(cell.get())->val);
     }
 

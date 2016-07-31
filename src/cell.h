@@ -6,18 +6,19 @@
 #ifndef VECTORCALC_CELL_H
 #define VECTORCALC_CELL_H
 
+enum Optional {
+    ABSENT,
+    PRESENT
+};
+
 typedef double real;
 
-enum CellType {
-    NULL_CELL,
-    REAL_CELL
-};
 
 /*
  * Pure virtual interface representing a generic cell.
  */
 struct Cell {
-    virtual CellType getType() const = 0;
+    virtual Optional isPresent() const = 0;
 
     // Arithmetic operations that must be supported by all cells
     virtual unique_ptr<Cell> operator+(const Cell &other) const = 0;
@@ -34,7 +35,7 @@ struct Cell {
 struct NullCell : Cell {
     NullCell() {}
 
-    virtual CellType getType() const { return NULL_CELL; }
+    virtual Optional isPresent() const { return ABSENT; }
 
     /*
      * Operations against a NULL cell always result in another NULL.
@@ -55,7 +56,7 @@ struct RealCell : Cell {
 
     RealCell(real val) : val(val) {}
 
-    virtual CellType getType() const { return REAL_CELL; }
+    virtual Optional isPresent() const { return PRESENT; }
 
     virtual unique_ptr<Cell> operator+(const Cell &other) const;
     virtual unique_ptr<Cell> operator-(const Cell &other) const;

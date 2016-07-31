@@ -13,6 +13,7 @@ enum Optional {
 
 typedef double real;
 
+size_t str_to_real(const char *str, real &val);
 
 /*
  * Pure virtual interface representing a generic cell.

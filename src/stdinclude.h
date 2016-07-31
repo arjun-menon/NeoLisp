@@ -12,9 +12,11 @@
 #include <numeric>
 #include <fstream>
 #include <iomanip>
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include <vector>
+#include <cmath>
 #include <list>
 
 using namespace std;

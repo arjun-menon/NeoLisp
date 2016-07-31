@@ -1,5 +1,11 @@
 #include "stdinclude.h"
 
+size_t str_to_real(const char *str, real &val) {
+    char* str_end;
+    val = strtod(str, &str_end);
+    return str_end - str;
+}
+
 std::ostream& NullCell::display(std::ostream &stream) const {
     stream << "NULL";
     return stream;

@@ -1,6 +1,5 @@
 /*
  * A cell in the table is represented by the `Cell` class here.
- * A concrete implementation of Cell is provided by `RealCell`.
  */
 
 #ifndef VECTORCALC_CELL_H
@@ -8,61 +7,40 @@
 
 typedef double real;
 
-size_t str_to_real(const char *str, real &val);
+inline real real_nan() { return nan(""); }
+
+inline size_t str_to_real(const char *str, real &val) {
+    char* str_end;
+    val = strtod(str, &str_end);
+    return str_end - str;
+}
 
 /*
- * Pure virtual interface representing a generic cell.
+ * Cell stores a real number (double).
  */
-struct Cell {
-    virtual bool isPresent() const = 0;
+class Cell {
+    real val;
 
-    // Arithmetic operations that must be supported by all cells
-    virtual unique_ptr<Cell> operator+(const Cell &other) const = 0;
-    virtual unique_ptr<Cell> operator-(const Cell &other) const = 0;
-    virtual unique_ptr<Cell> operator*(const Cell &other) const = 0;
-    virtual unique_ptr<Cell> operator/(const Cell &other) const = 0;
+public:
+    Cell() : val(real_nan()) {}
+    Cell(real val) : val(val) {}
 
-    virtual std::ostream& display(std::ostream &stream) const = 0;
+    inline real get() const { return val; }
+    inline bool isPresent() const { return !isnan(val); }
+    inline Cell& operator=(const Cell& o) { val = o.val; return *this; }
+
+    inline Cell operator+(const Cell &o) const { return val + o.val; };
+    inline Cell operator-(const Cell &o) const { return val - o.val; };
+    inline Cell operator*(const Cell &o) const { return val * o.val; };
+    inline Cell operator/(const Cell &o) const { return val / o.val; };
 };
 
-/*
- * Cell used in place of empty or missing data (i.e. NULL).
- */
-struct NullCell : Cell {
-    NullCell() {}
-
-    virtual bool isPresent() const { return false; }
-
-    /*
-     * Operations against a NULL cell always result in another NULL.
-     */
-    virtual unique_ptr<Cell> operator+(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
-    virtual unique_ptr<Cell> operator-(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
-    virtual unique_ptr<Cell> operator*(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
-    virtual unique_ptr<Cell> operator/(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
-
-    virtual std::ostream& display(std::ostream &stream) const;
-};
-
-/*
- * Cell that stores a real number (double).
- */
-struct RealCell : Cell {
-    const real val;
-
-    RealCell(real val) : val(val) {}
-
-    virtual bool isPresent() const { return true; }
-
-    virtual unique_ptr<Cell> operator+(const Cell &other) const;
-    virtual unique_ptr<Cell> operator-(const Cell &other) const;
-    virtual unique_ptr<Cell> operator*(const Cell &other) const;
-    virtual unique_ptr<Cell> operator/(const Cell &other) const;
-
-    virtual std::ostream& display(std::ostream &stream) const;
-};
-
-std::ostream& operator<<(std::ostream &stream, const Cell &cell);
-std::ostream& operator<<(std::ostream &stream, const unique_ptr<Cell> &cell);
+inline ostream& operator<<(ostream &stream, const Cell &cell) {
+    if (!cell.isPresent())
+        stream << "NULL";
+    else
+        stream << cell.get();
+    return stream;
+}
 
 #endif //VECTORCALC_CELL_H

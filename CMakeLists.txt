@@ -5,7 +5,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
 
 set(SOURCE_FILES
         src/cell.h
-        src/cell.cpp
         src/column.h
         src/column.cpp
         src/table.h

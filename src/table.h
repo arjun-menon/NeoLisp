@@ -25,13 +25,15 @@ public:
     inline const Column& operator[](const size_t col) const { return getColumn(col); }
     const Cell& getCell(const size_t col, const size_t row) const;
 
-    std::ostream& display(std::ostream &stream, vector<size_t> column_indices) const;
+    ostream& display(ostream &stream, vector<size_t> column_indices) const;
 
-    inline std::ostream& display(std::ostream &stream = cout) const  {
+    inline ostream& display(ostream &stream = cout) const  {
         return display(stream, generateSequence<size_t>(col_count));
     }
 };
 
-std::ostream& operator<<(std::ostream &stream, Table &table);
+inline ostream& operator<<(ostream &stream, Table &table) {
+    return table.display(stream);
+}
 
 #endif //VECTORCALC_TABLE_H

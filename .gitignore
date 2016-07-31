@@ -30,7 +30,7 @@
 
 # Target executables
 vcalc
-unit_tests
+vcalc_unit_tests
 
 # CMake generated build files
 CMakeCache.txt

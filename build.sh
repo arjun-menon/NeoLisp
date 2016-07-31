@@ -29,11 +29,11 @@ cd ..
 # Symlink from base dir
 echo "Setting up symlinks..."
 ln -sf build_files/vcalc
-ln -sf build_files/vcalc_unit_tests unit_tests
+ln -sf build_files/vcalc_unit_tests
 
 # Run unit tests
 printf "\nRunning unit tests...\n"
-./unit_tests
+./vcalc_unit_tests
 
 # Done
 echo "Feel free to run ./vcalc"

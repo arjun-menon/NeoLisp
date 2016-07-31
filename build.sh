@@ -7,9 +7,11 @@ if [[ $* == *--clean* ]]; then
   rm -rf build_files/
   rm -f vcalc
   rm -f vcalc_unit_tests
+  rm -rf *.dSYM/
   exit 0
 fi
 
+# Create build directory
 mkdir -p build_files
 cd build_files
 

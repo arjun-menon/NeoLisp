@@ -46,3 +46,6 @@ test_data
 
 # Build files
 build_files
+
+# Debug symbols
+*.dSYM/

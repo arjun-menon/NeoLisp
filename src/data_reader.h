@@ -5,8 +5,6 @@
 #ifndef VECTORCALC_DATA_READER_H
 #define VECTORCALC_DATA_READER_H
 
-typedef double real;
-
 /**
  * The consumer implements these callbacks.
  *

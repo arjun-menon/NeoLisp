@@ -6,6 +6,8 @@
 #ifndef VECTORCALC_CELL_H
 #define VECTORCALC_CELL_H
 
+typedef double real;
+
 enum CellType {
     NULL_CELL,
     REAL_CELL

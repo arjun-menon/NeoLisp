@@ -20,9 +20,9 @@
 using namespace std;
 
 #include "utils.h"
-#include "data_reader.h"
 #include "cell.h"
 #include "column.h"
+#include "data_reader.h"
 #include "table.h"
 
 #endif //VECTORCALC_STDINCLUDE_H

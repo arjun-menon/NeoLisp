@@ -2,6 +2,14 @@
 
 set -e
 
+# Should clean?
+if [[ $* == *--clean* ]]; then
+  rm -rf build_files/
+  rm -f vcalc
+  rm -f vcalc_unit_tests
+  exit 0
+fi
+
 mkdir -p build_files
 cd build_files
 

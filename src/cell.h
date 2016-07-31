@@ -15,18 +15,32 @@ enum CellType {
  * Pure virtual interface representing a generic cell.
  */
 struct Cell {
-    /*
-     * By default, a Cell is NULL.
-     */
+    virtual CellType getType() const = 0;
+
+    // Arithmetic operations that must be supported by all cells
+    virtual unique_ptr<Cell> operator+(const Cell &other) const = 0;
+    virtual unique_ptr<Cell> operator-(const Cell &other) const = 0;
+    virtual unique_ptr<Cell> operator*(const Cell &other) const = 0;
+    virtual unique_ptr<Cell> operator/(const Cell &other) const = 0;
+
+    virtual std::ostream& display(std::ostream &stream) const = 0;
+};
+
+/*
+ * Cell used in place of empty or missing data (i.e. NULL).
+ */
+struct NullCell : Cell {
+    NullCell() {}
+
     virtual CellType getType() const { return NULL_CELL; }
 
     /*
-     * Operations against a NULL cell result in another NULL.
+     * Operations against a NULL cell always result in another NULL.
      */
-    virtual unique_ptr<Cell> operator+(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
-    virtual unique_ptr<Cell> operator-(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
-    virtual unique_ptr<Cell> operator*(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
-    virtual unique_ptr<Cell> operator/(const Cell &other) const { return unique_ptr<Cell>(new Cell()); }
+    virtual unique_ptr<Cell> operator+(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
+    virtual unique_ptr<Cell> operator-(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
+    virtual unique_ptr<Cell> operator*(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
+    virtual unique_ptr<Cell> operator/(const Cell &other) const { return unique_ptr<Cell>(dynamic_cast<Cell *>(new NullCell())); }
 
     virtual std::ostream& display(std::ostream &stream) const;
 };

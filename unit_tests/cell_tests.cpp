@@ -2,7 +2,7 @@
 #include "../src/stdinclude.h"
 
 TEST_CASE("Null cells display as NULL") {
-    Cell nullCell;
+    NullCell nullCell;
     REQUIRE( toString(nullCell) == "NULL" );
 }
 
@@ -13,7 +13,7 @@ TEST_CASE("Real cells display their value") {
 
 TEST_CASE("Operations against a NULL cell always returns another NULL cell") {
     RealCell realCell(12);
-    Cell nullCell;
+    NullCell nullCell;
 
     REQUIRE( toString(realCell + nullCell) == "NULL" );
     REQUIRE( toString(realCell - nullCell) == "NULL" );

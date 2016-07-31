@@ -3,8 +3,8 @@
 static const int extra_padding = 3;
 
 Column::Column(size_t null_cells) :
-        realMin(new Cell()), realMax(new Cell()),
-        realAvg(new Cell()), realMedian(new Cell()) {
+        realMin(new NullCell()), realMax(new NullCell()),
+        realAvg(new NullCell()), realMedian(new NullCell()) {
     for(size_t i = 0; i < null_cells; i++)
         addNullCell();
 }
@@ -67,7 +67,7 @@ unique_ptr<Cell> Column::newRealCell(real val) {
 }
 
 void Column::addNullCell() {
-    addCell(unique_ptr<Cell>(new Cell()));
+    addCell(unique_ptr<Cell>(new NullCell()));
 }
 
 void Column::addRealCell(real val, size_t len) {

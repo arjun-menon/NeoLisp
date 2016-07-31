@@ -50,5 +50,6 @@ struct RealCell : Cell {
 };
 
 std::ostream& operator<<(std::ostream &stream, const Cell &cell);
+std::ostream& operator<<(std::ostream &stream, const unique_ptr<Cell> &cell);
 
 #endif //VECTORCALC_CELL_H

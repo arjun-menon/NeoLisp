@@ -41,3 +41,7 @@ unique_ptr<Cell> RealCell::operator/(const Cell &other) const {
 std::ostream &operator<<(std::ostream &stream, const Cell &cell) {
     return cell.display(stream);
 }
+
+std::ostream &operator<<(std::ostream &stream, const unique_ptr<Cell> &cell) {
+    return cell->display(stream);
+}

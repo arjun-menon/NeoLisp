@@ -1,2 +1,44 @@
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Prerequisites
+*.d
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Target executable
+vcalc
+
+# CMake generated build files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# CLion
 .idea
+
+# Test data
 test_data

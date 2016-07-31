@@ -28,8 +28,9 @@
 *.out
 *.app
 
-# Target executable
+# Target executables
 vcalc
+unit_tests
 
 # CMake generated build files
 CMakeCache.txt
@@ -42,3 +43,6 @@ cmake_install.cmake
 
 # Test data
 test_data
+
+# Build files
+build_files

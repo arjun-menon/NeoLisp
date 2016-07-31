@@ -18,6 +18,12 @@ set(SOURCE_FILES
 
 add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
 
-add_executable(vcalc_unit_tests ${SOURCE_FILES} tests/catch.hpp tests/unit_tests.cpp)
+set(UNIT_TEST_FILES
+        unit_tests/catch.hpp
+        unit_tests/catch_main.cpp
+        unit_tests/cell_tests.cpp
+)
+
+add_executable(vcalc_unit_tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
 enable_testing()
 add_test(NAME unit_tests COMMAND vcalc_unit_tests)

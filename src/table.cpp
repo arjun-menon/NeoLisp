@@ -4,13 +4,13 @@ void Table::startRow() {
     row_count++;
 }
 
-void Table::addReal(real val, size_t len) {
+void Table::addReal(real val) {
     if(col_count <= cur_col) {
         addColumn();
         col_count++;
     }
 
-    cols[cur_col++]->addRealCell(val, len);
+    cols[cur_col++]->addRealCell(val);
 }
 
 void Table::endRow() {

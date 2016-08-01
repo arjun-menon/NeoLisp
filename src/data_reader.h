@@ -15,7 +15,7 @@
 class DataConsumer {
 public:
     virtual void startRow() {};
-    virtual void addReal(real val, size_t len) = 0;
+    virtual void addReal(real val) = 0;
     virtual void endRow() {};
 };
 

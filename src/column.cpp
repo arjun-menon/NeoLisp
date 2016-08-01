@@ -1,7 +1,5 @@
 #include "stdinclude.h"
 
-static const int extra_padding = 3;
-
 Column::Column(size_t null_cells) {
     for(size_t i = 0; i < null_cells; i++)
         addEmptyCell();
@@ -66,8 +64,7 @@ void Column::addEmptyCell() {
     addCell(Cell());
 }
 
-void Column::addRealCell(real val, size_t len) {
-    max_str_len = max(max_str_len, len);
+void Column::addRealCell(real val) {
     addCell(Cell(val));
 }
 
@@ -96,7 +93,10 @@ const Cell& Column::getCell(const size_t row) const {
 }
 
 int Column::cell_width() const {
-    return static_cast<int>(max_str_len) + extra_padding;
+    const int padding = 2;
+    const int min_length = 4; // length of 'NULL'
+
+    return max((int) toString(maximum).length(), min_length) + padding;
 }
 
 ostream &Column::display(ostream& stream) const {

@@ -36,7 +36,7 @@ void DataReader::process_line(const string &line) {
             did_add_item = true;
         }
 
-        dataConsumer.addReal(val, num_len);
+        dataConsumer.addReal(val);
 
         pos += num_len;
     }

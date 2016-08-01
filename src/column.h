@@ -4,7 +4,6 @@
 
 class Column {
     vector<Cell> cells;
-    size_t max_str_len = 4;
 
     size_t realCount = 0;
     Cell minimum;
@@ -25,7 +24,7 @@ class Column {
 public:
     Column(size_t null_cells = 0);
     void addEmptyCell();
-    void addRealCell(real val, size_t len);
+    void addRealCell(real val);
 
     unique_ptr<Column> operator+(const Column& other) const;
     unique_ptr<Column> operator-(const Column& other) const;

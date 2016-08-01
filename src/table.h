@@ -15,7 +15,7 @@ class Table : public DataConsumer {
 
 public:
     virtual void startRow() override;
-    virtual void addReal(real val, size_t len) override;
+    virtual void addReal(real val) override;
     virtual void endRow() override;
 
     inline size_t getRowCount() const { return row_count; }

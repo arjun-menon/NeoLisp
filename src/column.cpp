@@ -7,20 +7,19 @@ Column::Column(size_t null_cells) {
         addEmptyCell();
 }
 
-// Update the min. as real numbers are added
-void Column::updateRealMin(real newVal) {
-    if(!minimum.isPresent())
-        minimum = newVal;
-    else
-        minimum = min(minimum.get(), newVal);
+void Column::addCell(const Cell& cell) {
+    if(cell.isPresent())
+        updateRealStatistics(cell.get());
+
+    cells.push_back(cell);
 }
 
-// Update the max. as real numbers are added
-void Column::updateRealMax(real newVal) {
-    if(!maximum.isPresent())
-        maximum = newVal;
-    else
-        maximum = max(maximum.get(), newVal);
+void Column::updateRealStatistics(real newVal) {
+    // Update statistics on real value cells
+    updateRealMin(newVal);
+    updateRealMax(newVal);
+    updateRealAverage(newVal);
+    realCount++;
 }
 
 // Update the average as real numbers are added
@@ -33,34 +32,25 @@ void Column::updateRealAverage(real newVal) {
     }
 }
 
-void Column::updateRealStatistics(real newVal) {
-    // Update statistics on real value cells
-    updateRealMin(newVal);
-    updateRealMax(newVal);
-    updateRealAverage(newVal);
-    realCount++;
+// Update the max. as real numbers are added
+void Column::updateRealMax(real newVal) {
+    if(!maximum.isPresent())
+        maximum = newVal;
+    else
+        maximum = max(maximum.get(), newVal);
+}
+
+// Update the min. as real numbers are added
+void Column::updateRealMin(real newVal) {
+    if(!minimum.isPresent())
+        minimum = newVal;
+    else
+        minimum = min(minimum.get(), newVal);
 }
 
 void Column::validateEqualSize(const Column &other) const {
     if(getSize() != other.getSize())
-        throw logic_error("Cannot add columns of different length");
-}
-
-void Column::addEmptyCell() {
-    cells.push_back(Cell());
-}
-
-void Column::addRealCell(real val, size_t len) {
-    max_str_len = max(max_str_len, len);
-    updateRealStatistics(val);
-    cells.push_back(Cell(val));
-}
-
-void Column::addCell(const Cell& cell) {
-    if(cell.isPresent())
-        updateRealStatistics(cell.get());
-
-    cells.push_back(cell);
+        throw logic_error("Cannot perform operations across columns of different lengths.");
 }
 
 unique_ptr<Column> Column::applyOp(const Column &other, function<Cell(const Cell&, const Cell&)> op) const {
@@ -70,6 +60,15 @@ unique_ptr<Column> Column::applyOp(const Column &other, function<Cell(const Cell
         result->addCell( op(getCell(i), other.getCell(i)) );
     }
     return result;
+}
+
+void Column::addEmptyCell() {
+    addCell(Cell());
+}
+
+void Column::addRealCell(real val, size_t len) {
+    max_str_len = max(max_str_len, len);
+    addCell(Cell(val));
 }
 
 unique_ptr<Column> Column::operator+(const Column &other) const {

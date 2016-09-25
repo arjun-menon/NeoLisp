@@ -18,7 +18,6 @@ set(SOURCE_FILES
 add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
 
 set(UNIT_TEST_FILES
-        unit_tests/catch.hpp
         unit_tests/catch_main.cpp
         unit_tests/cell_tests.cpp
 )

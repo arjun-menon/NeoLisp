@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <catch.hpp>
 #include "../src/stdinclude.h"
 
 TEST_CASE("Empty cells display as NULL") {

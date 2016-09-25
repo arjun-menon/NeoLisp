@@ -45,7 +45,7 @@ cmake_install.cmake
 test_data
 
 # Build files
-build_files
+cbuild
 
 # Debug symbols
 *.dSYM/

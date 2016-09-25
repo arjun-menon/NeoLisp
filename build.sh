@@ -4,7 +4,7 @@ set -e
 
 # Should clean?
 if [[ $* == *--clean* ]]; then
-  rm -rf build_files/
+  rm -rf cbuild/
   rm -f vcalc
   rm -f vcalc_unit_tests
   rm -rf *.dSYM/
@@ -12,8 +12,8 @@ if [[ $* == *--clean* ]]; then
 fi
 
 # Create build directory
-mkdir -p build_files
-cd build_files
+mkdir -p cbuild
+cd cbuild
 
 # Generate Makefile
 printf "Running cmake...\n"
@@ -37,13 +37,14 @@ make -j$NUMCPUS
 cd ..
 
 # Symlink from base dir
-echo "Setting up symlinks..."
-ln -sf build_files/vcalc
-ln -sf build_files/vcalc_unit_tests
+echo "Done compiling."
+ln -sf cbuild/vcalc
 
-# Run unit tests
-printf "\nRunning unit tests...\n"
-./vcalc_unit_tests
+if [ -f cbuild/vcalc_unit_tests ]; then
+  # Run unit tests
+  printf "\nRunning unit tests...\n"
+  ./cbuild/vcalc_unit_tests
+fi
 
 # Done
 echo "Feel free to run ./vcalc"

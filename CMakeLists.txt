@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+include(CheckIncludeFileCXX)
 project(vcalc)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
@@ -22,6 +23,12 @@ set(UNIT_TEST_FILES
         unit_tests/cell_tests.cpp
 )
 
-add_executable(vcalc_unit_tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
-enable_testing()
-add_test(NAME unit_tests COMMAND vcalc_unit_tests)
+check_include_file_cxx(catch.hpp HAVE_CATCH)
+
+if(HAVE_CATCH)
+    add_executable(vcalc_unit_tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
+    enable_testing()
+    add_test(NAME unit_tests COMMAND vcalc_unit_tests)
+else(Y)
+    message("If you'd like to run unit tests, install Catch: https://github.com/philsquared/Catch")
+endif()

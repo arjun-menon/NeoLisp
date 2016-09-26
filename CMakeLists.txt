@@ -18,6 +18,9 @@ set(SOURCE_FILES
 
 add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
 
+set_property(TARGET vcalc PROPERTY CXX_STANDARD 11)
+set_property(TARGET vcalc PROPERTY CXX_STANDARD_REQUIRED ON)
+
 set(UNIT_TEST_FILES
         unit_tests/catch_main.cpp
         unit_tests/cell_tests.cpp

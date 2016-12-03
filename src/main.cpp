@@ -1,5 +1,20 @@
 #include "stdinclude.h"
 
+void repl() {
+    for(string input; true; cout << endl) {
+        cout << "> ";
+
+        if (!getline(std::cin, input))
+            break;
+
+        if (input == "exit" || input == "quit")
+            break;
+        else {
+            cout << "ok";
+        }
+    }
+}
+
 void stuff() {
     Table table;
     DataReader::read_file("test_data/t1.txt", table);
@@ -10,6 +25,7 @@ void stuff() {
 }
 
 int main() {
-    stuff();
+    repl();
+    //stuff();
     return 0;
 }

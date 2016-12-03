@@ -26,7 +26,7 @@ public:
     Cell(real val) : val(val) {}
 
     inline real get() const { return val; }
-    inline bool isPresent() const { return !isnan(val); }
+    inline bool isPresent() const { return !::isnan(val); }
     inline Cell& operator=(const Cell& o) { val = o.val; return *this; }
 
     inline Cell operator+(const Cell &o) const { return val + o.val; };

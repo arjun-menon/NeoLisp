@@ -2,8 +2,7 @@
  * A cell in the table is represented by the `Cell` class here.
  */
 
-#ifndef VECTORCALC_CELL_H
-#define VECTORCALC_CELL_H
+#pragma once
 
 typedef double real;
 
@@ -42,5 +41,3 @@ inline ostream& operator<<(ostream &stream, const Cell &cell) {
         stream << cell.get();
     return stream;
 }
-
-#endif //VECTORCALC_CELL_H

@@ -1,6 +1,5 @@
 
-#ifndef VECTORCALC_TABLE_H
-#define VECTORCALC_TABLE_H
+#pragma once
 
 class Table : public DataConsumer {
     size_t row_count = 0;
@@ -35,5 +34,3 @@ public:
 inline ostream& operator<<(ostream &stream, Table &table) {
     return table.display(stream);
 }
-
-#endif //VECTORCALC_TABLE_H

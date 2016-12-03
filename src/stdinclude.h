@@ -2,8 +2,7 @@
  * Master header file to include everywhere.
  */
 
-#ifndef VECTORCALC_STDINCLUDE_H
-#define VECTORCALC_STDINCLUDE_H
+#pragma once
 
 #include <functional>
 #include <algorithm>
@@ -26,5 +25,3 @@ using namespace std;
 #include "column.h"
 #include "data_reader.h"
 #include "table.h"
-
-#endif //VECTORCALC_STDINCLUDE_H

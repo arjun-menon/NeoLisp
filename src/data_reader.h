@@ -2,8 +2,7 @@
  * Reads in a file containing lines of multiple numbers, e.g. a CSV of numbers.
  */
 
-#ifndef VECTORCALC_DATA_READER_H
-#define VECTORCALC_DATA_READER_H
+#pragma once
 
 /**
  * The consumer implements these callbacks.
@@ -31,5 +30,3 @@ public:
         DataReader(dataConsumer).process_file(filename);
     }
 };
-
-#endif //VECTORCALC_DATA_READER_H

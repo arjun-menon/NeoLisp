@@ -1,6 +1,5 @@
 
-#ifndef VECTORCALC_COLUMN_H
-#define VECTORCALC_COLUMN_H
+#pragma once
 
 class Column {
     vector<Cell> cells;
@@ -45,5 +44,3 @@ public:
 inline ostream &operator<<(ostream& stream, Column& column) {
     return column.display(stream);
 }
-
-#endif //VECTORCALC_COLUMN_H

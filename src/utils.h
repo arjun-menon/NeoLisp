@@ -1,6 +1,5 @@
 
-#ifndef VECTORCALC_UTILS_H
-#define VECTORCALC_UTILS_H
+#pragma once
 
 template<class T>
 struct Counter {
@@ -24,5 +23,3 @@ string toString(const T& obj) {
     oss << obj;
     return oss.str();
 }
-
-#endif //VECTORCALC_UTILS_H

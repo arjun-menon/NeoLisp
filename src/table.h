@@ -14,7 +14,7 @@ class Table : public DataConsumer {
 
  public:
     void startRow() override;
-    void addReal(real val) override;
+    void addReal(const Real &val) override;
     void endRow() override;
 
     inline size_t getRowCount() const { return row_count; }
@@ -22,7 +22,7 @@ class Table : public DataConsumer {
 
     const Column& getColumn(const size_t col) const;
     inline const Column& operator[](const size_t col) const { return getColumn(col); }
-    const Cell& getCell(const size_t col, const size_t row) const;
+    const Real& getCell(const size_t col, const size_t row) const;
 
     ostream& display(ostream &stream, vector<size_t> column_indices) const;
 

@@ -2,41 +2,41 @@
 #pragma once
 
 class Column {
-    vector<Cell> cells;
+    vector<Real> cells;
 
     size_t realCount = 0;
-    Cell minimum;
-    Cell maximum;
-    Cell average;
-    Cell median;
+    Real minimum;
+    Real maximum;
+    Real average;
+    Real median;
 
-    void addCell(const Cell& cell);
+    void addCell(const Real& cell);
 
-    void updateRealStatistics(real newVal);
-    void updateRealAverage(real newVal);
-    void updateRealMax(real newVal);
-    void updateRealMin(real newVal);
+    void updateRealStatistics(Real newVal);
+    void updateRealAverage(Real newVal);
+    void updateRealMax(Real newVal);
+    void updateRealMin(Real newVal);
 
     void validateEqualSize(const Column &other) const;
     unique_ptr<Column> applyOp(const Column& other,
-           function<Cell(const Cell&, const Cell&)> op) const;
+           function<Real(const Real&, const Real&)> op) const;
 
  public:
     Column(size_t null_cells = 0);
     void addEmptyCell();
-    void addRealCell(real val);
+    void addRealCell(const Real &val);
 
     unique_ptr<Column> operator+(const Column& other) const;
     unique_ptr<Column> operator-(const Column& other) const;
     unique_ptr<Column> operator*(const Column& other) const;
     unique_ptr<Column> operator/(const Column& other) const;
 
-    const Cell& getCell(const size_t row) const;
+    const Real& getCell(const size_t row) const;
 
     inline const size_t getSize() const { return cells.size(); }
-    inline const Cell& getAvg() const { return average; }
-    inline const Cell& getMax() const { return maximum; }
-    inline const Cell& getMin() const { return minimum; }
+    inline const Real& getAvg() const { return average; }
+    inline const Real& getMax() const { return maximum; }
+    inline const Real& getMin() const { return minimum; }
 
     int cell_width() const;
     ostream& display(ostream &stream = cout) const;

@@ -16,6 +16,7 @@ void repl() {
 }
 
 void stuff() {
+    cout<<"x = "<< sizeof(Real) <<endl;
     Table table;
     DataReader::read_file("test_data/t1.txt", table);
     cout << "table" << endl << table << endl;
@@ -25,7 +26,7 @@ void stuff() {
 }
 
 int main() {
-    repl();
-    // stuff();
+    // repl();
+    stuff();
     return 0;
 }

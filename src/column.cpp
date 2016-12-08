@@ -5,14 +5,14 @@ Column::Column(size_t null_cells) {
         addEmptyCell();
 }
 
-void Column::addCell(const Cell& cell) {
-    if (cell.isPresent())
-        updateRealStatistics(cell.get());
+void Column::addCell(const Real& cell) {
+    if (cell.isValid())
+        updateRealStatistics(cell());
 
     cells.push_back(cell);
 }
 
-void Column::updateRealStatistics(real newVal) {
+void Column::updateRealStatistics(Real newVal) {
     // Update statistics on real value cells
     updateRealMin(newVal);
     updateRealMax(newVal);
@@ -21,29 +21,29 @@ void Column::updateRealStatistics(real newVal) {
 }
 
 // Update the average as real numbers are added
-void Column::updateRealAverage(real newVal) {
-    if (!average.isPresent()) {
+void Column::updateRealAverage(Real newVal) {
+    if (!average.isValid()) {
         average = newVal;
     } else {
-        real oldAvg = average.get();
+        Real oldAvg = average();
         average = (oldAvg * realCount + newVal) / (realCount + 1);
     }
 }
 
 // Update the max. as real numbers are added
-void Column::updateRealMax(real newVal) {
-    if (!maximum.isPresent())
+void Column::updateRealMax(Real newVal) {
+    if (!maximum.isValid())
         maximum = newVal;
     else
-        maximum = max(maximum.get(), newVal);
+        maximum = max(maximum(), newVal());
 }
 
 // Update the min. as real numbers are added
-void Column::updateRealMin(real newVal) {
-    if (!minimum.isPresent())
+void Column::updateRealMin(Real newVal) {
+    if (!minimum.isValid())
         minimum = newVal;
     else
-        minimum = min(minimum.get(), newVal);
+        minimum = min(minimum(), newVal());
 }
 
 void Column::validateEqualSize(const Column &other) const {
@@ -51,7 +51,7 @@ void Column::validateEqualSize(const Column &other) const {
         throw logic_error("Cannot perform operations across columns of different lengths.");
 }
 
-unique_ptr<Column> Column::applyOp(const Column &other, function<Cell(const Cell&, const Cell&)> op) const {
+unique_ptr<Column> Column::applyOp(const Column &other, function<Real(const Real&, const Real&)> op) const {
     validateEqualSize(other);
     unique_ptr<Column> result = unique_ptr<Column>(new Column);
     for (size_t i = 0; i < getSize(); i++) {
@@ -61,30 +61,30 @@ unique_ptr<Column> Column::applyOp(const Column &other, function<Cell(const Cell
 }
 
 void Column::addEmptyCell() {
-    addCell(Cell());
+    addCell(Real());
 }
 
-void Column::addRealCell(real val) {
-    addCell(Cell(val));
+void Column::addRealCell(const Real &val) {
+    addCell(val);
 }
 
 unique_ptr<Column> Column::operator+(const Column &other) const {
-    return applyOp(other, [](const Cell& a, const Cell& b) { return a + b; });
+    return applyOp(other, [](const Real& a, const Real& b) { return a + b; });
 }
 
 unique_ptr<Column> Column::operator-(const Column &other) const {
-    return applyOp(other, [](const Cell& a, const Cell& b) { return a - b; });
+    return applyOp(other, [](const Real& a, const Real& b) { return a - b; });
 }
 
 unique_ptr<Column> Column::operator*(const Column &other) const {
-    return applyOp(other, [](const Cell& a, const Cell& b) { return a * b; });
+    return applyOp(other, [](const Real& a, const Real& b) { return a * b; });
 }
 
 unique_ptr<Column> Column::operator/(const Column &other) const {
-    return applyOp(other, [](const Cell& a, const Cell& b) { return a / b; });
+    return applyOp(other, [](const Real& a, const Real& b) { return a / b; });
 }
 
-const Cell& Column::getCell(const size_t row) const {
+const Real& Column::getCell(const size_t row) const {
     if (row < cells.size())
         return cells[row];
     else

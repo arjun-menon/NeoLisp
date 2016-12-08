@@ -22,9 +22,9 @@ void DataReader::process_line(const string &line) {
             break;
 
         size_t num_len;
-        real val;
+        Real val;
         try {
-            num_len = str_to_real(line.c_str() + pos, val);
+            num_len = val.fromStr(line.c_str() + pos);
         } catch (invalid_argument) {
             pos++;
             continue;

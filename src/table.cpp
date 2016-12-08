@@ -4,7 +4,7 @@ void Table::startRow() {
     row_count++;
 }
 
-void Table::addReal(real val) {
+void Table::addReal(const Real &val) {
     if (col_count <= cur_col) {
         addColumn();
         col_count++;
@@ -28,7 +28,7 @@ const Column &Table::getColumn(const size_t col) const {
                            " does not exist. Number of columns = " + to_string(col_count));
 }
 
-const Cell &Table::getCell(const size_t col, const size_t row) const {
+const Real &Table::getCell(const size_t col, const size_t row) const {
     return getColumn(col).getCell(row);
 }
 

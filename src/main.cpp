@@ -1,15 +1,15 @@
 #include "common.h"
 
 void repl() {
-    for(string input; true; cout << endl) {
+    for (string input; true; cout << endl) {
         cout << "> ";
 
         if (!getline(std::cin, input))
             break;
 
-        if (input == "exit" || input == "quit")
+        if (input == "exit" || input == "quit") {
             break;
-        else {
+        } else {
             cout << "ok";
         }
     }
@@ -26,6 +26,6 @@ void stuff() {
 
 int main() {
     repl();
-    //stuff();
+    // stuff();
     return 0;
 }

@@ -12,10 +12,10 @@
  *  endRow -- called after each row is processed
  */
 class DataConsumer {
-public:
-    virtual void startRow() {};
+ public:
+    virtual void startRow() {}
     virtual void addReal(real val) = 0;
-    virtual void endRow() {};
+    virtual void endRow() {}
 };
 
 class DataReader {
@@ -25,7 +25,7 @@ class DataReader {
     void process_file(const string &filename);
     void process_line(const string &line);
 
-public:
+ public:
     inline static void read_file(const string &filename, DataConsumer &dataConsumer) {
         DataReader(dataConsumer).process_file(filename);
     }

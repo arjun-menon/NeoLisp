@@ -20,18 +20,17 @@ inline size_t str_to_real(const char *str, real &val) {
 class Cell {
     real val;
 
-public:
-    Cell() : val(real_nan()) {}
-    Cell(real val) : val(val) {}
+ public:
+    Cell(real val = real_nan()) : val(val) {}
 
     inline real get() const { return val; }
     inline bool isPresent() const { return !::isnan(val); }
     inline Cell& operator=(const Cell& o) { val = o.val; return *this; }
 
-    inline Cell operator+(const Cell &o) const { return val + o.val; };
-    inline Cell operator-(const Cell &o) const { return val - o.val; };
-    inline Cell operator*(const Cell &o) const { return val * o.val; };
-    inline Cell operator/(const Cell &o) const { return val / o.val; };
+    inline Cell operator+(const Cell &o) const { return val + o.val; }
+    inline Cell operator-(const Cell &o) const { return val - o.val; }
+    inline Cell operator*(const Cell &o) const { return val * o.val; }
+    inline Cell operator/(const Cell &o) const { return val / o.val; }
 };
 
 inline ostream& operator<<(ostream &stream, const Cell &cell) {

@@ -6,16 +6,16 @@ class Table : public DataConsumer {
     size_t col_count = 0;
     vector< unique_ptr<Column> > cols;
 
-    size_t cur_col = 0; // Represents current column; used for construction
+    size_t cur_col = 0;  // Represents current column; used for construction
 
     inline void addColumn() {
         cols.push_back(unique_ptr<Column>(new Column(row_count - 1)));
     }
 
-public:
-    virtual void startRow() override;
-    virtual void addReal(real val) override;
-    virtual void endRow() override;
+ public:
+    void startRow() override;
+    void addReal(real val) override;
+    void endRow() override;
 
     inline size_t getRowCount() const { return row_count; }
     inline size_t getColCount() const { return col_count; }

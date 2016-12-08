@@ -12,7 +12,7 @@ set(SOURCE_FILES
         src/table.cpp
         src/data_reader.h
         src/data_reader.cpp
-        src/stdinclude.h
+        src/common.h
         src/utils.h
 )
 

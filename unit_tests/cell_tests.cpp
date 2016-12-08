@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../src/stdinclude.h"
+#include "../src/common.h"
 
 TEST_CASE("Empty cells display as NULL") {
     Cell emptyCell;

@@ -1,4 +1,4 @@
-#include "stdinclude.h"
+#include "common.h"
 
 void Table::startRow() {
     row_count++;

@@ -14,7 +14,7 @@ set(SOURCE_FILES
         src/data_reader.cpp
         src/common.h
         src/utils.h
-)
+        src/datatypes.cpp src/datatypes.h)
 
 add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
 

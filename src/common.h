@@ -21,6 +21,7 @@
 using namespace std;
 
 #include "utils.h"
+#include "datatypes.h"
 #include "cell.h"
 #include "column.h"
 #include "data_reader.h"

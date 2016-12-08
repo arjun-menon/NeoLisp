@@ -4,7 +4,7 @@
 class Table : public DataConsumer {
     size_t row_count = 0;
     size_t col_count = 0;
-    vector<unique_ptr<Column>> cols;
+    vector< unique_ptr<Column> > cols;
 
     size_t cur_col = 0; // Represents current column; used for construction
 

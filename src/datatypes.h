@@ -16,16 +16,41 @@ class Value
     void operator=(Value const &) = delete;
 };
 
+class Symbol : public Value
+{
+    string sym;
+
+public:
+    Symbol(const string &s) : sym(s) {}
+
+    inline ostream& display(ostream &o = cout) const { return o << sym; }
+};
+
+class List : public Value
+{
+    
+};
+
+class UserString : public Value
+{
+    const string text;
+
+public:
+    UserString(const string &s) : text(s) {}
+
+    inline ostream& display(ostream &o = cout) const { return o << text; }
+};
+
 /*
  * Real is a simple wrapper around a float.
  */
-class Real {
-    float val;
+class Real : public Value {
+    double val;
 
  public:
-    Real(float val = nanf("")) : val(val) {}
+    Real(double val = nanf("")) : val(val) {}
 
-    inline float operator()() const { return val; }
+    inline double operator()() const { return val; }
     inline bool isValid() const { return !::isnan(val); }
 
     inline Real(const Real& o) : val(o.val) {}
@@ -38,7 +63,7 @@ class Real {
 
     inline size_t fromStr(const char *str) {
         char* str_end;
-        val = strtof(str, &str_end);
+        val = strtod(str, &str_end);
         return str_end - str;
     }
 
@@ -54,10 +79,3 @@ class Real {
 inline ostream& operator<<(ostream &o, const Real &real) {
     return real.display(o);
 }
-
-class Number : public Value
-{
- public:
-    const Real val;
-    Number(Real val) : val(val) {}
-};

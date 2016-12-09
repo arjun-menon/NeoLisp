@@ -12,15 +12,19 @@
 #include <fstream>
 #include <iomanip>
 #include <cstdlib>
+#include <cctype>
 #include <memory>
 #include <string>
 #include <vector>
+#include <deque>
 #include <cmath>
 #include <list>
 
 using namespace std;
 
 #include "utils.h"
+#include "lexer.h"
+#include "parser.h"
 #include "datatypes.h"
 #include "column.h"
 #include "data_reader.h"

@@ -5,6 +5,8 @@ project(vcalc)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -g")
 
 set(SOURCE_FILES
+        src/lexer.cpp src/lexer.h
+        src/parser.cpp src/parser.h
         src/datatypes.h src/datatypes.cpp
         src/column.h src/column.cpp
         src/table.h src/table.cpp

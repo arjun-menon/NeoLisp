@@ -28,7 +28,7 @@ public:
 
 class List : public Value
 {
-    
+
 };
 
 class UserString : public Value

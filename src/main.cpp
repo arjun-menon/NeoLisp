@@ -10,7 +10,19 @@ void repl() {
         if (input == "exit" || input == "quit") {
             break;
         } else {
-            cout << "ok";
+            try
+            {
+                tok_chain tokens = Tokenize(input.c_str());
+                cout << display_toks(tokens, false);
+                frag_chain frags = Fragmentize(tokens);
+                cout << display_frags(frags, false);
+            }
+            catch(exception &e) {
+                cout << e.what();
+            }
+            catch(...) {
+                cout << "Unhandled Exception";
+            }
         }
     }
 }
@@ -26,7 +38,7 @@ void stuff() {
 }
 
 int main() {
-    // repl();
-    stuff();
+    repl();
+    // stuff();
     return 0;
 }

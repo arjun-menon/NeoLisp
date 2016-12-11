@@ -32,6 +32,11 @@ using namespace std;
  * Common classes, utility templates, and macros.
  */
 
+template<typename T, typename K>
+inline bool isType(const K &k) {
+    return typeid(T).hash_code() == typeid(k).hash_code();
+}
+
 template<typename T>
 struct Counter {
     T i = 0;

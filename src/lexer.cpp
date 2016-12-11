@@ -12,7 +12,7 @@ inline static bool nonAlnum(char c) {
     return !isalnum(c);
 }
 
-void Lexer::trim(string &str, const string to_remove)
+static void trim(string &str, const string to_remove = " \t")
 {
     // trim leading & trailing 'to_remove'
     size_t startpos = str.find_first_not_of(to_remove);

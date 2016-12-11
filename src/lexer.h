@@ -5,7 +5,6 @@ class Lexer
 {
     string token;
 
-    static void trim(string &str, const string to_remove = " \t");
     void addToken();
 
 public:

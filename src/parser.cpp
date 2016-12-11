@@ -1,16 +1,16 @@
 #include "common.h"
 
-frag_chain Fragmentize(tok_chain &toks)
+list< deque<string> > parse(deque<string> &tokens)
 {
-    frag_chain frags;
+    list< deque<string> > expressions;
 
-    while(!toks.empty())
+    while(!tokens.empty())
     {
-        tok_chain some_toks;
+        deque<string> some_toks;
 
         // fetches, pops & pushes the front-most token in 'tok_chain':
-        string s = toks.front();
-        toks.pop_front();
+        string s = tokens.front();
+        tokens.pop_front();
         some_toks.push_back(s);
 
         if(s=="(")
@@ -18,11 +18,11 @@ frag_chain Fragmentize(tok_chain &toks)
             // balance is the number of yet un-closed parentheses
             int balance = 1;
 
-            while(!toks.empty())
+            while(!tokens.empty())
             {
                 // fetches, pops & pushes the front-most token in 'tok_chain': (repeated code)
-                s = toks.front();
-                toks.pop_front();
+                s = tokens.front();
+                tokens.pop_front();
                 some_toks.push_back(s);
 
                 if(s=="(")
@@ -41,28 +41,28 @@ frag_chain Fragmentize(tok_chain &toks)
         else if(s==")")
             throw SyntaxError("Missing opening parenthesis.");
 
-        // push fragment
+        // push expression
         if(!some_toks.empty())
-            frags.push_back(some_toks);
+            expressions.push_back(some_toks);
     }
 
-    return frags;
+    return expressions;
 }
 
-string display_frags(const frag_chain &c, bool linear)
+string display_expressions(const list<deque<string> > &expressions, bool linear)
 {
     stringstream sout;
     int counter = 0;
 
     if(!linear)
-        sout<<endl<<c.size()<<" fragments:"<<endl;
+        sout<<endl<<expressions.size()<<" expressions:"<<endl;
 
-    for(frag_chain::const_iterator i = c.begin(); i!=c.end(); i++)
+    for(list< deque<string> >::const_iterator i = expressions.begin(); i!=expressions.end(); i++)
     {
         if(!linear)
             sout<<++counter<<": "<<endl;
 
-        for(tok_chain::const_iterator j = i->begin(); j!=i->end(); j++)
+        for(deque<string>::const_iterator j = i->begin(); j!=i->end(); j++)
         {
             if(linear)
                 sout<<*j;

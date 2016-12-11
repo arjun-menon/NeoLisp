@@ -1,6 +1,6 @@
 #include "common.h"
 
-void trim(string &str, const string to_remove = " \t")
+void static trim(string &str, const string to_remove = " \t")
 {
     // trim leading & trailing 'to_remove'
     size_t startpos = str.find_first_not_of(to_remove);
@@ -11,33 +11,33 @@ void trim(string &str, const string to_remove = " \t")
           str.substr( startpos, endpos-startpos+1 );
 }
 
-inline void push_token(string &s, tok_chain &l)
+inline static void push_token(string &s, deque<string> &tokens)
 {
     trim(s);
     if(s.length())
-        l.push_back(s);
+        tokens.push_back(s);
     s = "";
 }
 
-inline bool isBindingSymbol(char c) {
+inline static bool isBindingSymbol(char c) {
     return ( c=='(' || c==')' );
 }
 
-inline bool isIdChar(char c) {
+inline static bool isIdChar(char c) {
     return isalnum(c) || c == '_';
 }
 
-inline bool nonAlnum(char c) {
+inline static bool nonAlnum(char c) {
     return !isalnum(c);
 }
 
-tok_chain Tokenize(const char *sp)
+deque<string> lex(const char *sp)
 {
     const char quoteChar = '\"';
     const char escapeChar = '\\';
     // UNDERSCORES (_) IN VAR. NAMES !!!
 
-    tok_chain tokens;
+    deque<string> tokens;
     string temp;
     bool inString = false;
 
@@ -123,12 +123,12 @@ tok_chain Tokenize(const char *sp)
     return tokens;
 }
 
-string display_toks(const tok_chain &k, bool linear)
+string display_toks(const deque<string> &tokens, bool linear)
 {
     stringstream sout;
     if(!linear)
-        sout<<endl<<k.size()<<" tokens:"<<endl;
-    for(tok_chain::const_iterator i = k.begin(); i!=k.end(); i++)
+        sout<<endl<<tokens.size()<<" tokens:"<<endl;
+    for(deque<string>::const_iterator i = tokens.begin(); i!=tokens.end(); i++)
     {
         sout<<*i;
 

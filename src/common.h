@@ -23,9 +23,9 @@
 using namespace std;
 
 #include "utils.h"
+#include "datatypes.h"
 #include "lexer.h"
 #include "parser.h"
-#include "datatypes.h"
 #include "column.h"
 #include "data_reader.h"
 #include "table.h"

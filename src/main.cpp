@@ -12,10 +12,10 @@ void repl() {
         } else {
             try
             {
-                tok_chain tokens = Tokenize(input.c_str());
+                deque<string> tokens = lex(input.c_str());
                 cout << display_toks(tokens, false);
-                frag_chain frags = Fragmentize(tokens);
-                cout << display_frags(frags, false);
+                list< deque<string> > expressions = parse(tokens);
+                cout << display_expressions(expressions, false);
             }
             catch(exception &e) {
                 cout << e.what();

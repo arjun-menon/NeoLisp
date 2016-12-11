@@ -112,8 +112,8 @@ deque<string> lex(const char *sp)
         }
 
         else
-            throw SyntaxError("Non-printable ASCII character(" + toString((UC)(currentChar))
-                            + ":" + toString((UI)((UC)(currentChar))) + ") detected.");
+            throw SyntaxError("Non-printable ASCII character(" + toString((unsigned char) currentChar)
+                            + ":" + toString((unsigned int) currentChar) + ") detected.");
     }
     push_token(temp, tokens);
 

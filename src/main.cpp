@@ -12,10 +12,12 @@ void repl() {
         } else {
             try
             {
-                deque<string> tokens = lex(input.c_str());
-                cout << display_toks(tokens, false);
-                list< deque<string> > expressions = parse(tokens);
-                cout << display_expressions(expressions, false);
+                Lexer lexer;
+                lexer.lex(input.c_str());
+                cout << lexer.toString(true);
+
+                list< deque<string> > expressions = parse(lexer.tokens);
+                //cout << display_expressions(expressions, false);
             }
             catch(exception &e) {
                 cout << e.what();

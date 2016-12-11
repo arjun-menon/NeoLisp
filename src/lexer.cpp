@@ -1,24 +1,5 @@
 #include "common.h"
 
-void static trim(string &str, const string to_remove = " \t")
-{
-    // trim leading & trailing 'to_remove'
-    size_t startpos = str.find_first_not_of(to_remove);
-    size_t endpos = str.find_last_not_of(to_remove);
-
-    // if empty or all 'to_remove' return an empty string otherwise trim
-    str = (( string::npos == startpos ) || ( string::npos == endpos)) ? "" :
-          str.substr( startpos, endpos-startpos+1 );
-}
-
-inline static void push_token(string &s, deque<string> &tokens)
-{
-    trim(s);
-    if(s.length())
-        tokens.push_back(s);
-    s = "";
-}
-
 inline static bool isBindingSymbol(char c) {
     return ( c=='(' || c==')' );
 }
@@ -31,14 +12,33 @@ inline static bool nonAlnum(char c) {
     return !isalnum(c);
 }
 
-deque<string> lex(const char *sp)
+void Lexer::trim(string &str, const string to_remove)
+{
+    // trim leading & trailing 'to_remove'
+    size_t startpos = str.find_first_not_of(to_remove);
+    size_t endpos = str.find_last_not_of(to_remove);
+
+    // if empty or all 'to_remove' return an empty string otherwise trim
+    str = (( string::npos == startpos ) || ( string::npos == endpos)) ? "" :
+          str.substr( startpos, endpos-startpos+1 );
+}
+
+void Lexer::addToken()
+{
+    trim(token);
+
+    if(token.length())
+        tokens.emplace_back(token);
+
+    token = "";
+}
+
+void Lexer::lex(const char *sp)
 {
     const char quoteChar = '\"';
     const char escapeChar = '\\';
     // UNDERSCORES (_) IN VAR. NAMES !!!
 
-    deque<string> tokens;
-    string temp;
     bool inString = false;
 
     for(char currentChar = *sp, prevChar = '\0', prevChar2 = '\0',
@@ -62,29 +62,29 @@ deque<string> lex(const char *sp)
                 {
                     // string literal termination
                     inString = false;
-                    temp += currentChar;
-                    push_token(temp, tokens);
+                    token += currentChar;
+                    addToken();
                 }
                 else
-                    temp += currentChar;
+                    token += currentChar;
             }
             else
             {
                 if(currentChar=='\"')
                 {
-                    push_token(temp, tokens);
+                    addToken();
                     inString = true;
-                    temp += currentChar;
+                    token += currentChar;
                 }
                 else if(isspace(currentChar))
                 {
-                    push_token(temp, tokens);
+                    addToken();
                 }
                 else if(isBindingSymbol(currentChar))
                 {
-                    push_token(temp, tokens);
-                    temp = currentChar;
-                    push_token(temp, tokens);
+                    addToken();
+                    token = currentChar;
+                    addToken();
                 }
                 else
                 {
@@ -101,9 +101,9 @@ deque<string> lex(const char *sp)
                                     (isdigit(prevChar2) && prevChar=='.' && isdigit(currentChar))
                             )
                             )
-                        push_token(temp, tokens);
+                        addToken();
 
-                    temp += currentChar;
+                    token += currentChar;
                 }
             }
 
@@ -112,27 +112,27 @@ deque<string> lex(const char *sp)
         }
 
         else
-            throw SyntaxError("Non-printable ASCII character(" + toString((unsigned char) currentChar)
-                            + ":" + toString((unsigned int) currentChar) + ") detected.");
+            throw SyntaxError("Non-printable ASCII character(" + toString(static_cast<unsigned char>(currentChar))
+                            + ":" + toString(static_cast<unsigned int>(currentChar)) + ") detected.");
     }
-    push_token(temp, tokens);
+    addToken();
 
     if(inString)
         throw SyntaxError("Unterminated string");
-
-    return tokens;
 }
 
-string display_toks(const deque<string> &tokens, bool linear)
+string Lexer::toString(bool pretty_print)
 {
     stringstream sout;
-    if(!linear)
+
+    if(pretty_print)
         sout<<endl<<tokens.size()<<" tokens:"<<endl;
+
     for(deque<string>::const_iterator i = tokens.begin(); i!=tokens.end(); i++)
     {
         sout<<*i;
 
-        if(!linear)
+        if(pretty_print)
             sout<<endl;
     }
     return sout.str();

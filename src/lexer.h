@@ -1,5 +1,16 @@
 
 #pragma once
 
-deque<string> lex(const char *sp);
-string display_toks(const deque<string> &tokens, bool linear);
+class Lexer
+{
+    string token;
+
+    static void trim(string &str, const string to_remove = " \t");
+    void addToken();
+
+public:
+    deque<string> tokens;
+
+    void lex(const char *sp);
+    string toString(bool pretty_print=false);
+};

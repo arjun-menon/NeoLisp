@@ -4,51 +4,59 @@
 
 #pragma  once
 
-class Value
+struct Value
 {
- public:
     Value() = default;
     virtual ostream& display(ostream &o = cout) const = 0;
     virtual ~Value() = default;
-
- protected:
     Value(Value const &) = delete;
     void operator=(Value const &) = delete;
 };
 
-class Symbol : public Value
-{
-    string sym;
+inline ostream& operator<<(ostream &o, const Value &value) {
+    return value.display(o);
+}
 
-public:
+struct Symbol : public Value
+{
     Symbol(const string &s) : sym(s) {}
-
     inline ostream& display(ostream &o = cout) const { return o << sym; }
+
+ private:
+    string sym;
 };
 
-class List : public Value
+struct ExprStart : public Symbol
 {
-
+    ExprStart() : Symbol("(") {}
 };
 
-class UserString : public Value
+struct ExprEnd : public Symbol
 {
-    const string text;
+    ExprEnd() : Symbol(")") {}
+};
 
-public:
+struct Expr : public Value
+{
+    // TODO
+};
+
+struct UserString : public Value
+{
     UserString(const string &s) : text(s) {}
-
     inline ostream& display(ostream &o = cout) const { return o << text; }
+
+ private:
+    const string text;
 };
 
 /*
  * Real is a simple wrapper around a float.
  */
-class Real : public Value {
-    double val;
-
- public:
+struct Real : public Value {
     Real(double val = nanf("")) : val(val) {}
+    Real(const char *str) : val(nanf("")) { fromStr(str); }
+    Real(const string &s) : Real(s.c_str()) {}
 
     inline double operator()() const { return val; }
     inline bool isValid() const { return !::isnan(val); }
@@ -74,6 +82,9 @@ class Real : public Value {
             o << val;
         return o;
     }
+
+ private:
+    double val;
 };
 
 inline ostream& operator<<(ostream &o, const Real &real) {

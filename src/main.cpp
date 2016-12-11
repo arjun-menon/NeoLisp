@@ -16,7 +16,7 @@ void repl() {
                 lexer.lex(input.c_str());
                 lexer.display();
 
-                list< deque<string> > expressions = parse(lexer.tokens);
+                //list< deque<string> > expressions = parse(lexer.tokens);
                 //cout << display_expressions(expressions, false);
             }
             catch(exception &e) {

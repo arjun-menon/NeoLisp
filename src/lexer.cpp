@@ -12,8 +12,7 @@ inline static bool nonAlnum(char c) {
     return !isalnum(c);
 }
 
-static void trim(string &str, const string to_remove = " \t")
-{
+static void trim(string &str, const string to_remove = " \t") {
     // trim leading & trailing 'to_remove'
     size_t startpos = str.find_first_not_of(to_remove);
     size_t endpos = str.find_last_not_of(to_remove);
@@ -23,21 +22,37 @@ static void trim(string &str, const string to_remove = " \t")
           str.substr( startpos, endpos-startpos+1 );
 }
 
-void Lexer::addToken()
-{
+void Lexer::constructValue() {
+    if (token == "(") {
+        tokens.emplace_back(new ExprStart());
+    }
+    else if(token == ")") {
+        tokens.emplace_back(new ExprEnd());
+    }
+    else if(*token.begin() == '\"') {
+        tokens.emplace_back(new UserString(token.substr(1, token.length() - 2)));
+    }
+    else if(isdigit(*token.begin())) {
+        tokens.emplace_back(new Real(token));
+    }
+    else {
+        tokens.emplace_back(new Symbol(token));
+    }
+}
+
+void Lexer::addToken() {
     trim(token);
 
-    if(token.length())
-        tokens.emplace_back(token);
+    if(token.length()) {
+        constructValue();
+    }
 
     token = "";
 }
 
-void Lexer::lex(const char *sp)
-{
+void Lexer::lex(const char *sp) {
     const char quoteChar = '\"';
     const char escapeChar = '\\';
-    // UNDERSCORES (_) IN VAR. NAMES !!!
 
     bool inString = false;
 
@@ -121,14 +136,16 @@ void Lexer::lex(const char *sp)
         throw SyntaxError("Unterminated string");
 }
 
-ostream& Lexer::display(ostream &o, bool pretty_print) const
-{
+ostream& Lexer::display(ostream &o, bool pretty_print) const {
     if(pretty_print)
-        o<<endl<<tokens.size()<<" tokens:"<<endl;
+        o << "There are " << tokens.size() << " tokens:" << endl;
 
-    for(auto token : tokens)
+    for(auto &token : tokens)
     {
-        o<<token;
+        if(pretty_print)
+            o << typeid(*token).name() << ": ";
+
+        o<<*token;
 
         if(pretty_print)
             o<<endl;

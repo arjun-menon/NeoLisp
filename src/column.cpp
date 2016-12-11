@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hpp"
 
 Column::Column(size_t null_cells) {
     for (size_t i = 0; i < null_cells; i++)

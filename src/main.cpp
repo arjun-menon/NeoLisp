@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hpp"
 
 void repl() {
     for (string input; true; cout << endl) {

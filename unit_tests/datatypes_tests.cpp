@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "../src/common.h"
+#include "../src/common.hpp"
 
 TEST_CASE("Real displays its value properly") {
     Real validReal(42.0123);

@@ -84,10 +84,9 @@ public:
  * Project header files
  */
 
-#include "utils.h"
-#include "datatypes.h"
-#include "lexer.h"
-#include "parser.h"
-#include "column.h"
-#include "data_reader.h"
-#include "table.h"
+#include "datatypes.hpp"
+#include "lexer.hpp"
+#include "parser.hpp"
+#include "column.hpp"
+#include "data_reader.hpp"
+#include "table.hpp"

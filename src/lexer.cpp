@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hpp"
 
 inline static bool isBindingSymbol(char c) {
     return ( c=='(' || c==')' );

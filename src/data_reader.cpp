@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hpp"
 
 void DataReader::process_file(const string &filename) {
     ifstream csv_file(filename);

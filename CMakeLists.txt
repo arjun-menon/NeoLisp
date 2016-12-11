@@ -5,13 +5,13 @@ project(vcalc)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -g")
 
 set(SOURCE_FILES
-        src/lexer.cpp src/lexer.h
-        src/parser.cpp src/parser.h
-        src/datatypes.h src/datatypes.cpp
-        src/column.h src/column.cpp
-        src/table.h src/table.cpp
-        src/data_reader.h src/data_reader.cpp
-        src/utils.h src/common.h)
+        src/lexer.cpp src/lexer.hpp
+        src/parser.cpp src/parser.hpp
+        src/datatypes.hpp src/datatypes.cpp
+        src/column.hpp src/column.cpp
+        src/table.hpp src/table.cpp
+        src/data_reader.hpp src/data_reader.cpp
+        src/common.hpp)
 
 add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
 

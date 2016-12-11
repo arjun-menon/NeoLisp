@@ -121,19 +121,18 @@ void Lexer::lex(const char *sp)
         throw SyntaxError("Unterminated string");
 }
 
-string Lexer::toString(bool pretty_print)
+ostream& Lexer::display(ostream &o, bool pretty_print) const
 {
-    stringstream sout;
-
     if(pretty_print)
-        sout<<endl<<tokens.size()<<" tokens:"<<endl;
+        o<<endl<<tokens.size()<<" tokens:"<<endl;
 
-    for(deque<string>::const_iterator i = tokens.begin(); i!=tokens.end(); i++)
+    for(auto token : tokens)
     {
-        sout<<*i;
+        o<<token;
 
         if(pretty_print)
-            sout<<endl;
+            o<<endl;
     }
-    return sout.str();
+
+    return o;
 }

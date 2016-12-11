@@ -12,5 +12,5 @@ public:
     deque<string> tokens;
 
     void lex(const char *sp);
-    string toString(bool pretty_print=false);
+    ostream& display(ostream &o = cout, bool pretty_print = true) const;
 };

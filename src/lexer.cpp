@@ -136,7 +136,7 @@ void Lexer::lex(const char *sp) {
         throw SyntaxError("Unterminated string");
 }
 
-ostream& Lexer::display(ostream &o, bool pretty_print) const {
+ostream& Lexer::display(const deque< unique_ptr<Value> > &tokens, ostream &o, bool pretty_print) {
     if(pretty_print)
         o << "There are " << tokens.size() << " tokens:" << endl;
 
@@ -154,4 +154,8 @@ ostream& Lexer::display(ostream &o, bool pretty_print) const {
     }
 
     return o;
+}
+
+ostream& operator<<(ostream& stream, const TokenQueue &tokens) {
+    return Lexer::display(tokens, stream, true);
 }

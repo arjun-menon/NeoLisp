@@ -153,6 +153,8 @@ ostream& Lexer::display(const deque< unique_ptr<Value> > &tokens, ostream &o, bo
 
         if(pretty_print)
             o<<endl;
+        else
+            o<<' ';
     }
 
     return o;

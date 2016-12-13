@@ -36,13 +36,13 @@ TEST_CASE("Basic expressions") {
     ));
 
     CHECK(checkLexerOutput(
-            "1 (2*4) +5",
+            "1 (2*\"4\") +5",
             {
                     { T(Real), "1" },
                     { T(ExprStart), "(" },
                     { T(Real), "2" },
                     { T(Symbol), "*" },
-                    { T(Real), "4" },
+                    { T(UserString), "4" },
                     { T(ExprEnd), ")" },
                     { T(Symbol), "+" },
                     { T(Real), "5" }
@@ -50,13 +50,15 @@ TEST_CASE("Basic expressions") {
     ));
 
     CHECK(checkLexerOutput(
-            " 2  7 asdk ( + ) 34.212aa 909", // todo: '34.212aa' should be two tokens: '34.212' and 'aa'
+            " 2  7 asdk (0xBEEF + \"hmm\") 34.212aa 909", // todo: '34.212aa' should be two tokens: '34.212' and 'aa'
             {
                     { T(Real), "2" },
                     { T(Real), "7" },
                     { T(Symbol), "asdk" },
                     { T(ExprStart), "(" },
+                    { T(Real), "48879" },
                     { T(Symbol), "+" },
+                    { T(UserString), "hmm" },
                     { T(ExprEnd), ")" },
                     { T(Real), "34.212" },
                     { T(Real), "909" }

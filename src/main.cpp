@@ -12,11 +12,9 @@ void repl() {
         } else {
             try
             {
-                Lexer lexer;
-                cout << lexer.lex(input);
-
-                //list< deque<string> > expressions = parse(lexer.tokens);
-                //cout << display_expressions(expressions, false);
+                Parser parser;
+                unique_ptr<Expr> expr = parser.parse(input);
+                cout << *expr << endl;
             }
             catch(exception &e) {
                 cout << e.what();

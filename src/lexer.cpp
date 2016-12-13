@@ -50,7 +50,7 @@ void Lexer::addToken() {
     token = "";
 }
 
-const TokenQueue& Lexer::lex(const char *sp) {
+TokenQueue& Lexer::lex(const char *sp) {
     const char quoteChar = '\"';
     const char escapeChar = '\\';
 

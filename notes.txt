@@ -1,0 +1,22 @@
+Expressions consist of lists and atoms.
+
+Atoms can be:
+1. Symbols: any sequence of characters not containing any spaces and not starting with a number.
+2. String: "..."
+3. Number
+
+Atoms by default evaluate to themselves. Ie: symbols, strings & numbers, evaluate to themselves.
+
+However, a symbol is unique in that it can be 'bound'. The language does *not* distinguish between a symbol bound to a "value" (like a number) and a function. (Not true anymore: a function is now defined as any symbol having non-zero precedence.)
+
+Not true (what was I thinking?): A symbol is practically anything -- a single number/string; a list of atoms representing some set of operations (function), etc.
+
+Lists are demarcated in two ways: (1) using traditional parentheses. (2) curly braces. Parentheses result in _immediate evaluation_, whereas curly braces are literal (unevaluated) lists.
+
+Function application:
+All symbols by default have precedence zero.
+Some symbols have lower precedence than zero (+, -, /, *).
+The symbol with the lowest precedence
+
+Ref:
+http://norvig.com/lispy.html

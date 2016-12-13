@@ -19,7 +19,7 @@ inline ostream& operator<<(ostream &o, const Value &value) {
 struct Symbol : public Value {
     const string sym;
     Symbol(const string &s) : sym(s) {}
-    inline ostream& display(ostream &o = cout) const { return o << sym; }
+    ostream& display(ostream &o = cout) const { return o << sym; }
 };
 
 struct ExprStart : public Symbol {
@@ -33,19 +33,13 @@ struct ExprEnd : public Symbol {
 struct Expr : public Value {
     list< unique_ptr<Value> > lst;
 
-    ostream& display(ostream &o = cout) const {
-        o << '(';
-        for(auto &value : lst)
-            o << *value << ' ';
-        o << ')';
-        return o;
-    }
+    ostream& display(ostream &o = cout) const;
 };
 
 struct UserString : public Value {
     const string text;
     UserString(const string &s) : text(s) {}
-    inline ostream& display(ostream &o = cout) const { return o << text; }
+    ostream& display(ostream &o = cout) const { return o << text; }
 };
 
 /*
@@ -73,13 +67,7 @@ struct Real : public Value {
         return str_end - str;
     }
 
-    inline ostream& display(ostream &o = cout) const {
-        if (!isValid())
-            o << "NaN";
-        else
-            o << val;
-        return o;
-    }
+    ostream& display(ostream &o = cout) const;
 
  private:
     double val;

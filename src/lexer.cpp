@@ -143,7 +143,7 @@ ostream& Lexer::display(ostream &o, bool pretty_print) const {
     for(auto &token : tokens)
     {
         if(pretty_print) {
-            Value *value = token.get();
+            const Value &value = *token;
             o << typeid(value).name() << ": ";
         }
 

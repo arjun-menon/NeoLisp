@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 include(CheckIncludeFileCXX)
-project(vcalc)
+project(NeoLisp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -Werror -g")
 
@@ -13,10 +13,10 @@ set(SOURCE_FILES
         src/data_reader.hpp src/data_reader.cpp
         src/common.hpp)
 
-add_executable(vcalc ${SOURCE_FILES} src/main.cpp)
+add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)
 
-set_property(TARGET vcalc PROPERTY CXX_STANDARD 11)
-set_property(TARGET vcalc PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 11)
+set_property(TARGET NeoLisp PROPERTY CXX_STANDARD_REQUIRED ON)
 
 set(UNIT_TEST_FILES
         unit_tests/catch_main.cpp
@@ -26,10 +26,10 @@ set(UNIT_TEST_FILES
 
 check_include_file_cxx(catch.hpp HAVE_CATCH)
 
-if(HAVE_CATCH)
-    add_executable(vcalc_unit_tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
+#if(HAVE_CATCH)
+    add_executable(NeoLisp-tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
     enable_testing()
-    add_test(NAME unit_tests COMMAND vcalc_unit_tests)
-else(Y)
-    message("If you'd like to run unit tests, install Catch: https://github.com/philsquared/Catch")
-endif()
+    add_test(NAME NeoLisp-tests COMMAND NeoLisp-tests)
+#else(Y)
+#    message("If you'd like to run unit tests, install Catch: https://github.com/philsquared/Catch")
+#endif()

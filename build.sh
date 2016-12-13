@@ -5,8 +5,8 @@ set -e
 # Should clean?
 if [[ $* == *--clean* ]]; then
   rm -rf cbuild/
-  rm -f vcalc
-  rm -f vcalc_unit_tests
+  rm -f NeoLisp
+  rm -f NeoLisp-tests
   rm -rf *.dSYM/
   exit 0
 fi
@@ -38,13 +38,14 @@ cd ..
 
 # Symlink from base dir
 echo "Done compiling."
-ln -sf cbuild/vcalc
+ln -sf cbuild/NeoLisp
+ln -sf cbuild/NeoLisp-tests
 
-if [ -f cbuild/vcalc_unit_tests ]; then
+if [ -f cbuild/NeoLisp-tests ]; then
   # Run unit tests
   printf "\nRunning unit tests...\n"
-  ./cbuild/vcalc_unit_tests
+  ./cbuild/NeoLisp-tests
 fi
 
 # Done
-echo "Feel free to run ./vcalc"
+echo "You can run ./NeoLisp now"

@@ -21,6 +21,7 @@ set_property(TARGET vcalc PROPERTY CXX_STANDARD_REQUIRED ON)
 set(UNIT_TEST_FILES
         unit_tests/catch_main.cpp
         unit_tests/datatypes_tests.cpp
+        unit_tests/lexer_tests.cpp
 )
 
 check_include_file_cxx(catch.hpp HAVE_CATCH)

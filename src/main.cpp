@@ -13,7 +13,7 @@ void repl() {
             try
             {
                 Lexer lexer;
-                cout << lexer.lex(input.c_str());
+                cout << lexer.lex(input);
 
                 //list< deque<string> > expressions = parse(lexer.tokens);
                 //cout << display_expressions(expressions, false);

@@ -14,9 +14,9 @@ public:
     TokenQueue tokens;
 
     static ostream& display(const TokenQueue &tokens, ostream &o = cout, bool pretty_print = true);
-    ostream& display(ostream &o = cout, bool pretty_print = true) { return display(tokens, o, pretty_print); }
+    ostream& display(ostream &o = cout, bool pretty_print = true) const { return display(tokens, o, pretty_print); }
 
-    void lex(const char *sp);
+    const TokenQueue& lex(const char *sp);
 };
 
 ostream& operator<<(ostream& stream, const TokenQueue &tokens);

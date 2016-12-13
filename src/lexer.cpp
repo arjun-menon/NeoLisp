@@ -50,7 +50,7 @@ void Lexer::addToken() {
     token = "";
 }
 
-void Lexer::lex(const char *sp) {
+const TokenQueue& Lexer::lex(const char *sp) {
     const char quoteChar = '\"';
     const char escapeChar = '\\';
 
@@ -134,6 +134,8 @@ void Lexer::lex(const char *sp) {
 
     if(inString)
         throw SyntaxError("Unterminated string");
+
+    return tokens;
 }
 
 ostream& Lexer::display(const deque< unique_ptr<Value> > &tokens, ostream &o, bool pretty_print) {

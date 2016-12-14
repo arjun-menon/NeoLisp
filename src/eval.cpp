@@ -1,5 +1,9 @@
 #include "common.hpp"
 
-void eval(unique_ptr<Value> expr) {
-    cout << *expr << endl;
+unique_ptr<Value> eval(unique_ptr<Value> v) {
+    if (isType<Expr>(*v)) {
+        return v;
+    }
+
+    return v;
 }

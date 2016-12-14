@@ -12,8 +12,7 @@ void repl() {
         } else {
             try
             {
-                Parser parser;
-                unique_ptr<Value> code = parser.parse(input);
+                unique_ptr<Value> code = Parser::parse(input);
 
                 Env env;
                 cout << *eval(move(code), env) << endl;

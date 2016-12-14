@@ -1,3 +1,3 @@
 #pragma once
 
-void eval(unique_ptr<Expr> expr);
+void eval(unique_ptr<Value> expr);

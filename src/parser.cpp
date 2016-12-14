@@ -22,9 +22,9 @@ void Parser::parse(Expr &expr, TokenQueue::iterator& i, int depth) {
         throw SyntaxError("Missing closing parenthesis.");
 }
 
-unique_ptr<Expr> Parser::parse() {
+unique_ptr<Value> Parser::parse() {
     TokenQueue::iterator i = lexer.tokens.begin();
-    unique_ptr<Expr> expr(new Expr);
-    parse(*expr, i, 0);
+    unique_ptr<Value> expr(new Expr);
+    parse(*dynamic_cast<Expr*>(expr.get()), i, 0);
     return expr;
 }

@@ -13,7 +13,7 @@ void repl() {
             try
             {
                 Parser parser;
-                unique_ptr<Expr> expr = parser.parse(input);
+                unique_ptr<Value> expr = parser.parse(input);
                 eval(move(expr));
             }
             catch(exception &e) {

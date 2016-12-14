@@ -24,7 +24,7 @@ void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
 
 unique_ptr<Value> Parser::parse() {
     TokenQueue::iterator i = lexer.tokens.begin();
-    unique_ptr<Value> expr(new List);
-    parse(*dynamic_cast<List*>(expr.get()), i, 0);
+    unique_ptr<List> expr(new List);
+    parse(*expr, i, 0);
     return expr;
 }

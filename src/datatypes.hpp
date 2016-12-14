@@ -19,7 +19,7 @@ inline ostream& operator<<(ostream &o, const Value &value) {
 struct Symbol : public Value {
     const string sym;
     Symbol(const string &s) : sym(s) {}
-    ostream& display(ostream &o = cout) const { return o << sym; }
+    ostream& display(ostream &o = cout) const override { return o << sym; }
 };
 
 struct ListOpen : public Symbol {
@@ -33,7 +33,7 @@ struct ListClose : public Symbol {
 struct List : public Value {
     list< unique_ptr<Value> > lst;
 
-    ostream& display(ostream &o = cout) const;
+    ostream& display(ostream &o = cout) const override;
 };
 
 struct Function : public Value {
@@ -43,7 +43,7 @@ struct Function : public Value {
 struct UserString : public Value {
     const string text;
     UserString(const string &s) : text(s) {}
-    ostream& display(ostream &o = cout) const { return o << text; }
+    ostream& display(ostream &o = cout) const override { return o << text; }
 };
 
 /*
@@ -71,7 +71,7 @@ struct Real : public Value {
         return str_end - str;
     }
 
-    ostream& display(ostream &o = cout) const;
+    ostream& display(ostream &o = cout) const override;
 
  private:
     double val;

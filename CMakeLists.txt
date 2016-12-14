@@ -27,10 +27,10 @@ set(UNIT_TEST_FILES
 
 check_include_file_cxx(catch.hpp HAVE_CATCH)
 
-#if(HAVE_CATCH)
+if(HAVE_CATCH)
     add_executable(NeoLisp-tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
     enable_testing()
     add_test(NAME NeoLisp-tests COMMAND NeoLisp-tests)
-#else(Y)
-#    message("If you'd like to run unit tests, install Catch: https://github.com/philsquared/Catch")
-#endif()
+else(Y)
+    message("If you'd like to run unit tests, install Catch: https://github.com/philsquared/Catch")
+endif()

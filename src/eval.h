@@ -1,3 +1,5 @@
 #pragma once
 
-unique_ptr<Value> eval(unique_ptr<Value>);
+typedef map< string, unique_ptr<Value> > Env;
+
+unique_ptr<Value> eval(unique_ptr<Value>, Env&);

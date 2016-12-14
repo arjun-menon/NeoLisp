@@ -25,6 +25,7 @@
 #include <deque>
 #include <cmath>
 #include <list>
+#include <map>
 
 using namespace std;
 
@@ -35,6 +36,11 @@ using namespace std;
 template<typename T, typename K>
 inline bool isType(const K &k) {
     return typeid(T).hash_code() == typeid(k).hash_code();
+}
+
+template<typename T, typename K>
+inline bool instanceof(K &k) {
+    return dynamic_cast<T*>(&k) != nullptr;
 }
 
 template<typename T>

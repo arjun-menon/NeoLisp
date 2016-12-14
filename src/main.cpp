@@ -13,14 +13,16 @@ void repl() {
             try
             {
                 Parser parser;
-                unique_ptr<Value> expr = parser.parse(input);
-                cout << *eval(move(expr)) << endl;
+                unique_ptr<Value> code = parser.parse(input);
+
+                Env env;
+                cout << *eval(move(code), env) << endl;
             }
             catch(exception &e) {
-                cout << e.what();
+                cout << e.what() << endl;
             }
             catch(...) {
-                cout << "Unhandled Exception";
+                cout << "Error: Unhandled Exception" << endl;
             }
         }
     }

@@ -36,6 +36,10 @@ struct Expr : public Value {
     ostream& display(ostream &o = cout) const;
 };
 
+struct Function : public Value {
+    virtual unique_ptr<Value> apply(list< unique_ptr<Value> > args, unsigned short pivot = 0) = 0;
+};
+
 struct UserString : public Value {
     const string text;
     UserString(const string &s) : text(s) {}

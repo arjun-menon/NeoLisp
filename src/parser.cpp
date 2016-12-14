@@ -11,7 +11,7 @@ void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
         }
         else if (isType<ListClose>(*token)) {
             if (depth < 1)
-                throw SyntaxError("Missing opening parenthesis.");
+                throw Error("Missing opening parenthesis.");
             return;
         }
         else {
@@ -19,7 +19,7 @@ void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
         }
     }
     if (depth > 0)
-        throw SyntaxError("Missing closing parenthesis.");
+        throw Error("Missing closing parenthesis.");
 }
 
 unique_ptr<Value> Parser::parse() {

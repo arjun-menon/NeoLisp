@@ -31,7 +31,7 @@ unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
             return move(env.at(sym));
         } catch(out_of_range) {
             string err_msg = "The symbol '" + sym + "' is not defined.";
-            throw SyntaxError(err_msg);
+            throw Error(err_msg);
         }
     }
 

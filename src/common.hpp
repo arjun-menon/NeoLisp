@@ -66,30 +66,18 @@ string toString(const T& obj) {
     return oss.str();
 }
 
-class SyntaxError : public exception
+class Error : public exception
 {
     // Represents user-caused syntactic (parsing) errors.
 private:
     const string error_description;
 public:
     virtual const char* what() const throw() { return error_description.c_str(); }
-    SyntaxError(string err) : error_description((string)("Error: ")+err) {}
-    ~SyntaxError() throw() {}
+    Error(string err) : error_description((string)("Error: ")+err) {}
+    ~Error() throw() {}
 };
 
-class FatalError : public exception
-{
-    // These are unrecoverable internal errors, such as assertion failures.
-private:
-    const string error_description;
-public:
-    virtual const char* what() const throw() { return error_description.c_str(); }
-    FatalError(string err) : error_description((string)("Fatal Error: ")+err) {}
-    ~FatalError() throw() {}
-};
-
-#define ASSERT(X) if(!(X)) throw fatalError\
-((string)("Assertion failure ( ")+(string)(#X)+(string)(" )"))
+#define ASSERT(X) if(!(X)) throw Error((string)("Assertion failure ( ")+(string)(#X)+(string)(" )"))
 
 /*
  * Project header files

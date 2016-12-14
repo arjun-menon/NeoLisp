@@ -128,13 +128,13 @@ TokenQueue& Lexer::lex(const char *sp) {
         }
 
         else
-            throw SyntaxError("Non-printable ASCII character(" + toString(static_cast<unsigned char>(currentChar))
+            throw Error("Non-printable ASCII character(" + toString(static_cast<unsigned char>(currentChar))
                             + ":" + toString(static_cast<unsigned int>(currentChar)) + ") detected.");
     }
     addToken();
 
     if(inString)
-        throw SyntaxError("Unterminated string");
+        throw Error("Unterminated string");
 
     return tokens;
 }

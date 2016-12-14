@@ -15,6 +15,7 @@ void repl() {
                 unique_ptr<Value> code = Parser::parse(input);
 
                 Env env;
+                define_builtin_functions(env);
                 cout << *eval(move(code), env) << endl;
             }
             catch(exception &e) {

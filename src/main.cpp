@@ -14,7 +14,7 @@ void repl() {
             {
                 Parser parser;
                 unique_ptr<Expr> expr = parser.parse(input);
-                cout << *expr << endl;
+                eval(move(expr));
             }
             catch(exception &e) {
                 cout << e.what();

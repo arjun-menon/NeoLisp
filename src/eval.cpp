@@ -5,11 +5,22 @@ unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
         /*
          * Evaluate all of the elements in the list
          */
-        List* list = dynamic_cast<List*>(v.get());
+        List& list = dynamic_cast<List&>(*v);
         unique_ptr<List> evaluatedList(new List);
 
-        for(auto i =  list->lst.begin(); i != list->lst.end(); i++)
+        for(auto i =  list.lst.begin(); i != list.lst.end(); i++)
             evaluatedList->lst.emplace_back(eval(move(*i), env));
+
+        /*
+         * If the expression is function-applicable, execute it
+         */
+        if (evaluatedList->lst.size() > 0 &&
+                instanceof<Function>(*evaluatedList->lst.front())) {
+            unique_ptr<Value> fn_(move(evaluatedList->lst.front()));
+            Function& fn = dynamic_cast<Function&>(*v);
+            evaluatedList->lst.pop_front();
+            return fn.apply(move(evaluatedList));
+        }
 
         return evaluatedList;
     }
@@ -21,9 +32,6 @@ unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
             string err_msg = "The symbol '" + sym + "' is not defined.";
             throw SyntaxError(err_msg);
         }
-    }
-    else if (instanceof<Function>(*v)) {
-        //
     }
 
     return v;

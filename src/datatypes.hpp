@@ -37,7 +37,7 @@ struct List : public Value {
 };
 
 struct Function : public Value {
-    virtual unique_ptr<Value> apply(list< unique_ptr<Value> > args, unsigned short pivot = 0) = 0;
+    virtual unique_ptr<Value> apply(unique_ptr<List> args, unsigned short pivot = 0) = 0;
 };
 
 struct UserString : public Value {

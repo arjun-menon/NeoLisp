@@ -14,7 +14,13 @@ unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
         return evaluatedList;
     }
     else if (isType<Symbol>(*v)) {
-        //return env[dynamic_cast<Symbol *>(v.get())->sym];
+        const string &sym = dynamic_cast<Symbol *>(v.get())->sym;
+        try {
+            return move(env.at(sym));
+        } catch(out_of_range) {
+            string err_msg = "The symbol '" + sym + "' is not defined.";
+            throw SyntaxError(err_msg);
+        }
     }
     else if (instanceof<Function>(*v)) {
         //

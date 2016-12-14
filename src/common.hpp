@@ -99,6 +99,7 @@ public:
 #include "lexer.hpp"
 #include "parser.hpp"
 #include "eval.h"
+#include "builtin.h"
 #include "column.hpp"
 #include "data_reader.hpp"
 #include "table.hpp"

@@ -9,6 +9,7 @@ set(SOURCE_FILES
         src/parser.cpp src/parser.hpp
         src/datatypes.hpp src/datatypes.cpp
         src/eval.cpp src/eval.h
+        src/builtin.cpp src/builtin.h
         src/column.hpp src/column.cpp
         src/table.hpp src/table.cpp
         src/data_reader.hpp src/data_reader.cpp

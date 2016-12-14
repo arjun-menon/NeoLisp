@@ -24,10 +24,10 @@ static void trim(string &str, const string to_remove = " \t") {
 
 void Lexer::constructValue() {
     if (token == "(") {
-        tokens.emplace_back(new ExprStart());
+        tokens.emplace_back(new ListOpen());
     }
     else if(token == ")") {
-        tokens.emplace_back(new ExprEnd());
+        tokens.emplace_back(new ListClose());
     }
     else if(*token.begin() == '\"') {
         tokens.emplace_back(new UserString(token.substr(1, token.length() - 2)));

@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-ostream& Expr::display(ostream &o) const {
+ostream& List::display(ostream &o) const {
     o << '(';
     for(auto i = lst.begin() ;; i++) {
         if (i == lst.end()) {

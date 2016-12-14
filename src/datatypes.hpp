@@ -22,15 +22,15 @@ struct Symbol : public Value {
     ostream& display(ostream &o = cout) const { return o << sym; }
 };
 
-struct ExprStart : public Symbol {
-    ExprStart() : Symbol("(") {}
+struct ListOpen : public Symbol {
+    ListOpen() : Symbol("(") {}
 };
 
-struct ExprEnd : public Symbol {
-    ExprEnd() : Symbol(")") {}
+struct ListClose : public Symbol {
+    ListClose() : Symbol(")") {}
 };
 
-struct Expr : public Value {
+struct List : public Value {
     list< unique_ptr<Value> > lst;
 
     ostream& display(ostream &o = cout) const;

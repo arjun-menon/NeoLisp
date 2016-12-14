@@ -1,7 +1,7 @@
 #include "common.hpp"
 
 unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
-    if (isType<Expr>(*v)) {
+    if (isType<List>(*v)) {
         return v;
     }
     else if (isType<Symbol>(*v)) {

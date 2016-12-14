@@ -4,7 +4,7 @@
 class Parser
 {
     Lexer lexer;
-    void parse(Expr &expr, TokenQueue::iterator& i, int depth);
+    void parse(List &expr, TokenQueue::iterator& i, int depth);
     unique_ptr<Value> parse();
 
 public:

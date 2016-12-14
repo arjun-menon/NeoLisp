@@ -22,6 +22,8 @@ static void trim(string &str, const string to_remove = " \t") {
           str.substr( startpos, endpos-startpos+1 );
 }
 
+static const char quoteChar = '\'';
+
 void Lexer::constructValue() {
     if (token == "(") {
         tokens.emplace_back(new ListOpen());
@@ -29,7 +31,7 @@ void Lexer::constructValue() {
     else if(token == ")") {
         tokens.emplace_back(new ListClose());
     }
-    else if(*token.begin() == '\"') {
+    else if(*token.begin() == '\'') {
         tokens.emplace_back(new UserString(token.substr(1, token.length() - 2)));
     }
     else if(isdigit(*token.begin())) {
@@ -51,7 +53,6 @@ void Lexer::addToken() {
 }
 
 TokenQueue& Lexer::lex(const char *sp) {
-    const char quoteChar = '\"';
     const char escapeChar = '\\';
 
     bool inString = false;
@@ -85,7 +86,7 @@ TokenQueue& Lexer::lex(const char *sp) {
             }
             else
             {
-                if(currentChar=='\"')
+                if(currentChar==quoteChar)
                 {
                     addToken();
                     inString = true;

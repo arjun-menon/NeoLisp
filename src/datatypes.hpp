@@ -46,7 +46,7 @@ struct Function : public Value {
 struct UserString : public Value {
     const string text;
     UserString(const string &s) : text(s) {}
-    ostream& display(ostream &o = cout) const override { return o << text; }
+    ostream& display(ostream &o = cout) const override { return o << "'" << text << "'"; }
 };
 
 /*

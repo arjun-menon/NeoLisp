@@ -26,5 +26,5 @@ unique_ptr<Value> Parser::parse() {
     TokenQueue::iterator i = lexer.tokens.begin();
     unique_ptr<List> expr(new List);
     parse(*expr, i, 0);
-    return expr;
+    return unique_ptr<Value>(move(expr));
 }

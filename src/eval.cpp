@@ -23,7 +23,7 @@ unique_ptr<Value> eval(unique_ptr<Value> v, Env& env) {
             return fn.apply(move(evaluatedList));
         }
 
-        return evaluatedList;
+        return unique_ptr<Value>(move(evaluatedList));
     }
     else if (isType<Symbol>(*v)) {
         const string &sym = dynamic_cast<Symbol *>(v.get())->sym;

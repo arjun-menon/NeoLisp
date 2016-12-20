@@ -68,7 +68,7 @@ string toString(const T& obj) {
 
 class Error : public exception
 {
-    // Represents user-caused syntactic (parsing) errors.
+    // Represents user-caused syntactic or run-time errors.
 private:
     const string error_description;
 public:

@@ -1,5 +1,11 @@
 #include "common.hpp"
 
+void errNotNumber(shared_ptr<Value> x) {
+    stringstream errMsg;
+    errMsg << "The value " << *x << " is not a number.";
+    throw Error(errMsg.str());
+}
+
 struct AddFunction : Function {
     AddFunction() : Function("add") {};
 
@@ -8,14 +14,10 @@ struct AddFunction : Function {
         for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
             shared_ptr<Value> x = *i;
 
-            if (isType<Real>(*x)) {
-                Real& real = dynamic_cast<Real&>(*x);
-                sum = sum + real;
-            } else {
-                stringstream ss;
-                ss << "The value " << *x << " is not a number.";
-                throw Error(ss.str());
-            }
+            if (isType<Real>(*x))
+                sum = sum + dynamic_cast<Real&>(*x);
+            else
+                errNotNumber(x);
         }
         return make_shared<Real>(sum);
     }
@@ -30,13 +32,15 @@ struct SubFunction : Function {
 
         for(shared_ptr<Value> &x : args->lst) {
             if (isType<Real>(*x)) {
-                Real& real = dynamic_cast<Real&>(*x);
+                Real& val = dynamic_cast<Real&>(*x);
 
                 if(pivot-- > 0)
-                    left_sum = left_sum + real;
+                    left_sum = left_sum + val;
                 else
-                    right_sum = right_sum + real;
+                    right_sum = right_sum + val;
             }
+            else
+                errNotNumber(x);
         }
 
         return make_shared<Real>(left_sum -  right_sum);
@@ -49,10 +53,10 @@ struct MulFunction : Function {
     shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         Real product(1.0f);
         for(shared_ptr<Value> &x : args->lst) {
-            if (isType<Real>(*x)) {
-                Real& real = dynamic_cast<Real&>(*x);
-                product = product * real;
-            }
+            if (isType<Real>(*x))
+                product = product * dynamic_cast<Real&>(*x);
+            else
+                errNotNumber(x);
         }
         return make_shared<Real>(product);
     }

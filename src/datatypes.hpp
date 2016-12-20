@@ -16,34 +16,34 @@ inline ostream& operator<<(ostream &o, const Value &value) {
     return value.display(o);
 }
 
-struct Symbol : public Value {
+struct Symbol : Value {
     const string sym;
     Symbol(const string &s) : sym(s) {}
     ostream& display(ostream &o = cout) const override { return o << sym; }
 };
 
-struct ListOpen : public Symbol {
+struct ListOpen : Symbol {
     ListOpen() : Symbol("(") {}
 };
 
-struct ListClose : public Symbol {
+struct ListClose : Symbol {
     ListClose() : Symbol(")") {}
 };
 
-struct List : public Value {
+struct List : Value {
     list< shared_ptr<Value> > lst;
 
     ostream& display(ostream &o = cout) const override;
 };
 
-struct Function : public Value {
+struct Function : Value {
     const string functionDescription;
     Function(const string &functionDescription) : functionDescription(functionDescription) {};
     virtual shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) = 0;
     ostream& display(ostream &o = cout) const override { return o << "function<" << functionDescription << ">"; }
 };
 
-struct UserString : public Value {
+struct UserString : Value {
     const string text;
     UserString(const string &s) : text(s) {}
     ostream& display(ostream &o = cout) const override { return o << "'" << text << "'"; }
@@ -52,7 +52,7 @@ struct UserString : public Value {
 /*
  * Real is a simple wrapper around a float.
  */
-struct Real : public Value {
+struct Real : Value {
     Real(double val = nanf("")) : val(val) {}
     Real(const char *str) : val(nanf("")) { fromStr(str); }
     Real(const string &s) : Real(s.c_str()) {}

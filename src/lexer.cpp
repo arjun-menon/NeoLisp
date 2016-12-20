@@ -31,7 +31,7 @@ void Lexer::constructValue() {
     else if(token == ")") {
         tokens.emplace_back(make_shared<ListClose>());
     }
-    else if(*token.begin() == '\'') {
+    else if(*token.begin() == quoteChar) {
         tokens.emplace_back(make_shared<UserString>(token.substr(1, token.length() - 2)));
     }
     else if(isdigit(*token.begin())) {

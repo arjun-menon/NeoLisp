@@ -1,14 +1,14 @@
 #include "common.hpp"
 
 class BuiltinFunction : public Function {
-    function<shared_ptr<Value>(shared_ptr<List> args, unsigned short pivot)> fn;
+    function<shared_ptr<Value>(shared_ptr<List> args, short pivot)> fn;
 
 public:
     BuiltinFunction(string functionDescription,
-                    function<shared_ptr<Value>(shared_ptr<List> args, unsigned short pivot)> fn) :
+                    function<shared_ptr<Value>(shared_ptr<List> args, short pivot)> fn) :
             Function(functionDescription), fn(fn) {}
 
-    shared_ptr<Value> apply(shared_ptr<List> args, unsigned short pivot = 0) override {
+    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         return fn(args, pivot);
     }
 };
@@ -18,7 +18,7 @@ static void define_arithmetic_function(Env &env) {
             "+",
             make_shared<BuiltinFunction>(
                     "add",
-                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
+                    [](shared_ptr<List> args, short pivot) -> shared_ptr<Value> {
                         Real sum(0.0f);
                         for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
                             shared_ptr<Value> x = *i;
@@ -41,7 +41,7 @@ static void define_arithmetic_function(Env &env) {
             "-",
             make_shared<BuiltinFunction>(
                     "sub",
-                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
+                    [](shared_ptr<List> args, short pivot) -> shared_ptr<Value> {
                         Real left_sum(0.0f);
                         Real right_sum(0.0f);
 
@@ -65,7 +65,7 @@ static void define_arithmetic_function(Env &env) {
             "*",
             make_shared<BuiltinFunction>(
                     "div",
-                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
+                    [](shared_ptr<List> args, short pivot) -> shared_ptr<Value> {
                         Real product(1.0f);
                         for(shared_ptr<Value> &x : args->lst) {
                             if (isType<Real>(*x)) {

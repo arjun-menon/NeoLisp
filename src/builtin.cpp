@@ -60,14 +60,14 @@ static void define_arithmetic_function(Env &env) {
             unique_ptr<Value>(new BuiltinFunction(
                     "div",
                     [](unique_ptr<List> args, unsigned short pivot) -> unique_ptr<Value> {
-                        unique_ptr<Real> product(new Real(1.0f));
+                        Real product(1.0f);
                         for(unique_ptr<Value> &x : args->lst) {
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
-                                *product = *product * real;
+                                product = product * real;
                             }
                         }
-                        return product;
+                        return unique_ptr<Value>(new Real(product));
                     })
             )
     ));

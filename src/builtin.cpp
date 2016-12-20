@@ -19,14 +19,20 @@ static void define_arithmetic_function(Env &env) {
             unique_ptr<Value>(new BuiltinFunction(
                     "add",
                     [](unique_ptr<List> args, unsigned short pivot) -> unique_ptr<Value> {
-                        unique_ptr<Real> sum(new Real(0.0f));
-                        for(unique_ptr<Value> &x : args->lst) {
+                        Real sum(0.0f);
+                        for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
+                            unique_ptr<Value> x = move(*i);
+
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
-                                *sum = *sum + real;
+                                sum = sum + real;
+                            } else {
+                                stringstream ss;
+                                ss << "The value " << *x << " is not a number.";
+                                throw Error(ss.str());
                             }
                         }
-                        return sum;
+                        return unique_ptr<Value>(new Real(sum));
                     })
             )
     ));

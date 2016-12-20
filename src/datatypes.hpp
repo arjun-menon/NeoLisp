@@ -31,7 +31,7 @@ struct ListClose : public Symbol {
 };
 
 struct List : public Value {
-    list< unique_ptr<Value> > lst;
+    list< shared_ptr<Value> > lst;
 
     ostream& display(ostream &o = cout) const override;
 };
@@ -39,7 +39,7 @@ struct List : public Value {
 struct Function : public Value {
     const string functionDescription;
     Function(const string &functionDescription) : functionDescription(functionDescription) {};
-    virtual unique_ptr<Value> apply(unique_ptr<List> args, unsigned short pivot = 0) = 0;
+    virtual shared_ptr<Value> apply(shared_ptr<List> args, unsigned short pivot = 0) = 0;
     ostream& display(ostream &o = cout) const override { return o << "function<" << functionDescription << ">"; }
 };
 

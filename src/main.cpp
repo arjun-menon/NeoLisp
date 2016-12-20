@@ -12,11 +12,11 @@ void repl() {
         } else {
             try
             {
-                unique_ptr<Value> code = Parser::parse(input);
+                shared_ptr<Value> code = Parser::parse(input);
 
                 Env env;
                 define_builtin_functions(env);
-                cout << *eval(move(code), env) << endl;
+                cout << *eval(code, env) << endl;
             }
             catch(exception &e) {
                 cout << e.what() << endl;

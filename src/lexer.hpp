@@ -1,7 +1,7 @@
 
 #pragma once
 
-typedef deque< unique_ptr<Value> > TokenQueue;
+typedef deque< shared_ptr<Value> > TokenQueue;
 
 class Lexer
 {

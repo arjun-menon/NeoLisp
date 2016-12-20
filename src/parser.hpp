@@ -7,16 +7,16 @@ class Parser
 
     Parser() = default;
     void parse(List &expr, TokenQueue::iterator& i, int depth);
-    unique_ptr<Value> parse();
+    shared_ptr<Value> parse();
 
 public:
-    static unique_ptr<Value> parse(const char *str) {
+    static shared_ptr<Value> parse(const char *str) {
         Parser parser;
         parser.lexer.lex(str);
         return parser.parse();
     }
 
-    inline static unique_ptr<Value> parse(const string &s) {
+    inline static shared_ptr<Value> parse(const string &s) {
         return parse(s.c_str());
     }
 };

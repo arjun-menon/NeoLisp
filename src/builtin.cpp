@@ -1,27 +1,27 @@
 #include "common.hpp"
 
 class BuiltinFunction : public Function {
-    function<unique_ptr<Value>(unique_ptr<List> args, unsigned short pivot)> fn;
+    function<shared_ptr<Value>(shared_ptr<List> args, unsigned short pivot)> fn;
 
 public:
     BuiltinFunction(string functionDescription,
-                    function<unique_ptr<Value>(unique_ptr<List> args, unsigned short pivot)> fn) :
+                    function<shared_ptr<Value>(shared_ptr<List> args, unsigned short pivot)> fn) :
             Function(functionDescription), fn(fn) {}
 
-    unique_ptr<Value> apply(unique_ptr<List> args, unsigned short pivot = 0) override {
-        return fn(move(args), pivot);
+    shared_ptr<Value> apply(shared_ptr<List> args, unsigned short pivot = 0) override {
+        return fn(args, pivot);
     }
 };
 
 static void define_arithmetic_function(Env &env) {
     env.insert(make_pair(
             "+",
-            unique_ptr<Value>(new BuiltinFunction(
+            make_shared<BuiltinFunction>(
                     "add",
-                    [](unique_ptr<List> args, unsigned short pivot) -> unique_ptr<Value> {
+                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
                         Real sum(0.0f);
                         for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
-                            unique_ptr<Value> x = move(*i);
+                            shared_ptr<Value> x = *i;
 
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
@@ -32,20 +32,20 @@ static void define_arithmetic_function(Env &env) {
                                 throw Error(ss.str());
                             }
                         }
-                        return unique_ptr<Value>(new Real(sum));
-                    })
+                        return make_shared<Real>(sum);
+                    }
             )
     ));
 
     env.insert(make_pair(
             "-",
-            unique_ptr<Value>(new BuiltinFunction(
+            make_shared<BuiltinFunction>(
                     "sub",
-                    [](unique_ptr<List> args, unsigned short pivot) -> unique_ptr<Value> {
+                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
                         Real left_sum(0.0f);
                         Real right_sum(0.0f);
 
-                        for(unique_ptr<Value> &x : args->lst) {
+                        for(shared_ptr<Value> &x : args->lst) {
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
 
@@ -56,25 +56,25 @@ static void define_arithmetic_function(Env &env) {
                             }
                         }
 
-                        return unique_ptr<Real>(new Real(left_sum -  right_sum));
-                    })
+                        return make_shared<Real>(left_sum -  right_sum);
+                    }
             )
     ));
 
     env.insert(make_pair(
             "*",
-            unique_ptr<Value>(new BuiltinFunction(
+            make_shared<BuiltinFunction>(
                     "div",
-                    [](unique_ptr<List> args, unsigned short pivot) -> unique_ptr<Value> {
+                    [](shared_ptr<List> args, unsigned short pivot) -> shared_ptr<Value> {
                         Real product(1.0f);
-                        for(unique_ptr<Value> &x : args->lst) {
+                        for(shared_ptr<Value> &x : args->lst) {
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
                                 product = product * real;
                             }
                         }
-                        return unique_ptr<Value>(new Real(product));
-                    })
+                        return make_shared<Real>(product);
+                    }
             )
     ));
 }

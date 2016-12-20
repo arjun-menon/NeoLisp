@@ -26,19 +26,19 @@ static const char quoteChar = '\'';
 
 void Lexer::constructValue() {
     if (token == "(") {
-        tokens.emplace_back(new ListOpen());
+        tokens.emplace_back(make_shared<ListOpen>());
     }
     else if(token == ")") {
-        tokens.emplace_back(new ListClose());
+        tokens.emplace_back(make_shared<ListClose>());
     }
     else if(*token.begin() == '\'') {
-        tokens.emplace_back(new UserString(token.substr(1, token.length() - 2)));
+        tokens.emplace_back(make_shared<UserString>(token.substr(1, token.length() - 2)));
     }
     else if(isdigit(*token.begin())) {
-        tokens.emplace_back(new Real(token));
+        tokens.emplace_back(make_shared<Real>(token));
     }
     else {
-        tokens.emplace_back(new Symbol(token));
+        tokens.emplace_back(make_shared<Symbol>(token));
     }
 }
 
@@ -139,7 +139,7 @@ TokenQueue& Lexer::lex(const char *sp) {
     return tokens;
 }
 
-ostream& Lexer::display(const deque< unique_ptr<Value> > &tokens, ostream &o, bool pretty_print) {
+ostream& Lexer::display(const deque< shared_ptr<Value> > &tokens, ostream &o, bool pretty_print) {
     if(pretty_print)
         o << "There are " << tokens.size() << " tokens:" << endl;
 

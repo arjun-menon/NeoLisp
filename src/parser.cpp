@@ -2,12 +2,12 @@
 
 void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
     while(i != lexer.tokens.end()) {
-        unique_ptr<Value> token = move(*i++);
+        shared_ptr<Value> token = *i++;
 
         if (isType<ListOpen>(*token)) {
-            unique_ptr<List> subexpression(new List);
+            auto subexpression = make_shared<List>();
             parse(*subexpression, i, depth + 1);
-            expr.lst.emplace_back(move(subexpression));
+            expr.lst.emplace_back(subexpression);
         }
         else if (isType<ListClose>(*token)) {
             if (depth < 1)
@@ -15,16 +15,16 @@ void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
             return;
         }
         else {
-            expr.lst.emplace_back(move(token));
+            expr.lst.emplace_back(token);
         }
     }
     if (depth > 0)
         throw Error("Missing closing parenthesis.");
 }
 
-unique_ptr<Value> Parser::parse() {
+shared_ptr<Value> Parser::parse() {
     TokenQueue::iterator i = lexer.tokens.begin();
-    unique_ptr<List> expr(new List);
+    auto expr = make_shared<List>();
     parse(*expr, i, 0);
-    return unique_ptr<Value>(move(expr));
+    return shared_ptr<Value>(expr);
 }

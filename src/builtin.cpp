@@ -49,7 +49,7 @@ static void define_arithmetic_function(Env &env) {
                             if (isType<Real>(*x)) {
                                 Real& real = dynamic_cast<Real&>(*x);
 
-                                if(pivot--)
+                                if(pivot-- > 0)
                                     left_sum = left_sum + real;
                                 else
                                     right_sum = right_sum + real;

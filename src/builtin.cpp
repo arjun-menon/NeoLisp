@@ -63,7 +63,7 @@ struct MulFunction : Function {
 };
 
 void define_builtin_functions(Env &env) {
-    env.insert(make_pair("+", make_shared<AddFunction>()));
-    env.insert(make_pair("-", make_shared<SubFunction>()));
-    env.insert(make_pair("*", make_shared<MulFunction>()));
+    env.insert(make_pair(Symbol::create("+"), make_shared<AddFunction>()));
+    env.insert(make_pair(Symbol::create("-"), make_shared<SubFunction>()));
+    env.insert(make_pair(Symbol::create("*"), make_shared<MulFunction>()));
 }

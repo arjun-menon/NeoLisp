@@ -1,5 +1,5 @@
 #pragma once
 
-typedef map< string, shared_ptr<Value> > Env;
+typedef map<shared_ptr<Symbol>, shared_ptr<Value>> Env;
 
 shared_ptr<Value> eval(shared_ptr<Value>, Env&);

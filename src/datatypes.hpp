@@ -19,6 +19,7 @@ inline ostream& operator<<(ostream &o, const Value &value) {
 struct Symbol : Value {
     static shared_ptr<Symbol> create(const string &s);
     ostream& display(ostream &o = cout) const override { return o << sym; }
+    inline bool operator<(const Symbol &o) const { return less<string>()(sym, o.sym); }
 
 private:
     const string sym;

@@ -33,6 +33,13 @@ using namespace std;
  * Common classes, utility templates, and macros.
  */
 
+template< typename T >
+struct shared_ptr_comparator {
+    bool operator()(const std::shared_ptr<T> &a, const std::shared_ptr<T> &b) const {
+        return std::less<T>()(*a, *b);
+    }
+};
+
 template<typename T, typename K>
 inline bool isType(const K &k) {
     return typeid(T).hash_code() == typeid(k).hash_code();

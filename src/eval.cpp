@@ -25,15 +25,15 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
 
         return shared_ptr<Value>(evaluatedList);
     }
-    else if (isType<Symbol>(*v)) {
-        const string &sym = dynamic_cast<Symbol *>(v.get())->sym;
-        try {
-            return env.at(sym);
-        } catch(out_of_range) {
-            string err_msg = "The symbol '" + sym + "' is not defined.";
-            throw Error(err_msg);
-        }
-    }
+//    else if (isType<Symbol>(*v)) {
+//        const string &sym = dynamic_cast<Symbol *>(v.get())->sym;
+//        try {
+//            return env.at(sym);
+//        } catch(out_of_range) {
+//            string err_msg = "The symbol '" + sym + "' is not defined.";
+//            throw Error(err_msg);
+//        }
+//    }
 
     return v;
 }

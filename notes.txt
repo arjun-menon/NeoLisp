@@ -18,5 +18,7 @@ All symbols by default have precedence zero.
 Some symbols have lower precedence than zero (+, -, /, *).
 The symbol with the lowest precedence
 
+Optionally enabled deferred/lazy evaluation.
+
 Ref:
 http://norvig.com/lispy.html

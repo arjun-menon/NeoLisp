@@ -1,6 +1,9 @@
 #include "common.hpp"
 
 void repl() {
+    Env env;
+    define_builtin_functions(env);
+
     for (string input; true; cout << endl) {
         cout << "> ";
 
@@ -10,13 +13,8 @@ void repl() {
         if (input == "exit" || input == "quit") {
             break;
         } else {
-            try
-            {
-                shared_ptr<Value> code = Parser::parse(input);
-
-                Env env;
-                define_builtin_functions(env);
-                cout << *eval(code, env) << endl;
+            try {
+                cout << *eval(Parser::parse(input), env) << endl;
             }
             catch(exception &e) {
                 cout << e.what() << endl;

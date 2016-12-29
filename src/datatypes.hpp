@@ -17,23 +17,21 @@ inline ostream& operator<<(ostream &o, const Value &value) {
 }
 
 struct Symbol : Value {
+    static shared_ptr<Symbol> create(const string &s);
+    ostream& display(ostream &o = cout) const override { return o << sym; }
+
+private:
     const string sym;
     Symbol(const string &s) : sym(s) {}
-    ostream& display(ostream &o = cout) const override { return o << sym; }
-};
-
-struct ListOpen : Symbol {
-    ListOpen() : Symbol("(") {}
-};
-
-struct ListClose : Symbol {
-    ListClose() : Symbol(")") {}
 };
 
 struct List : Value {
     list< shared_ptr<Value> > lst;
 
     ostream& display(ostream &o = cout) const override;
+
+    static shared_ptr<Symbol> open;   // "("
+    static shared_ptr<Symbol> close;  // ")"
 };
 
 struct Function : Value {

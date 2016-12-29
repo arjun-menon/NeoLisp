@@ -4,12 +4,12 @@ void Parser::parse(List &expr, TokenQueue::iterator& i, int depth) {
     while(i != lexer.tokens.end()) {
         shared_ptr<Value> token = *i++;
 
-        if (isType<ListOpen>(*token)) {
+        if (token == List::open) {
             auto subexpression = make_shared<List>();
             parse(*subexpression, i, depth + 1);
             expr.lst.emplace_back(subexpression);
         }
-        else if (isType<ListClose>(*token)) {
+        else if (token == List::close) {
             if (depth < 1)
                 throw Error("Missing opening parenthesis.");
             return;

@@ -26,10 +26,10 @@ static const char quoteChar = '\'';
 
 void Lexer::constructValue() {
     if (token == "(") {
-        tokens.emplace_back(make_shared<ListOpen>());
+        tokens.emplace_back(List::open);
     }
     else if(token == ")") {
-        tokens.emplace_back(make_shared<ListClose>());
+        tokens.emplace_back(List::close);
     }
     else if(*token.begin() == quoteChar) {
         tokens.emplace_back(make_shared<UserString>(token.substr(1, token.length() - 2)));
@@ -38,7 +38,7 @@ void Lexer::constructValue() {
         tokens.emplace_back(make_shared<Real>(token));
     }
     else {
-        tokens.emplace_back(make_shared<Symbol>(token));
+        tokens.emplace_back(Symbol::create(token));
     }
 }
 

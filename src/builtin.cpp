@@ -82,6 +82,6 @@ public:
     }
 };
 
-void define_builtin_functions(Env &env) {
+void define_builtin(Env &env) {
     Builtin(env).define();
 }

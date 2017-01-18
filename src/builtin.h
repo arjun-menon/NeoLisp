@@ -1,3 +1,3 @@
 #pragma once
 
-void define_builtin_functions(Env&);
+void define_builtin(Env &);

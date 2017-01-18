@@ -4,9 +4,11 @@ class Builtin {
     struct AddFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real sum(0.0f);
-            for (shared_ptr<Value> &x : args(env)) {
-                if (isType<Real>(*x))
-                    sum = sum + dynamic_cast<Real &>(*x);
+            for (auto &k : args(env)) {
+                auto &x = *eval(k, env);
+
+                if (isType<Real>(x))
+                    sum = sum + dynamic_cast<Real &>(x);
                 else
                     errNotNumber(x);
             }
@@ -19,9 +21,11 @@ class Builtin {
             Real left_sum(0.0f);
             Real right_sum(0.0f);
 
-            for (shared_ptr<Value> &x : args(env)) {
-                if (isType<Real>(*x)) {
-                    Real &val = dynamic_cast<Real &>(*x);
+            for (auto &k : args(env)) {
+                auto &x = *eval(k, env);
+
+                if (isType<Real>(x)) {
+                    Real &val = dynamic_cast<Real &>(x);
 
                     if (pivot-- > 0)
                         left_sum = left_sum + val;
@@ -38,9 +42,11 @@ class Builtin {
     struct MulFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real product(1.0f);
-            for (shared_ptr<Value> &x : args(env)) {
-                if (isType<Real>(*x))
-                    product = product * dynamic_cast<Real &>(*x);
+            for (auto &k : args(env)) {
+                auto &x = *eval(k, env);
+
+                if (isType<Real>(x))
+                    product = product * dynamic_cast<Real &>(x);
                 else
                     errNotNumber(x);
             }
@@ -61,9 +67,9 @@ class Builtin {
         return dynamic_pointer_cast<List>(argsVal)->lst;
     }
 
-    static void errNotNumber(shared_ptr<Value> x) {
+    static void errNotNumber(Value &x) {
         stringstream errMsg;
-        errMsg << "The value " << *x << " is not a number.";
+        errMsg << "The value " << x << " is not a number.";
         throw Error(errMsg.str());
     }
 

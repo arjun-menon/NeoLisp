@@ -16,32 +16,22 @@ shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
 
 shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
     if (isType<List>(*v)) {
-        /*
-         * Evaluate all of the elements in the list
-         */
-        List& list = dynamic_cast<List&>(*v);
-        auto evaluatedList = make_shared<List>();
+        auto vList = dynamic_pointer_cast<List>(v);
 
-        for(auto i =  list.lst.begin(); i != list.lst.end(); i++)
-            evaluatedList->lst.emplace_back(eval(*i, env));
+        auto head = eval(vList->lst.front(), env);
+        vList->lst.pop_front();
 
-        /*
-         * If the expression is function-applicable, execute it
-         */
-
-        if (evaluatedList->lst.size() > 0 &&
-                instanceof<Function>(*evaluatedList->lst.front())) {
-            shared_ptr<Value> fn_(evaluatedList->lst.front());
-            Function& fn = dynamic_cast<Function&>(*fn_);
-            evaluatedList->lst.pop_front();
+        if(instanceof<Function>(*head)) {
+            auto fn = dynamic_pointer_cast<Function>(head);
 
             Env fnEnv(&env);
-            fnEnv.assign(Function::argsVar, evaluatedList);
+            fnEnv.assign(Function::argsVar, vList);
 
-            return fn.apply(fnEnv);
+            return fn->apply(fnEnv);
         }
-
-        return shared_ptr<Value>(evaluatedList);
+        else {
+            vList->lst.push_front(head);
+        }
     }
     else if (isType<Symbol>(*v)) {
         return env.get( dynamic_pointer_cast<Symbol>(v) );

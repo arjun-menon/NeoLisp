@@ -37,10 +37,9 @@ struct List : Value {
 };
 
 struct Function : Value {
-    const string functionDescription;
-    Function(const string &functionDescription) : functionDescription(functionDescription) {};
     virtual shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) = 0;
-    ostream& display(ostream &o = cout) const override { return o << "function<" << functionDescription << ">"; }
+    ostream& display(ostream &o = cout) const override;
+    weak_ptr<Symbol> symbol;
 };
 
 struct UserString : Value {

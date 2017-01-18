@@ -7,8 +7,6 @@ void errNotNumber(shared_ptr<Value> x) {
 }
 
 struct AddFunction : Function {
-    AddFunction() : Function("add") {};
-
     shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         Real sum(0.0f);
         for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
@@ -24,8 +22,6 @@ struct AddFunction : Function {
 };
 
 struct SubFunction : Function {
-    SubFunction() : Function("sub") {};
-
     shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         Real left_sum(0.0f);
         Real right_sum(0.0f);
@@ -48,8 +44,6 @@ struct SubFunction : Function {
 };
 
 struct MulFunction : Function {
-    MulFunction() : Function("mul") {};
-
     shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         Real product(1.0f);
         for(shared_ptr<Value> &x : args->lst) {
@@ -63,8 +57,6 @@ struct MulFunction : Function {
 };
 
 struct ExitFunction : Function {
-    ExitFunction() : Function("exit") {};
-
     shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
         throw ExitNow(0);
     }

@@ -31,6 +31,15 @@ ostream& List::display(ostream &o) const {
     return o;
 }
 
+ostream& Function::display(ostream &o) const {
+    o << "function<";
+    if(auto s = symbol.lock())
+        s->display(o);
+    else
+        o << "lambda";
+    return o << ">";
+}
+
 ostream& Real::display(ostream &o) const {
     if (isValid())
         o << val;

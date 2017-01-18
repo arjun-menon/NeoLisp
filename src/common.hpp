@@ -1,7 +1,7 @@
 /*
- * Common universal header file
+ * Common header file for all *.cpp files in this project.
  *
- * For simplicity's sake, just include this header everywhere.
+ * Include this header everywhere. (This is just for simplicity's sake.)
  */
 
 #pragma once

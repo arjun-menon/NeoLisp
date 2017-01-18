@@ -44,6 +44,8 @@ string toString(const T& obj) {
     return oss.str();
 }
 
+#define ASSERT(X) if(!(X)) throw Error((string)("Assertion failure ( ")+(string)(#X)+(string)(" )"))
+
 class Error : public exception
 {
     // Represents user-caused syntactic or run-time errors.
@@ -55,4 +57,9 @@ public:
     ~Error() throw() {}
 };
 
-#define ASSERT(X) if(!(X)) throw Error((string)("Assertion failure ( ")+(string)(#X)+(string)(" )"))
+struct ExitNow : public exception
+{
+    // Terminate the program immediately.
+    const int exit_code;
+    ExitNow(int exit_code) : exit_code(exit_code) {}
+};

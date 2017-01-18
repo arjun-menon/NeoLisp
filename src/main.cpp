@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-void repl() {
+int repl() {
     Env env;
     define_builtin_functions(env);
 
@@ -16,6 +16,9 @@ void repl() {
             try {
                 cout << *eval(Parser::parse(input), env) << endl;
             }
+            catch(ExitNow &e) {
+                return e.exit_code;
+            }
             catch(exception &e) {
                 cout << e.what() << endl;
             }
@@ -24,6 +27,8 @@ void repl() {
             }
         }
     }
+
+    return 0;
 }
 
 void stuff() {
@@ -37,7 +42,6 @@ void stuff() {
 }
 
 int main() {
-    repl();
     // stuff();
-    return 0;
+    return repl();
 }

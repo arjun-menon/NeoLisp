@@ -62,8 +62,17 @@ struct MulFunction : Function {
     }
 };
 
+struct ExitFunction : Function {
+    ExitFunction() : Function("exit") {};
+
+    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+        throw ExitNow(0);
+    }
+};
+
 void define_builtin_functions(Env &env) {
     env[Symbol::create("+")] = make_shared<AddFunction>();
     env[Symbol::create("-")] = make_shared<SubFunction>();
     env[Symbol::create("*")] = make_shared<MulFunction>();
+    env[Symbol::create("q")] = make_shared<ExitFunction>();
 }

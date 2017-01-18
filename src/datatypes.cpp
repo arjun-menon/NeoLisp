@@ -4,11 +4,9 @@ map<string, weak_ptr<Symbol>> Symbol::existingSymbols;
 
 shared_ptr<Symbol> Symbol::create(const string &name)
 {
-    if(existingSymbols.find(name) != existingSymbols.end()) {
-        auto p = existingSymbols[name];
-        if(!p.expired())
-            return p.lock();
-    }
+    if(existingSymbols.find(name) != existingSymbols.end())
+        if(auto symbol = existingSymbols[name].lock())
+            return symbol;
 
     auto symbol = shared_ptr<Symbol>(new Symbol(name));
     existingSymbols[name] = symbol;

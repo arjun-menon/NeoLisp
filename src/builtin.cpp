@@ -4,9 +4,7 @@ class Builtin {
     struct AddFunction : Function {
         shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
             Real sum(0.0f);
-            for (auto i = args->lst.begin(); i != args->lst.end(); i++) {
-                shared_ptr<Value> x = *i;
-
+            for (shared_ptr<Value> &x : args->lst) {
                 if (isType<Real>(*x))
                     sum = sum + dynamic_cast<Real &>(*x);
                 else

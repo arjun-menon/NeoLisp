@@ -1,5 +1,23 @@
 #pragma once
 
-typedef map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> Env;
+class Env
+{
+    map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> variables;
+
+    Env* const outerEnv;
+
+public:
+    Env(Env* outerEnv = nullptr) : outerEnv(outerEnv) {}
+
+    inline void assign(shared_ptr<Symbol> symbol, shared_ptr<Value> value) {
+        variables[symbol] = value;
+    }
+
+    inline bool check(shared_ptr<Symbol> symbol) {
+        return variables.find(symbol) != variables.end() || (outerEnv != nullptr ? outerEnv->check(symbol) : false);
+    }
+
+    shared_ptr<Value> get(shared_ptr<Symbol> symbol);
+};
 
 shared_ptr<Value> eval(shared_ptr<Value>, Env&);

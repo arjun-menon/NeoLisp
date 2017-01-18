@@ -1,5 +1,19 @@
 #include "common.hpp"
 
+shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
+    if(variables.find(symbol) != variables.end()) {
+        return variables.at(symbol);
+    }
+    else {
+        if (outerEnv) {
+            return outerEnv->get(symbol);
+        } else {
+            string err_msg = "The symbol '" + toString(*symbol) + "' is not defined.";
+            throw Error(err_msg);
+        }
+    }
+}
+
 shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
     if (isType<List>(*v)) {
         /*
@@ -26,13 +40,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
         return shared_ptr<Value>(evaluatedList);
     }
     else if (isType<Symbol>(*v)) {
-        shared_ptr<Symbol> symbol = dynamic_pointer_cast<Symbol>(v);
-        try {
-            return env.at(symbol);
-        } catch(out_of_range) {
-            string err_msg = "The symbol '" + toString(*symbol) + "' is not defined.";
-            throw Error(err_msg);
-        }
+        return env.get( dynamic_pointer_cast<Symbol>(v) );
     }
 
     return v;

@@ -62,7 +62,7 @@ class Builtin {
 
     void define_function(string name, shared_ptr<Function> fn) {
         auto symbol = Symbol::create(name);
-        env[symbol] = fn;
+        env.assign(symbol, fn);
         fn->symbol = symbol;
     }
 

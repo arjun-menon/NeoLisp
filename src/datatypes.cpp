@@ -31,6 +31,8 @@ ostream& List::display(ostream &o) const {
     return o;
 }
 
+shared_ptr<Symbol> Function::argsVar = Symbol::create("args");
+
 ostream& Function::display(ostream &o) const {
     o << "function<";
     if(auto s = symbol.lock())

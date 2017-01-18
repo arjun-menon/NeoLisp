@@ -36,7 +36,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
             evaluatedList->lst.pop_front();
 
             Env fnEnv(&env);
-            fnEnv.assign(Symbol::create("args"), evaluatedList);
+            fnEnv.assign(Function::argsVar, evaluatedList);
 
             return fn.apply(fnEnv);
         }

@@ -42,6 +42,7 @@ struct Function : Value {
     virtual shared_ptr<Value> apply(Env &env, short pivot = 0) = 0;
     ostream& display(ostream &o = cout) const override;
     weak_ptr<Symbol> symbol;
+    static shared_ptr<Symbol> argsVar;  // "args"
 };
 
 struct UserString : Value {

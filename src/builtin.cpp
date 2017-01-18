@@ -55,7 +55,10 @@ class Builtin {
     };
 
     static list<shared_ptr<Value>> args(Env &env) {
-        return dynamic_pointer_cast<List>(env.get(Symbol::create("args")))->lst;
+        auto argsVal = env.get(Function::argsVar);
+        if (!isType<List>(*argsVal))
+            throw Error("Function call 'args' is not a list!");
+        return dynamic_pointer_cast<List>(argsVal)->lst;
     }
 
     static void errNotNumber(shared_ptr<Value> x) {

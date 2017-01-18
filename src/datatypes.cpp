@@ -1,9 +1,18 @@
 #include "common.hpp"
 
-shared_ptr<Symbol> Symbol::create(const string &s)
+map<string, weak_ptr<Symbol>> Symbol::existingSymbols;
+
+shared_ptr<Symbol> Symbol::create(const string &name)
 {
-    //return make_shared<Symbol>(s);
-    return std::shared_ptr<Symbol>(new Symbol(s));
+    if(existingSymbols.find(name) != existingSymbols.end()) {
+        auto p = existingSymbols[name];
+        if(!p.expired())
+            return p.lock();
+    }
+
+    auto symbol = shared_ptr<Symbol>(new Symbol(name));
+    existingSymbols[name] = symbol;
+    return symbol;
 }
 
 shared_ptr<Symbol> List::open = Symbol::create("(");

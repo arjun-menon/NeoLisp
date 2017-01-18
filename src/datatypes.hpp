@@ -17,13 +17,14 @@ inline ostream& operator<<(ostream &o, const Value &value) {
 }
 
 struct Symbol : Value {
-    static shared_ptr<Symbol> create(const string &s);
-    ostream& display(ostream &o = cout) const override { return o << sym; }
-    inline bool operator<(const Symbol &o) const { return less<string>()(sym, o.sym); }
+    static shared_ptr<Symbol> create(const string &name);
+    ostream& display(ostream &o = cout) const override { return o << name; }
+    inline bool operator<(const Symbol &o) const { return less<string>()(name, o.name); }
 
 private:
-    const string sym;
-    Symbol(const string &s) : sym(s) {}
+    const string name;
+    Symbol(const string &name) : name(name) {}
+    static map<string, weak_ptr<Symbol>> existingSymbols;
 };
 
 struct List : Value {

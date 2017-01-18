@@ -54,6 +54,33 @@ class Builtin {
         }
     };
 
+    struct IfFunction : Function {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+            auto args = getArgs(env)->lst;
+
+            auto cond = args.front();
+            args.pop_front();
+
+            auto conseq = args.front();
+            args.pop_front();
+
+            auto alt = args.front();
+            args.pop_front();
+
+            auto cond_result = eval(cond, env);
+
+            if (!isType<Real>(*cond_result))
+                errNotNumber(cond_result);
+
+            auto result_bool = dynamic_cast<Real &>(*cond_result)() != 0.0;
+
+            if (result_bool)
+                return eval(conseq, env);
+            else
+                return eval(alt, env);
+        }
+    };
+
     struct ExitFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             throw ExitNow(0);
@@ -88,6 +115,7 @@ public:
         define_function("+", make_shared<AddFunction>());
         define_function("-", make_shared<SubFunction>());
         define_function("*", make_shared<MulFunction>());
+        define_function("?", make_shared<IfFunction>());
         define_function("q", make_shared<ExitFunction>());
     }
 };

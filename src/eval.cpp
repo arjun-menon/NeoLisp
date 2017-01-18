@@ -34,7 +34,11 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
             shared_ptr<Value> fn_(evaluatedList->lst.front());
             Function& fn = dynamic_cast<Function&>(*fn_);
             evaluatedList->lst.pop_front();
-            return fn.apply(evaluatedList);
+
+            Env fnEnv(&env);
+            fnEnv.assign(Symbol::create("args"), evaluatedList);
+
+            return fn.apply(fnEnv);
         }
 
         return shared_ptr<Value>(evaluatedList);

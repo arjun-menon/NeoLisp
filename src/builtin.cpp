@@ -2,9 +2,9 @@
 
 class Builtin {
     struct AddFunction : Function {
-        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real sum(0.0f);
-            for (shared_ptr<Value> &x : args->lst) {
+            for (shared_ptr<Value> &x : args(env)) {
                 if (isType<Real>(*x))
                     sum = sum + dynamic_cast<Real &>(*x);
                 else
@@ -15,11 +15,11 @@ class Builtin {
     };
 
     struct SubFunction : Function {
-        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real left_sum(0.0f);
             Real right_sum(0.0f);
 
-            for (shared_ptr<Value> &x : args->lst) {
+            for (shared_ptr<Value> &x : args(env)) {
                 if (isType<Real>(*x)) {
                     Real &val = dynamic_cast<Real &>(*x);
 
@@ -36,9 +36,9 @@ class Builtin {
     };
 
     struct MulFunction : Function {
-        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real product(1.0f);
-            for (shared_ptr<Value> &x : args->lst) {
+            for (shared_ptr<Value> &x : args(env)) {
                 if (isType<Real>(*x))
                     product = product * dynamic_cast<Real &>(*x);
                 else
@@ -49,10 +49,14 @@ class Builtin {
     };
 
     struct ExitFunction : Function {
-        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             throw ExitNow(0);
         }
     };
+
+    static list<shared_ptr<Value>> args(Env &env) {
+        return dynamic_pointer_cast<List>(env.get(Symbol::create("args")))->lst;
+    }
 
     static void errNotNumber(shared_ptr<Value> x) {
         stringstream errMsg;

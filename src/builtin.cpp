@@ -1,11 +1,5 @@
 #include "common.hpp"
 
-void errNotNumber(shared_ptr<Value> x) {
-    stringstream errMsg;
-    errMsg << "The value " << *x << " is not a number.";
-    throw Error(errMsg.str());
-}
-
 class Builtin {
     struct AddFunction : Function {
         shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
@@ -62,6 +56,11 @@ class Builtin {
         }
     };
 
+    static void errNotNumber(shared_ptr<Value> x) {
+        stringstream errMsg;
+        errMsg << "The value " << *x << " is not a number.";
+        throw Error(errMsg.str());
+    }
 
     void define_function(string name, shared_ptr<Function> fn) {
         auto symbol = Symbol::create(name);

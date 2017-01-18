@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 include(CheckIncludeFileCXX)
 project(NeoLisp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -Werror -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror -g")
 
 set(SOURCE_FILES
         src/lexer.cpp src/lexer.hpp

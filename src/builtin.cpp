@@ -6,65 +6,82 @@ void errNotNumber(shared_ptr<Value> x) {
     throw Error(errMsg.str());
 }
 
-struct AddFunction : Function {
-    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
-        Real sum(0.0f);
-        for(auto i = args->lst.begin(); i != args->lst.end(); i++) {
-            shared_ptr<Value> x = *i;
+class Builtin {
+    struct AddFunction : Function {
+        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+            Real sum(0.0f);
+            for (auto i = args->lst.begin(); i != args->lst.end(); i++) {
+                shared_ptr<Value> x = *i;
 
-            if (isType<Real>(*x))
-                sum = sum + dynamic_cast<Real&>(*x);
-            else
-                errNotNumber(x);
-        }
-        return make_shared<Real>(sum);
-    }
-};
-
-struct SubFunction : Function {
-    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
-        Real left_sum(0.0f);
-        Real right_sum(0.0f);
-
-        for(shared_ptr<Value> &x : args->lst) {
-            if (isType<Real>(*x)) {
-                Real& val = dynamic_cast<Real&>(*x);
-
-                if(pivot-- > 0)
-                    left_sum = left_sum + val;
+                if (isType<Real>(*x))
+                    sum = sum + dynamic_cast<Real &>(*x);
                 else
-                    right_sum = right_sum + val;
+                    errNotNumber(x);
             }
-            else
-                errNotNumber(x);
+            return make_shared<Real>(sum);
         }
+    };
 
-        return make_shared<Real>(left_sum -  right_sum);
-    }
-};
+    struct SubFunction : Function {
+        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+            Real left_sum(0.0f);
+            Real right_sum(0.0f);
 
-struct MulFunction : Function {
-    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
-        Real product(1.0f);
-        for(shared_ptr<Value> &x : args->lst) {
-            if (isType<Real>(*x))
-                product = product * dynamic_cast<Real&>(*x);
-            else
-                errNotNumber(x);
+            for (shared_ptr<Value> &x : args->lst) {
+                if (isType<Real>(*x)) {
+                    Real &val = dynamic_cast<Real &>(*x);
+
+                    if (pivot-- > 0)
+                        left_sum = left_sum + val;
+                    else
+                        right_sum = right_sum + val;
+                } else
+                    errNotNumber(x);
+            }
+
+            return make_shared<Real>(left_sum - right_sum);
         }
-        return make_shared<Real>(product);
-    }
-};
+    };
 
-struct ExitFunction : Function {
-    shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
-        throw ExitNow(0);
+    struct MulFunction : Function {
+        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+            Real product(1.0f);
+            for (shared_ptr<Value> &x : args->lst) {
+                if (isType<Real>(*x))
+                    product = product * dynamic_cast<Real &>(*x);
+                else
+                    errNotNumber(x);
+            }
+            return make_shared<Real>(product);
+        }
+    };
+
+    struct ExitFunction : Function {
+        shared_ptr<Value> apply(shared_ptr<List> args, short pivot = 0) override {
+            throw ExitNow(0);
+        }
+    };
+
+
+    void define_function(string name, shared_ptr<Function> fn) {
+        auto symbol = Symbol::create(name);
+        env[symbol] = fn;
+        fn->symbol = symbol;
+    }
+
+    Env &env;
+
+public:
+    Builtin(Env &env) : env(env) {}
+
+    void define() {
+        define_function("+", make_shared<AddFunction>());
+        define_function("-", make_shared<SubFunction>());
+        define_function("*", make_shared<MulFunction>());
+        define_function("q", make_shared<ExitFunction>());
     }
 };
 
 void define_builtin_functions(Env &env) {
-    env[Symbol::create("+")] = make_shared<AddFunction>();
-    env[Symbol::create("-")] = make_shared<SubFunction>();
-    env[Symbol::create("*")] = make_shared<MulFunction>();
-    env[Symbol::create("q")] = make_shared<ExitFunction>();
+    Builtin(env).define();
 }

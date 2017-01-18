@@ -4,7 +4,7 @@ class Builtin {
     struct AddFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real sum(0.0f);
-            for (auto &k : args(env)) {
+            for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
 
                 if (isType<Real>(*x))
@@ -21,7 +21,7 @@ class Builtin {
             Real left_sum(0.0f);
             Real right_sum(0.0f);
 
-            for (auto &k : args(env)) {
+            for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
 
                 if (isType<Real>(*x)) {
@@ -42,7 +42,7 @@ class Builtin {
     struct MulFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             Real product(1.0f);
-            for (auto &k : args(env)) {
+            for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
 
                 if (isType<Real>(*x))
@@ -60,11 +60,11 @@ class Builtin {
         }
     };
 
-    static list<shared_ptr<Value>> args(Env &env) {
+    static shared_ptr<List> getArgs(Env &env) {
         auto argsVal = env.get(Function::argsVar);
         if (!isType<List>(*argsVal))
             throw Error("Function call 'args' is not a list!");
-        return dynamic_pointer_cast<List>(argsVal)->lst;
+        return dynamic_pointer_cast<List>(argsVal);
     }
 
     static void errNotNumber(shared_ptr<Value> &x) {

@@ -4,9 +4,9 @@ class Env
 {
     map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> variables;
 
+public:
     Env* const outerEnv;
 
-public:
     Env(Env* outerEnv = nullptr) : outerEnv(outerEnv) {}
 
     inline void assign(shared_ptr<Symbol> symbol, shared_ptr<Value> value) {

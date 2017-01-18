@@ -58,6 +58,9 @@ class Builtin {
         shared_ptr<Value> apply(Env &env, short pivot = 0) override {
             auto args = getArgs(env)->lst;
 
+            if (args.size() != 3)
+                throw Error("The ? function expects exactly 3 arguments: cond, conseq, alt.");
+
             auto cond = args.front();
             args.pop_front();
 
@@ -78,6 +81,34 @@ class Builtin {
                 return eval(conseq, env);
             else
                 return eval(alt, env);
+        }
+    };
+
+    struct AssignFunction : Function {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+            auto args = getArgs(env)->lst;
+
+            if (args.size() != 2)
+                throw Error("The = function expects exactly 2 arguments: var, val.");
+
+            auto var_name = args.front();
+            args.pop_front();
+
+            auto var_val = args.front();
+            args.pop_front();
+
+            if (!isType<Symbol>(*var_name))
+                throw Error("The variable name must be a symbol.");
+
+            auto var = dynamic_pointer_cast<Symbol>(var_name);
+            auto val = eval(var_val, env);
+
+            Env* outerEnv = env.outerEnv;
+            if (outerEnv) {
+                outerEnv->assign(var, val);
+            }
+
+            return make_shared<Real>();
         }
     };
 
@@ -116,6 +147,7 @@ public:
         define_function("-", make_shared<SubFunction>());
         define_function("*", make_shared<MulFunction>());
         define_function("?", make_shared<IfFunction>());
+        define_function("=", make_shared<AssignFunction>());
         define_function("q", make_shared<ExitFunction>());
     }
 };

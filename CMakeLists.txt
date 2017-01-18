@@ -13,7 +13,7 @@ set(SOURCE_FILES
         src/column.hpp src/column.cpp
         src/table.hpp src/table.cpp
         src/data_reader.hpp src/data_reader.cpp
-        src/common.hpp)
+        src/utils.hpp src/common.hpp)
 
 add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)
 

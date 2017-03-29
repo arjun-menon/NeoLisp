@@ -29,8 +29,8 @@
 *.app
 
 # Target executables
-vcalc
-vcalc_unit_tests
+NeoLisp
+NeoLisp-tests
 
 # CMake generated build files
 CMakeCache.txt

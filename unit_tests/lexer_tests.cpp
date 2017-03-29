@@ -1,19 +1,22 @@
 #include <catch.hpp>
 #include "../src/common.hpp"
 
+#define T(TYPE) typeid(TYPE).hash_code()
+
 bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expectedOutput) {
     Lexer lexer;
     lexer.lex(input);
 
-    cout<<"Testing Lexer Output: ";
+    cout << "Testing Lexer Output: ";
     lexer.display(cout, false);
-    cout<<endl;
+    cout << endl;
 
     size_t i = 0;
-    for(auto &token : lexer.tokens) {
+    for (auto &token : lexer.tokens) {
         const Value &value = *token;
 
-        if (typeid(value).hash_code() != expectedOutput[i].first ||
+        cout << value << endl;
+        if (T(value) != expectedOutput[i].first ||
             toString(value) != expectedOutput[i].second)
             return false;
 
@@ -22,8 +25,6 @@ bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expect
 
     return true;
 }
-
-#define T(TYPE) typeid(TYPE).hash_code()
 
 TEST_CASE("Basic expressions") {
     CHECK(checkLexerOutput(
@@ -36,30 +37,30 @@ TEST_CASE("Basic expressions") {
     ));
 
     CHECK(checkLexerOutput(
-            "1 (2*\"4\") +5",
+            "1 (2*'4') +5",
             {
                     { T(Real), "1" },
-                    { T(ExprStart), "(" },
+                    { T(Symbol), "(" },
                     { T(Real), "2" },
                     { T(Symbol), "*" },
-                    { T(UserString), "4" },
-                    { T(ExprEnd), ")" },
+                    { T(UserString), "'4'" },
+                    { T(Symbol), ")" },
                     { T(Symbol), "+" },
                     { T(Real), "5" }
             }
     ));
 
     CHECK(checkLexerOutput(
-            " 2  7 asdk (0xBEEF + \"hmm\") 34.212aa 909", // todo: '34.212aa' should be two tokens: '34.212' and 'aa'
+            " 2  7 asdk (0xBEEF + 'hmm') 34.212aa 909",  // todo: '34.212aa' should be two tokens: '34.212' and 'aa'
             {
                     { T(Real), "2" },
                     { T(Real), "7" },
                     { T(Symbol), "asdk" },
-                    { T(ExprStart), "(" },
+                    { T(Symbol), "(" },
                     { T(Real), "48879" },
                     { T(Symbol), "+" },
-                    { T(UserString), "hmm" },
-                    { T(ExprEnd), ")" },
+                    { T(UserString), "'hmm'" },
+                    { T(Symbol), ")" },
                     { T(Real), "34.212" },
                     { T(Real), "909" }
             }

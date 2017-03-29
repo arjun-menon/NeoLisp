@@ -6,11 +6,9 @@ class Builtin {
             Real sum(0.0f);
             for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
+                Real& val = *vCast<Real>(x);
 
-                if (isType<Real>(*x))
-                    sum = sum + dynamic_cast<Real &>(*x);
-                else
-                    errNotNumber(x);
+                sum = sum + val;
             }
             return make_shared<Real>(sum);
         }
@@ -23,16 +21,12 @@ class Builtin {
 
             for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
+                Real& val = *vCast<Real>(x);
 
-                if (isType<Real>(*x)) {
-                    Real &val = dynamic_cast<Real &>(*x);
-
-                    if (pivot-- > 0)
-                        left_sum = left_sum + val;
-                    else
-                        right_sum = right_sum + val;
-                } else
-                    errNotNumber(x);
+                if (pivot-- > 0)
+                    left_sum = left_sum + val;
+                else
+                    right_sum = right_sum + val;
             }
 
             return make_shared<Real>(left_sum - right_sum);
@@ -44,11 +38,9 @@ class Builtin {
             Real product(1.0f);
             for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
+                Real& val = *vCast<Real>(x);
 
-                if (isType<Real>(*x))
-                    product = product * dynamic_cast<Real &>(*x);
-                else
-                    errNotNumber(x);
+                product = product * val;
             }
             return make_shared<Real>(product);
         }
@@ -71,6 +63,8 @@ class Builtin {
             args.pop_front();
 
             auto cond_result = eval(cond, env);
+
+            // TODO: create Boolean type, require/expect it here
 
             if (!isType<Real>(*cond_result))
                 errNotNumber(cond_result);
@@ -129,6 +123,34 @@ class Builtin {
         stringstream errMsg;
         errMsg << "The value " << x << " is not a number.";
         throw Error(errMsg.str());
+    }
+
+    // Remove the numerical prefix (if any) from the RTTI type name
+    static char* cleanTypeName(const char *str) {
+        char* str_end;
+        strtod(str, &str_end);
+        return str_end;
+    }
+
+    template <typename expectedType>
+    static string typeErrorMsg(shared_ptr<Value> val_ptr) {
+        Value &val = *val_ptr;
+        const char *expectedTypeName = cleanTypeName(typeid(expectedType).name());
+        const char *receivedTypeName = cleanTypeName(typeid(val).name());
+
+        stringstream errMsg;
+        errMsg << "Expected a value of type " << expectedTypeName
+               << ", but instead got the value `" << val
+               << "` of type " << receivedTypeName << ".";
+        return errMsg.str();
+    }
+
+    template <typename targetType>
+    static shared_ptr<targetType> vCast(shared_ptr<Value> val) {
+        shared_ptr<targetType> result = dynamic_pointer_cast<targetType>(val);
+        if (result == nullptr)
+            throw Error(typeErrorMsg<targetType>(val));
+        return result;
     }
 
     void define_function(string name, shared_ptr<Function> fn) {

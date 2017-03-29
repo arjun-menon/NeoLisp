@@ -66,10 +66,7 @@ class Builtin {
 
             // TODO: create Boolean type, require/expect it here
 
-            if (!isType<Real>(*cond_result))
-                errNotNumber(cond_result);
-
-            auto result_bool = dynamic_cast<Real &>(*cond_result)() != 0.0;
+            auto result_bool = (*vCast<Real>(cond_result))() != 0.0;
 
             if (result_bool)
                 return eval(conseq, env);
@@ -117,12 +114,6 @@ class Builtin {
         if (!isType<List>(*argsVal))
             throw Error("Function call 'args' is not a list!");
         return dynamic_pointer_cast<List>(argsVal);
-    }
-
-    static void errNotNumber(shared_ptr<Value> &x) {
-        stringstream errMsg;
-        errMsg << "The value " << x << " is not a number.";
-        throw Error(errMsg.str());
     }
 
     // Remove the numerical prefix (if any) from the RTTI type name

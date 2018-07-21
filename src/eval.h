@@ -21,3 +21,6 @@ public:
 };
 
 shared_ptr<Value> eval(shared_ptr<Value>, Env&);
+
+// Defined in builtin.cpp:
+void define_builtins(Env &);

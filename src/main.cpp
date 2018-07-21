@@ -2,7 +2,7 @@
 
 int repl() {
     Env env;
-    define_builtin(env);
+    define_builtins(env);
 
     for (string input; true; cout << endl) {
         cout << "> ";

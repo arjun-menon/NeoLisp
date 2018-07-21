@@ -4,4 +4,4 @@
 #cpplint "$@" src/*
 
 # Run cppcheck
-cppcheck -j 8 --language=c++ --std=c++11 --enable=warning,performance,portability,unusedFunction --platform=unix64 src
+cppcheck -j 8 --language=c++ --std=c++14 --enable=warning,performance,portability,unusedFunction --platform=unix64 src

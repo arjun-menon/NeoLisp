@@ -1,6 +1,59 @@
 #include "common.hpp"
 
 class Builtin {
+    struct Fn : Function {
+        vector<shared_ptr<Symbol>> params;
+        shared_ptr<Value> expr;
+
+        Fn(vector<shared_ptr<Symbol>> _params, shared_ptr<Value> _expr) : params(move(_params)), expr(_expr) {}
+
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+            auto args = getArgs(env)->lst;
+
+            if (args.size() != params.size()) {
+                throw Error("This functions expects " + toString(params.size()) + " arguments.");
+            }
+
+            Env fnEnv(&env);
+            auto param = params.begin();
+            for (auto &arg : args) {
+                fnEnv.assign(*param, eval(arg, env));
+                param++;
+            }
+            cout<<"expr ==> "<<toString(*expr)<<endl;
+
+            return eval(expr, fnEnv);
+        }
+    };
+
+    struct FnDefinition : Function {
+        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+            auto args = getArgs(env)->lst;
+
+            if (args.size() != 2)
+                throw Error("A lambda must have two arguments: (fn (a b c) expr)");
+
+            auto param_names_list = args.front();
+            args.pop_front();
+
+            auto fn_expr = args.front();
+            args.pop_front();
+
+            if (!isType<List>(*param_names_list))
+                throw Error("The lambda parameters must be a list.");
+
+            vector<shared_ptr<Symbol>> params;
+            for (auto param_name : dynamic_pointer_cast<List>(param_names_list)->lst) {
+                if (!isType<Symbol>(*param_name))  {
+                    throw Error("The lambda parameter names must all be symbols. This is not a symbol: " + toString(*param_name));
+                }
+                params.push_back(dynamic_pointer_cast<Symbol>(param_name));
+            }
+
+            return make_shared<Fn>(params, fn_expr);
+        }
+    };
+
     struct AddFunction : Function {
         shared_ptr<Value> apply(Env &env, short pivot) override {
             Real sum(0.0f);
@@ -76,11 +129,11 @@ class Builtin {
     };
 
     struct AssignFunction : Function {
-        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
             auto args = getArgs(env)->lst;
 
             if (args.size() != 2)
-                throw Error("The = function expects exactly 2 arguments: var, val.");
+                throw Error("The assignment function expects exactly 2 arguments: var, val.");
 
             auto var_name = args.front();
             args.pop_front();
@@ -99,7 +152,7 @@ class Builtin {
                 outerEnv->assign(var, val);
             }
 
-            return make_shared<Real>();
+            return var_name;
         }
     };
 
@@ -160,11 +213,12 @@ public:
         define_function("-", make_shared<SubFunction>());
         define_function("*", make_shared<MulFunction>());
         define_function("?", make_shared<IfFunction>());
+        define_function("fn", make_shared<FnDefinition>());
         define_function("=", make_shared<AssignFunction>());
         define_function("q", make_shared<ExitFunction>());
     }
 };
 
-void define_builtin(Env &env) {
+void define_builtins(Env &env) {
     Builtin(env).define();
 }

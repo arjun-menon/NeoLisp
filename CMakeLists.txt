@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 include(CheckIncludeFileCXX)
 project(NeoLisp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -g")
 
 set(SOURCE_FILES
         src/lexer.cpp src/lexer.hpp
         src/parser.cpp src/parser.hpp
         src/datatypes.hpp src/datatypes.cpp
         src/eval.cpp src/eval.h
-        src/builtin.cpp src/builtin.h
+        src/builtin.cpp
         src/column.hpp src/column.cpp
         src/table.hpp src/table.cpp
         src/data_reader.hpp src/data_reader.cpp
@@ -17,7 +17,7 @@ set(SOURCE_FILES
 
 add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)
 
-set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 11)
+set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 14)
 set_property(TARGET NeoLisp PROPERTY CXX_STANDARD_REQUIRED ON)
 
 set(UNIT_TEST_FILES

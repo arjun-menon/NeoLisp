@@ -35,8 +35,8 @@ shared_ptr<Symbol> Function::argsVar = Symbol::create("args");
 
 ostream& Function::display(ostream &o) const {
     o << "function<";
-    if(auto s = symbol.lock())
-        s->display(o);
+    if(!symbol.expired())
+        symbol.lock()->display(o);
     else
         o << "lambda";
     return o << ">";

@@ -31,7 +31,9 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
             Env fnEnv(&env);
             fnEnv.assign(Function::argsVar, vList);
 
-            return fn->apply(fnEnv);
+            auto result = fn->apply(fnEnv);
+            vList->lst.push_front(head);
+            return result;
         }
         else {
             vList->lst.push_front(head);

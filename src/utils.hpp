@@ -53,7 +53,7 @@ private:
     const string error_description;
 public:
     virtual const char* what() const throw() { return error_description.c_str(); }
-    Error(string err) : error_description((string)("Error: ")+err) {}
+    Error(const string &err) : error_description((string)("Error: ")+err) {}
     ~Error() throw() {}
 };
 

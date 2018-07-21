@@ -18,6 +18,10 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
     if (isType<List>(*v)) {
         auto vList = dynamic_pointer_cast<List>(v);
 
+        if (!vList->lst.size()) {
+            return vList;
+        }
+
         auto head = eval(vList->lst.front(), env);
         vList->lst.pop_front();
 

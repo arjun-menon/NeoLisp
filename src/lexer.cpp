@@ -12,7 +12,7 @@ inline static bool nonAlnum(char c) {
     return !isalnum(c);
 }
 
-static void trim(string &str, const string to_remove = " \t") {
+static void trim(string &str, const string &to_remove = " \t") {
     // trim leading & trailing 'to_remove'
     size_t startpos = str.find_first_not_of(to_remove);
     size_t endpos = str.find_last_not_of(to_remove);
@@ -69,7 +69,7 @@ TokenQueue& Lexer::lex(const char *sp) {
         */
         nextChar = *(sp+1);
 
-        if(!iscntrl(currentChar))
+        if(!iscntrl(currentChar) || isspace(currentChar))
         {
             if(inString)
             {
@@ -139,7 +139,7 @@ TokenQueue& Lexer::lex(const char *sp) {
     return tokens;
 }
 
-ostream& Lexer::display(const deque< shared_ptr<Value> > &tokens, ostream &o, bool pretty_print) {
+ostream& Lexer::display(const TokenQueue &tokens, ostream &o, bool pretty_print) {
     if(pretty_print)
         o << "There are " << tokens.size() << " tokens:" << endl;
 

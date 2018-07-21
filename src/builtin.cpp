@@ -2,7 +2,7 @@
 
 class Builtin {
     struct AddFunction : Function {
-        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
             Real sum(0.0f);
             for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
@@ -15,7 +15,7 @@ class Builtin {
     };
 
     struct SubFunction : Function {
-        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
             Real left_sum(0.0f);
             Real right_sum(0.0f);
 
@@ -34,7 +34,7 @@ class Builtin {
     };
 
     struct MulFunction : Function {
-        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
             Real product(1.0f);
             for (auto &k : getArgs(env)->lst) {
                 auto x = eval(k, env);
@@ -47,7 +47,7 @@ class Builtin {
     };
 
     struct IfFunction : Function {
-        shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
             auto args = getArgs(env)->lst;
 
             if (args.size() != 3)

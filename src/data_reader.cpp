@@ -25,7 +25,7 @@ void DataReader::process_line(const string &line) {
         Real val;
         try {
             num_len = val.fromStr(line.c_str() + pos);
-        } catch (invalid_argument) {
+        } catch (invalid_argument&) {
             pos++;
             continue;
         }

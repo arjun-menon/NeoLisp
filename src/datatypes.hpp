@@ -20,7 +20,7 @@ class Env;
 
 struct Symbol : Value {
     static shared_ptr<Symbol> create(const string &name);
-    ostream& display(ostream &o = cout) const override { return o << name; }
+    ostream& display(ostream &o) const override { return o << name; }
     inline bool operator<(const Symbol &o) const { return less<string>()(name, o.name); }
 
 private:
@@ -32,7 +32,7 @@ private:
 struct List : Value {
     list< shared_ptr<Value> > lst;
 
-    ostream& display(ostream &o = cout) const override;
+    ostream& display(ostream &o) const override;
 
     static shared_ptr<Symbol> open;   // "("
     static shared_ptr<Symbol> close;  // ")"
@@ -40,7 +40,7 @@ struct List : Value {
 
 struct Function : Value {
     virtual shared_ptr<Value> apply(Env &env, short pivot = 0) = 0;
-    ostream& display(ostream &o = cout) const override;
+    ostream& display(ostream &o) const override;
     weak_ptr<Symbol> symbol;
     static shared_ptr<Symbol> argsVar;  // "args"
 };
@@ -48,7 +48,7 @@ struct Function : Value {
 struct UserString : Value {
     const string text;
     UserString(const string &s) : text(s) {}
-    ostream& display(ostream &o = cout) const override { return o << "'" << text << "'"; }
+    ostream& display(ostream &o) const override { return o << "'" << text << "'"; }
 };
 
 /*
@@ -76,7 +76,7 @@ struct Real : Value {
         return str_end - str;
     }
 
-    ostream& display(ostream &o = cout) const override;
+    ostream& display(ostream &o) const override;
 
  private:
     double val;

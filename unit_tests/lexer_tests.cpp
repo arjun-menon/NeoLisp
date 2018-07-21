@@ -7,15 +7,15 @@ bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expect
     Lexer lexer;
     lexer.lex(input);
 
-    cout << "Testing Lexer Output: ";
-    lexer.display(cout, false);
-    cout << endl;
+    // cout << "Testing Lexer Output: ";
+    // lexer.display(cout, false);
+    // cout << endl;
 
     size_t i = 0;
     for (auto &token : lexer.tokens) {
         const Value &value = *token;
 
-        cout << value << endl;
+        // cout << value << endl;
         if (T(value) != expectedOutput[i].first ||
             toString(value) != expectedOutput[i].second)
             return false;
@@ -27,6 +27,9 @@ bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expect
 }
 
 TEST_CASE("Basic expressions") {
+    CHECK(checkLexerOutput("", {}));
+    CHECK(checkLexerOutput("  \r\n  \t  \n  ", {}));
+
     CHECK(checkLexerOutput(
             "1+2",
             {

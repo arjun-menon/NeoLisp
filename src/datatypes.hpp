@@ -39,13 +39,14 @@ struct List : Value {
 };
 
 struct Function : Value {
-    virtual shared_ptr<Value> apply(Env &env, short pivot = 0) = 0;
+    virtual shared_ptr<Value> apply(Env &env) = 0;
     ostream& display(ostream &o) const override;
     weak_ptr<Symbol> symbol;
     bool specialForm = false;
     static float defaultPrecedence;
     float precedence = defaultPrecedence;
-    static shared_ptr<Symbol> argsVar;  // "args"
+    static shared_ptr<Symbol> args;  // "args"
+    static shared_ptr<Symbol> lhs;  // "lhs"
 };
 
 struct UserString : Value {

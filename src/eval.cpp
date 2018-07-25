@@ -22,10 +22,9 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
             return vList;
         }
 
-        short i = 0, pivot = 0;
         shared_ptr<Function> fn;
         auto pos = vList->lst.end();
-        for (auto it = vList->lst.begin(); it != vList->lst.end(); it++, i++) {
+        for (auto it = vList->lst.begin(); it != vList->lst.end(); it++) {
             shared_ptr<Function> possibleFn = dynamic_pointer_cast<Function>(*it);
             if (!possibleFn && instanceof<Symbol>(*it)) {
                 auto symbol = dynamic_pointer_cast<Symbol>(*it);
@@ -35,22 +34,26 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
             }
             if (possibleFn && (!fn || fn->precedence > possibleFn->precedence)) {
                 fn = possibleFn;
-                pivot = i;
                 pos = it;
             }
         }
 
-        if (pos != vList->lst.end()) {
-            auto val = *pos;
-            auto reinsertAt = vList->lst.erase(pos);
+        if (pos != vList->lst.end()) { // there's a function in vList
+            auto lhs = make_shared<List>();
+            auto rhs = make_shared<List>();
+            lhs->lst.splice(lhs->lst.begin(), vList->lst, vList->lst.begin(), pos);
+            rhs->lst.splice(rhs->lst.begin(), vList->lst, ++pos, vList->lst.end());
 
             Env fnEnv(env);
-            fnEnv.assign(Function::argsVar, vList);
-            auto result = fn->apply(fnEnv, pivot);
-
-            vList->lst.insert(reinsertAt, val);
-            return result;
-        } else if (!reified) {
+            if (fn->specialForm) {
+                fnEnv.assign(Function::args, rhs);
+                fnEnv.assign(Function::lhs, lhs);
+            } else {
+                fnEnv.assign(Function::args, eval(rhs, env));
+                fnEnv.assign(Function::lhs, eval(lhs, env));
+            }
+            return fn->apply(fnEnv);
+        } else if (!reified) { // no function present in vList
             auto evaluatedList = make_shared<List>();
             for (auto &elem : vList->lst)
                 evaluatedList->lst.push_back(eval(elem, env));

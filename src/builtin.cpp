@@ -1,10 +1,13 @@
 #include "common.hpp"
 
-static shared_ptr<List> getArgs(Env &env) {
-    auto argsVal = env.get(Function::argsVar);
-    if (!instanceof<List>(argsVal))
-        throw Error("Function call 'args' is not a list!");
-    return dynamic_pointer_cast<List>(argsVal);
+static shared_ptr<List> getArgs(Env &env, shared_ptr<Symbol>& whichArgs = Function::args) {
+    auto args = env.get(whichArgs);
+    if (!instanceof<List>(args)) {
+        auto argsList = make_shared<List>();
+        argsList->lst.push_back(args);
+        return argsList;
+    }
+    return dynamic_pointer_cast<List>(args);
 }
 
 // Remove the numerical prefix (if any) from the RTTI type name
@@ -41,7 +44,7 @@ struct Fn : Function {
 
     Fn(vector<shared_ptr<Symbol>> _params, shared_ptr<Value> _expr) : params(move(_params)), expr(_expr) {}
 
-    shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+    shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env)->lst;
 
         if (args.size() != params.size()) {
@@ -60,7 +63,7 @@ struct Fn : Function {
 };
 
 struct FnDefinition : Function {
-    shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+    shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env)->lst;
 
         if (args.size() != 2)
@@ -88,9 +91,13 @@ struct FnDefinition : Function {
 };
 
 struct AddFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
         Real sum(0.0f);
-        for (auto &k : getArgs(env)->lst) {
+        for (auto &k : args->lst) {
             auto x = eval(k, env);
             Real& val = *vCast<Real>(x);
 
@@ -101,11 +108,16 @@ struct AddFunction : Function {
 };
 
 struct SubFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        unsigned long pivot = lhs->lst.size();
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
         Real left_sum(0.0f);
         Real right_sum(0.0f);
 
-        for (auto &k : getArgs(env)->lst) {
+        for (auto &k : args->lst) {
             auto x = eval(k, env);
             Real& val = *vCast<Real>(x);
 
@@ -120,9 +132,13 @@ struct SubFunction : Function {
 };
 
 struct MulFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
         Real product(1.0f);
-        for (auto &k : getArgs(env)->lst) {
+        for (auto &k : args->lst) {
             auto x = eval(k, env);
             Real& val = *vCast<Real>(x);
 
@@ -133,11 +149,16 @@ struct MulFunction : Function {
 };
 
 struct DivFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        unsigned long pivot = args->lst.size();
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
         Real left_product(1.0f);
         Real right_product(1.0f);
 
-        for (auto &k : getArgs(env)->lst) {
+        for (auto &k : args->lst) {
             auto x = eval(k, env);
             Real& val = *vCast<Real>(x);
 
@@ -152,20 +173,22 @@ struct DivFunction : Function {
 };
 
 struct IfFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
-        auto args = getArgs(env)->lst;
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
 
-        if (args.size() != 3)
+        if (args->lst.size() != 3)
             throw Error("The ? function expects exactly 3 arguments: cond, conseq, alt.");
 
-        auto cond = args.front();
-        args.pop_front();
+        auto cond = args->lst.front();
+        args->lst.pop_front();
 
-        auto conseq = args.front();
-        args.pop_front();
+        auto conseq = args->lst.front();
+        args->lst.pop_front();
 
-        auto alt = args.front();
-        args.pop_front();
+        auto alt = args->lst.front();
+        args->lst.pop_front();
 
         auto cond_result = eval(cond, env);
 
@@ -181,17 +204,19 @@ struct IfFunction : Function {
 };
 
 struct AssignFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot) override {
-        auto args = getArgs(env)->lst;
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
 
-        if (args.size() != 2)
+        if (args->lst.size() != 2)
             throw Error("The assignment function expects exactly 2 arguments: var, val.");
 
-        auto var_name = args.front();
-        args.pop_front();
+        auto var_name = args->lst.front();
+        args->lst.pop_front();
 
-        auto var_val = args.front();
-        args.pop_front();
+        auto var_val = args->lst.front();
+        args->lst.pop_front();
 
         if (!instanceof<Symbol>(var_name))
             throw Error("The variable name must be a symbol.");
@@ -209,7 +234,7 @@ struct AssignFunction : Function {
 };
 
 struct ExitFunction : Function {
-    shared_ptr<Value> apply(Env &env, short pivot = 0) override {
+    shared_ptr<Value> apply(Env &env) override {
         throw ExitNow(0);
     }
 };
@@ -231,7 +256,7 @@ static void def(Env* env, string name, float precedence = Function::defaultPrece
 
 Env::Env() : outerEnv(nullptr) {
     def<AddFunction>(this, "+", 13);
-    def<SubFunction>(this, "-", 13);
+    def<SubFunction>(this, "-", 13.1);
     def<MulFunction>(this, "*", 14);
     def<DivFunction>(this, "/", 14);
     def<IfFunction>(this, "?");

@@ -31,6 +31,12 @@ TEST_CASE("Eval basic arithmetic expressions") {
     CHECK_THAT(eval("80 / 20"), Equals("4"));
     CHECK_THAT(eval("(4 * 20) / (11 + 9)"), Equals("4"));
     CHECK_THAT(eval("(7 + (5 * 3)) - 2"), Equals("20"));
+
+    CHECK_THAT(eval("7+3*4"), Equals("19"));
+    CHECK_THAT(eval("3*7 + 2*4"), Equals("29"));
+    CHECK_THAT(eval("-5"), Equals("-5"));
+    CHECK_THAT(eval("-1 + 5"), Equals("4"));
+    CHECK_THAT(eval("5 + -1"), Equals("4"));
 }
 
 TEST_CASE("Eval simple lambda expressions") {

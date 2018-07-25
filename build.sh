@@ -43,9 +43,14 @@ ln -sf cbuild/NeoLisp-tests
 
 if [ -f cbuild/NeoLisp-tests ]; then
   # Run unit tests
-  printf "\nRunning unit tests...\n"
-  ./cbuild/NeoLisp-tests
+  printf "\nRunning unit tests...\n\n"
+  if ! [ -x "$(command -v git)" ]; then
+    printf "Install Valgrind to perform memory leak checks.\n\n"
+    ./cbuild/NeoLisp-tests
+  else
+    ./valgrind.sh
+  fi
 fi
 
 # Done
-echo "You can run ./NeoLisp now"
+printf "\nYou can run ./NeoLisp now.\n"

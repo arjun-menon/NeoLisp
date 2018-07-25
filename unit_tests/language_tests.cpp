@@ -20,9 +20,17 @@ static string eval_and_get_r(std::initializer_list<string> inputExpressions)
 
 TEST_CASE("Eval basic arithmetic expressions") {
     CHECK_THAT(eval(""), Equals("()"));
+
     CHECK_THAT(eval("+ 1 2 3"), Equals("6"));
     CHECK_THAT(eval("* 4 5"), Equals("20"));
     CHECK_THAT(eval("+ 1 2 (* 4 5) 3 4"), Equals("30"));
+
+    CHECK_THAT(eval("3 + 5"), Equals("8"));
+    CHECK_THAT(eval("7 * 5"), Equals("35"));
+    CHECK_THAT(eval("7 - 5"), Equals("2"));
+    CHECK_THAT(eval("80 / 20"), Equals("4"));
+    CHECK_THAT(eval("(4 * 20) / (11 + 9)"), Equals("4"));
+    CHECK_THAT(eval("(7 + (5 * 3)) - 2"), Equals("20"));
 }
 
 TEST_CASE("Eval simple lambda expressions") {

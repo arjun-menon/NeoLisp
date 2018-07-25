@@ -14,7 +14,7 @@ shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
     }
 }
 
-shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
+shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
     if (isType<List>(*v)) {
         auto vList = dynamic_pointer_cast<List>(v);
 
@@ -22,21 +22,39 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
             return vList;
         }
 
-        auto head = eval(vList->lst.front(), env);
-        vList->lst.pop_front();
+        short i = 0, pivot = 0;
+        shared_ptr<Function> fn;
+        auto pos = vList->lst.end();
+        for (auto it = vList->lst.begin(); it != vList->lst.end(); it++, i++) {
+            shared_ptr<Function> possibleFn = dynamic_pointer_cast<Function>(*it);
+            if (!possibleFn && isType<Symbol>(**it)) {
+                auto symbol = dynamic_pointer_cast<Symbol>(*it);
+                if (env.check(symbol)) {
+                    possibleFn = dynamic_pointer_cast<Function>(env.get(symbol));
+                }
+            }
+            if (possibleFn && (!fn || fn->precedence > possibleFn->precedence)) {
+                fn = possibleFn;
+                pivot = i;
+                pos = it;
+            }
+        }
 
-        if(instanceof<Function>(*head)) {
-            auto fn = dynamic_pointer_cast<Function>(head);
+        if (pos != vList->lst.end()) {
+            auto val = *pos;
+            auto reinsertAt = vList->lst.erase(pos);
 
             Env fnEnv(env);
             fnEnv.assign(Function::argsVar, vList);
+            auto result = fn->apply(fnEnv, pivot);
 
-            auto result = fn->apply(fnEnv);
-            vList->lst.push_front(head);
+            vList->lst.insert(reinsertAt, val);
             return result;
-        }
-        else {
-            vList->lst.push_front(head);
+        } else if (!reified) {
+            auto evaluatedList = make_shared<List>();
+            for (auto &elem : vList->lst)
+                evaluatedList->lst.push_back(eval(elem, env));
+            return eval(evaluatedList, env, true);
         }
     }
     else if (isType<Symbol>(*v)) {

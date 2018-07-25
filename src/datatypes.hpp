@@ -42,6 +42,8 @@ struct Function : Value {
     virtual shared_ptr<Value> apply(Env &env, short pivot = 0) = 0;
     ostream& display(ostream &o) const override;
     weak_ptr<Symbol> symbol;
+    static float defaultPrecedence;
+    float precedence = defaultPrecedence;
     static shared_ptr<Symbol> argsVar;  // "args"
 };
 

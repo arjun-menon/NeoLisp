@@ -7,7 +7,6 @@ static shared_ptr<List> getArgs(Env &env) {
     return dynamic_pointer_cast<List>(argsVal);
 }
 
-
 // Remove the numerical prefix (if any) from the RTTI type name
 static char* cleanTypeName(const char *str) {
     char* str_end;
@@ -215,24 +214,27 @@ struct ExitFunction : Function {
     }
 };
 
-static void def(Env& env, string name, shared_ptr<Function> fn) {
+static void def(Env& env, string name, shared_ptr<Function> fn, float precedence) {
     auto symbol = Symbol::create(name);
     env.assign(symbol, fn);
     fn->symbol = symbol;
+    fn->precedence = precedence;
 }
 
+float Function::defaultPrecedence = 19;
+
 template <class T>
-static void def(Env* env, string name) {
-    def(*env, name, make_shared<T>());
+static void def(Env* env, string name, float precedence = Function::defaultPrecedence) {
+    def(*env, name, make_shared<T>(), precedence);
 }
 
 Env::Env() : outerEnv(nullptr) {
-    def<AddFunction>(this, "+");
-    def<SubFunction>(this, "-");
-    def<MulFunction>(this, "*");
-    def<DivFunction>(this, "/");
+    def<AddFunction>(this, "+", 13);
+    def<SubFunction>(this, "-", 13);
+    def<MulFunction>(this, "*", 14);
+    def<DivFunction>(this, "/", 14);
     def<IfFunction>(this, "?");
     def<FnDefinition>(this, "fn");
-    def<AssignFunction>(this, "=");
+    def<AssignFunction>(this, "=", 3);
     def<ExitFunction>(this, "q");
 }

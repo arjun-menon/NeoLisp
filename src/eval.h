@@ -20,4 +20,4 @@ public:
     shared_ptr<Value> get(shared_ptr<Symbol> symbol);
 };
 
-shared_ptr<Value> eval(shared_ptr<Value>, Env&);
+shared_ptr<Value> eval(shared_ptr<Value>, Env&, bool reified=false);

@@ -13,7 +13,7 @@ int repl() {
             break;
         } else {
             try {
-                shared_ptr<Value> ast = Parser::parse(input);
+                shared_ptr<Value> ast = parse(input);
                 cout << *eval(ast, env) << endl;
             }
             catch(ExitNow &e) {

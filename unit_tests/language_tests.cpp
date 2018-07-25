@@ -6,8 +6,7 @@ using Catch::Matchers::Contains;
 
 string ev(const string& inputExpression) {
     Env env;
-    shared_ptr<Value> ast = Parser::parse(inputExpression);
-    return toString(*eval(ast, env));
+    return toString(*eval(parse(inputExpression), env));
 }
 
 TEST_CASE("Eval basic arithmetic expressions") {

@@ -20,7 +20,6 @@ class Builtin {
                 fnEnv.assign(*param, eval(arg, env));
                 param++;
             }
-            cout<<"expr ==> "<<toString(*expr)<<endl;
 
             return eval(expr, fnEnv);
         }
@@ -96,6 +95,25 @@ class Builtin {
                 product = product * val;
             }
             return make_shared<Real>(product);
+        }
+    };
+
+    struct DivFunction : Function {
+        shared_ptr<Value> apply(Env &env, short pivot) override {
+            Real left_product(1.0f);
+            Real right_product(1.0f);
+
+            for (auto &k : getArgs(env)->lst) {
+                auto x = eval(k, env);
+                Real& val = *vCast<Real>(x);
+
+                if (pivot-- > 0)
+                    left_product = left_product * val;
+                else
+                    right_product = right_product * val;
+            }
+
+            return make_shared<Real>(left_product / right_product);
         }
     };
 
@@ -212,6 +230,7 @@ public:
         define_function("+", make_shared<AddFunction>());
         define_function("-", make_shared<SubFunction>());
         define_function("*", make_shared<MulFunction>());
+        define_function("/", make_shared<DivFunction>());
         define_function("?", make_shared<IfFunction>());
         define_function("fn", make_shared<FnDefinition>());
         define_function("=", make_shared<AssignFunction>());

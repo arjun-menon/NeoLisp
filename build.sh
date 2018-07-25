@@ -11,6 +11,15 @@ if [[ $* == *--clean* ]]; then
   exit 0
 fi
 
+if ! [ -x "$(command -v cppcheck)" ]; then
+    printf "Install cppcheck to perform additional code quality checks.\n\n"
+  else
+    printf "Running `cppcheck --version`...\n"
+    # Run cppcheck (add `-j 8` for parallelism; this disables the unusedFunction check however)
+    cppcheck -j 8 --language=c++ --std=c++14 --enable=warning,performance,portability,unusedFunction --platform=unix64 --error-exitcode=5 src || true
+    printf "\n"
+fi
+
 # Create build directory
 mkdir -p cbuild
 cd cbuild
@@ -41,14 +50,16 @@ echo "Done compiling."
 ln -sf cbuild/NeoLisp
 ln -sf cbuild/NeoLisp-tests
 
-if [ -f cbuild/NeoLisp-tests ]; then
+TESTS=./cbuild/NeoLisp-tests
+if [ -f $TESTS ]; then
   # Run unit tests
   printf "\nRunning unit tests...\n\n"
   if ! [ -x "$(command -v valgrind)" ]; then
     printf "Install Valgrind to perform memory leak checks.\n\n"
-    ./cbuild/NeoLisp-tests
+    $TESTS
   else
-    ./valgrind.sh ./cbuild/NeoLisp-tests
+    # Run valgrind
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=tools/.mac_leak.supp $TESTS
   fi
 fi
 

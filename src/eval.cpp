@@ -15,10 +15,10 @@ shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
 }
 
 shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
-    if (isType<List>(*v)) {
+    if (instanceof<List>(v)) {
         auto vList = dynamic_pointer_cast<List>(v);
 
-        if (!vList->lst.size()) {
+        if (vList->lst.empty()) {
             return vList;
         }
 
@@ -27,7 +27,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
         auto pos = vList->lst.end();
         for (auto it = vList->lst.begin(); it != vList->lst.end(); it++, i++) {
             shared_ptr<Function> possibleFn = dynamic_pointer_cast<Function>(*it);
-            if (!possibleFn && isType<Symbol>(**it)) {
+            if (!possibleFn && instanceof<Symbol>(*it)) {
                 auto symbol = dynamic_pointer_cast<Symbol>(*it);
                 if (env.check(symbol)) {
                     possibleFn = dynamic_pointer_cast<Function>(env.get(symbol));
@@ -57,7 +57,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
             return eval(evaluatedList, env, true);
         }
     }
-    else if (isType<Symbol>(*v)) {
+    else if (instanceof<Symbol>(v)) {
         return env.get( dynamic_pointer_cast<Symbol>(v) );
     }
 

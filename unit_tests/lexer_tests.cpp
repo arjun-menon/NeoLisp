@@ -26,7 +26,7 @@ bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expect
     return true;
 }
 
-TEST_CASE("Basic expressions") {
+TEST_CASE("Lex basic expressions") {
     CHECK(checkLexerOutput("", {}));
     CHECK(checkLexerOutput("  \r\n  \t  \n  ", {}));
 

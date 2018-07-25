@@ -8,6 +8,8 @@ public:
     Env* const outerEnv;
     explicit Env();  // defined in builtin.cpp
     explicit Env(Env& outerEnv) : outerEnv(&outerEnv) {}
+    Env& operator=(const Env&) = delete;
+    Env(const Env&) = delete;
 
     inline void assign(shared_ptr<Symbol> symbol, shared_ptr<Value> value) {
         variables[symbol] = value;

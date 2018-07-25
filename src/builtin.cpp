@@ -42,7 +42,7 @@ struct Fn : Function {
     vector<shared_ptr<Symbol>> params;
     shared_ptr<Value> expr;
 
-    Fn(vector<shared_ptr<Symbol>> _params, shared_ptr<Value> _expr) : params(move(_params)), expr(_expr) {}
+    Fn(vector<shared_ptr<Symbol>> &_params, shared_ptr<Value> _expr) : params(move(_params)), expr(_expr) {}
 
     shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env)->lst;

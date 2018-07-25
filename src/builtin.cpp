@@ -90,6 +90,20 @@ struct FnDefinition : Function {
     }
 };
 
+struct SemicolonFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto lhs = getArgs(env, Function::lhs);
+        auto rhs = getArgs(env);
+
+        auto lhsResult = eval(lhs, env);
+        if (rhs->lst.empty()) {
+            return lhsResult;
+        }
+        env.assign(Symbol::create("_"), lhsResult);
+        return eval(rhs, env);
+    }
+};
+
 struct AddFunction : Function {
     shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env);
@@ -233,6 +247,17 @@ struct AssignFunction : Function {
     }
 };
 
+struct PrintFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+        string result = toString(*args);
+        cout << result << endl;
+        return make_shared<List>();
+    }
+};
+
 struct ExitFunction : Function {
     shared_ptr<Value> apply(Env &env) override {
         throw ExitNow(0);
@@ -259,8 +284,10 @@ Env::Env() : outerEnv(nullptr) {
     def<SubFunction>(this, "-", 13.1);
     def<MulFunction>(this, "*", 14);
     def<DivFunction>(this, "/", 14);
-    def<IfFunction>(this, "?");
+    def<IfFunction>(this, "?", Function::defaultPrecedence, true);
     def<FnDefinition>(this, "fn", Function::defaultPrecedence, true);
+    def<SemicolonFunction>(this, ";", 0, true);
     def<AssignFunction>(this, "=", 3, true);
+    def<PrintFunction>(this, "p");
     def<ExitFunction>(this, "q");
 }

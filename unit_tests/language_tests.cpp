@@ -4,7 +4,7 @@
 using Catch::Matchers::Equals;
 using Catch::Matchers::Contains;
 
-static string eval(const string &inputExpression) {
+static string eval(const char *inputExpression) {
     Env env;
     return toString(*eval(parse(inputExpression), env));
 }
@@ -51,10 +51,22 @@ TEST_CASE("Eval simple lambda expressions") {
         "= r x"}),
     Equals("80"));
 
+    CHECK_THAT(eval(R"code(
+x = 7;
+x = (x * 11);
+x = (x + 3);
+x
+)code"), Equals("(80)"));
+
     CHECK_THAT(eval_and_get_r({
         "= cube (fn (x) (* x x x))",
         "= r (cube 3)"}),
     Equals("27"));
+
+    CHECK_THAT(eval(R"code(
+cube = (fn (x) (* x x x));
+cube 3;
+)code"), Equals("27"));
 
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1"), Contains("This functions expects 2 arguments"));
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This functions expects 2 arguments"));

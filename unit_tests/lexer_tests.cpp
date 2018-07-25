@@ -4,15 +4,14 @@
 #define T(TYPE) typeid(TYPE).hash_code()
 
 bool checkLexerOutput(string input, const vector< pair<size_t, string> > &expectedOutput) {
-    Lexer lexer;
-    lexer.lex(input);
+    TokenQueue tokens = lex(input.c_str());
 
     // cout << "Testing Lexer Output: ";
-    // lexer.display(cout, false);
+    // display(tokens, cout, false);
     // cout << endl;
 
     size_t i = 0;
-    for (auto &token : lexer.tokens) {
+    for (auto &token : tokens) {
         const Value &value = *token;
 
         // cout << value << endl;

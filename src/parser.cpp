@@ -22,9 +22,9 @@ static void parse(TokenQueue& tokens, List &expr, TokenQueue::iterator& i, int d
         throw Error("Missing closing parenthesis.");
 }
 
-shared_ptr<Value> parse(TokenQueue& tokens) {
+shared_ptr<Value> parse(TokenQueue tokens) {
     auto expr = make_shared<List>();
-    TokenQueue::iterator i = tokens.begin();
+    auto i = tokens.begin();
     parse(tokens, *expr, i, 0);
     return shared_ptr<Value>(expr);
 }

@@ -49,7 +49,7 @@ struct Fn : Function {
             throw Error("This functions expects " + toString(params.size()) + " arguments.");
         }
 
-        Env fnEnv(&env);
+        Env fnEnv(env);
         auto param = params.begin();
         for (auto &arg : args) {
             fnEnv.assign(*param, eval(arg, env));
@@ -222,17 +222,17 @@ static void def(Env& env, string name, shared_ptr<Function> fn) {
 }
 
 template <class T>
-static void def(Env& env, string name) {
-    def(env, name, make_shared<T>());
+static void def(Env* env, string name) {
+    def(*env, name, make_shared<T>());
 }
 
-void define_builtins(Env& env) {
-    def<AddFunction>(env, "+");
-    def<SubFunction>(env, "-");
-    def<MulFunction>(env, "*");
-    def<DivFunction>(env, "/");
-    def<IfFunction>(env, "?");
-    def<FnDefinition>(env, "fn");
-    def<AssignFunction>(env, "=");
-    def<ExitFunction>(env, "q");
+Env::Env() : outerEnv(nullptr) {
+    def<AddFunction>(this, "+");
+    def<SubFunction>(this, "-");
+    def<MulFunction>(this, "*");
+    def<DivFunction>(this, "/");
+    def<IfFunction>(this, "?");
+    def<FnDefinition>(this, "fn");
+    def<AssignFunction>(this, "=");
+    def<ExitFunction>(this, "q");
 }

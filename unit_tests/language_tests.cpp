@@ -4,9 +4,8 @@
 using Catch::Matchers::Equals;
 using Catch::Matchers::Contains;
 
-inline string ev(string inputExpression) {
+string ev(const string& inputExpression) {
     Env env;
-    define_builtins(env);
     shared_ptr<Value> ast = Parser::parse(inputExpression);
     return toString(*eval(ast, env));
 }

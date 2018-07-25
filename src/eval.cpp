@@ -28,7 +28,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env) {
         if(instanceof<Function>(*head)) {
             auto fn = dynamic_pointer_cast<Function>(head);
 
-            Env fnEnv(&env);
+            Env fnEnv(env);
             fnEnv.assign(Function::argsVar, vList);
 
             auto result = fn->apply(fnEnv);

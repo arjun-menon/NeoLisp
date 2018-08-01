@@ -14,7 +14,7 @@ NeoLisp code samples/snippets in `unit_tests/language_tests.cpp`.
 
 One interesting aspect of NeoLisp is its function application rules.
 In addition to supporting LISP-style S-expression function application,
-it has a novel set of function application that allow traditional
+it has a novel set of function application rules that allow traditional
 *precedence-based infix expressions*.
 
 Functions in NeoLisp can have a floating-point precedence value

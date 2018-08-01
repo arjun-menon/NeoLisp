@@ -264,7 +264,7 @@ struct ExitFunction : Function {
     }
 };
 
-static void def(Env& env, string name, shared_ptr<Function> fn, float precedence, bool specialForm) {
+static void def(Env& env, const string& name, shared_ptr<Function> fn, float precedence, bool specialForm) {
     auto symbol = Symbol::create(name);
     env.assign(symbol, fn);
     fn->symbol = symbol;
@@ -275,7 +275,7 @@ static void def(Env& env, string name, shared_ptr<Function> fn, float precedence
 float Function::defaultPrecedence = 19;
 
 template <class T>
-static void def(Env* env, string name, float precedence = Function::defaultPrecedence, bool specialForm = false) {
+static void def(Env* env, const string& name, float precedence = Function::defaultPrecedence, bool specialForm = false) {
     def(*env, name, make_shared<T>(), precedence, specialForm);
 }
 

@@ -62,7 +62,7 @@ if [ -f $TESTS ]; then
     $TESTS
   else
     # Run valgrind
-    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=.valgrind-false-positives.supp --gen-suppressions=all $TESTS
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=.valgrind-false-positives.supp --gen-suppressions=all --error-exitcode=999 $TESTS
   fi
 fi
 

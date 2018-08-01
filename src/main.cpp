@@ -33,8 +33,8 @@ int repl() {
 
 void stuff() {
     cout<<"x = "<< sizeof(Real) <<endl;
-    Table table;
-    DataReader::read_file("test_data/t1.txt", table);
+    Matrix table;
+    CsvReader::read_file("test_data/t1.txt", table);
     cout << "table" << endl << table << endl;
     cout << table[3].getMin() << endl;
     table.display(cout, {1, 3});

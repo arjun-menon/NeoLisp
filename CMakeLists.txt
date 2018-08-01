@@ -10,9 +10,7 @@ set(SOURCE_FILES
         src/datatypes.hpp src/datatypes.cpp
         src/eval.cpp src/eval.h
         src/builtin.cpp
-        src/column.hpp src/column.cpp
-        src/table.hpp src/table.cpp
-        src/data_reader.hpp src/data_reader.cpp
+        src/matrix.hpp src/matrix.cpp
         src/utils.hpp src/common.hpp)
 
 add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)

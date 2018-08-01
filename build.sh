@@ -15,7 +15,7 @@ if ! [ -x "$(command -v cppcheck)" ]; then
     printf "Install cppcheck to perform additional code quality checks.\n\n"
   else
     printf "Running `cppcheck --version`...\n"
-    # Run cppcheck (add `-j 8` for parallelism; this disables the unusedFunction check however)
+    # Run cppcheck (`-j 8` for parallelism disables the unusedFunction check ; cppcheck does not support C++17 yet, so we set --std=c++14)
     cppcheck -j 8 --language=c++ --std=c++14 --enable=warning,performance,portability,unusedFunction --platform=unix64 --error-exitcode=5 src || true
     printf "\n"
 fi

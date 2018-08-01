@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 include(CheckIncludeFileCXX)
 project(NeoLisp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror -g")
 
 set(SOURCE_FILES
         src/lexer.cpp src/lexer.hpp
@@ -17,7 +17,7 @@ set(SOURCE_FILES
 
 add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)
 
-set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 14)
+set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 17)
 set_property(TARGET NeoLisp PROPERTY CXX_STANDARD_REQUIRED ON)
 
 set(UNIT_TEST_FILES

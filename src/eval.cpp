@@ -39,10 +39,8 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
         }
 
         if (pos != vList->lst.end()) { // there's a function in vList
-            auto lhs = make_shared<List>();
-            auto rhs = make_shared<List>();
-            lhs->lst.splice(lhs->lst.begin(), vList->lst, vList->lst.begin(), pos);
-            rhs->lst.splice(rhs->lst.begin(), vList->lst, ++pos, vList->lst.end());
+            auto lhs = make_shared<List>(vList->lst.begin(), pos);
+            auto rhs = make_shared<List>(++pos, vList->lst.end());
 
             Env fnEnv(env);
             if (fn->specialForm) {
@@ -55,8 +53,8 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
             return fn->apply(fnEnv);
         } else if (!reified) { // no function present in vList
             auto evaluatedList = make_shared<List>();
-            for (auto &elem : vList->lst)
-                evaluatedList->lst.push_back(eval(elem, env));
+            transform(vList->lst.begin(), vList->lst.end(), std::back_inserter(evaluatedList->lst),
+                      [&env](shared_ptr<Value> elem) -> shared_ptr<Value> { return eval(elem, env); });
             return eval(evaluatedList, env, true);
         }
     }

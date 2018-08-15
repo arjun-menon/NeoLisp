@@ -32,6 +32,9 @@ private:
 struct List : Value {
     list< shared_ptr<Value> > lst;
 
+    template<typename... Args>
+    List(Args&&... args) : lst(std::forward<Args>(args)...) {}
+
     ostream& display(ostream &o) const override;
 
     static shared_ptr<Symbol> open;   // "("

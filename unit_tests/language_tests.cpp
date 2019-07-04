@@ -68,3 +68,7 @@ TEST_CASE("Eval simple lambda expressions") {
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1"), Contains("This functions expects 2 arguments"));
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This functions expects 2 arguments"));
 }
+
+TEST_CASE("Test StrMap") {
+    CHECK_THAT(eval("(map ('a' 1) ('b' 2))"), Equals("(StrMap[2]{ 'a': 1, 'b': 2 })"));
+}

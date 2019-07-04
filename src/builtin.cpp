@@ -247,6 +247,30 @@ struct AssignFunction : Function {
     }
 };
 
+struct StrMapFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+        auto strMap = make_shared<StrMap>();
+        for (auto &entry : args->lst) {
+            auto errMsg = "A map must be made up a list of pairs of strings mapping to value, like (('a' 1) ('b' 2)).";
+            if (!instanceof<List>(entry))
+                throw Error(errMsg);
+            auto entryList = dynamic_pointer_cast<List>(entry)->lst;
+            if (entryList.size() != 2)
+                throw Error(errMsg);
+            auto key = entryList.front();
+            auto value = entryList.back();
+            if (!instanceof<UserString>(key))
+                throw Error(errMsg);
+            auto keyStr = dynamic_pointer_cast<UserString>(key)->text;
+            (strMap->strMap)[keyStr] = value;
+        }
+        return strMap;
+    }
+};
+
 struct PrintFunction : Function {
     shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env);
@@ -288,6 +312,7 @@ Env::Env() : outerEnv(nullptr) {
     def<FnDefinition>(this, "fn", Function::defaultPrecedence, true);
     def<SemicolonFunction>(this, ";", 0, true);
     def<AssignFunction>(this, "=", 3, true);
+    def<StrMapFunction>(this, "map");
     def<PrintFunction>(this, "p");
     def<ExitFunction>(this, "q");
 }

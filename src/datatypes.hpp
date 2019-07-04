@@ -58,6 +58,29 @@ struct UserString : Value {
     ostream& display(ostream &o) const override { return o << "'" << text << "'"; }
 };
 
+struct UserBool : Value {
+    const bool b;
+    UserBool(const bool &_b) : b(_b) {}
+    ostream& display(ostream &o) const override { return o << (b ? "true" : "false"); }
+};
+
+struct StrMap : Value {
+    map<string, shared_ptr<Value>> strMap;
+    ostream& display(ostream &o) const override {
+        o << "StrMap[" << strMap.size() << "]";
+        if (strMap.size() > 0) {
+            o << "{ ";
+            bool first = true;
+            for (const auto &pair : strMap) {
+                if (!first) o << ", "; else first = false;
+                o << "'" << pair.first << "': " << *pair.second;
+            }
+            o << " }";
+        }
+        return o;
+    }
+};
+
 /*
  * Real is a simple wrapper around a float.
  */

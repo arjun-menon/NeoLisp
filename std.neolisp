@@ -1,0 +1,3 @@
+print 'Loading standard definitions...';
+
+print 'Done. Welcome to NeoLisp.';

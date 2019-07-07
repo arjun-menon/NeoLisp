@@ -304,6 +304,34 @@ struct MapFunction : Function {
     }
 };
 
+struct ImportFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+        if (args->lst.size() != 1)
+            throw Error("The import function expects exactly one (string) argument.");
+
+        auto filenameArg = args->lst.front();
+        auto filename = dynamic_pointer_cast<UserString>(filenameArg);
+        if (!filename)
+            throw Error("The import function expects a string containing a file name as argument.");
+
+        ifstream file(filename->text);
+        if (!file)
+            throw Error("Could not open file '" + filename->text + "'.");
+
+        ostringstream file_contents;
+        file_contents << file.rdbuf();
+        file.close();
+        string contents = file_contents.str();
+
+        env.eval(parse(contents));
+
+        return make_shared<List>();
+    }
+};
+
 struct PrintFunction : Function {
     shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env);
@@ -350,6 +378,7 @@ Env::Env() : outerEnv(nullptr) {
     def<SemicolonFunction>(this, ";", 100, true);
     def<AssignFunction>(this, "=", 90, true);
     def<MapFunction>(this, "map", defaultPrecedence, true);
+    def<ImportFunction>(this, "import");
     def<PrintFunction>(this, "print");
     def<ExitFunction>(this, "exit");
 }

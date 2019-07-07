@@ -261,12 +261,16 @@ struct MapFunction : Function {
             auto l = entryList->lst;
             if (l.size() != 2)
                 throw Error(errMsg);
+
             auto key = l.front();
-            auto value = l.back();
             auto keySym = dynamic_pointer_cast<Symbol>(key);
             if (!keySym)
                 throw Error(errMsg + string(" `") + toString(*key) + string("` is not a symbol."));
-            (symMap->entries)[keySym] = value;
+
+            auto valExpr = l.back();
+            auto val = env.eval(valExpr);
+
+            (symMap->entries)[keySym] = val;
         }
         return symMap;
     }

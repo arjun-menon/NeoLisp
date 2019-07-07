@@ -46,8 +46,6 @@ struct Function : Value {
     ostream& display(ostream &o) const override;
     weak_ptr<Symbol> symbol;
     bool specialForm = false;
-    static float defaultPrecedence;
-    float precedence = defaultPrecedence;
     static shared_ptr<Symbol> args;  // "args"
     static shared_ptr<Symbol> lhs;  // "lhs"
 };

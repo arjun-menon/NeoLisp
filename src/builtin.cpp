@@ -289,31 +289,33 @@ struct ExitFunction : Function {
     }
 };
 
-static void def(Env& env, const string& name, shared_ptr<Function> fn, float precedence, bool specialForm) {
+static void def(Env& env, const string& name, shared_ptr<Function> fn, double precedence, bool specialForm) {
     auto symbol = Symbol::create(name);
     env.assign(symbol, fn);
     fn->symbol = symbol;
-    fn->precedence = precedence;
     fn->specialForm = specialForm;
+    if (precedence != Env::defaultPrecedence)
+        dynamic_pointer_cast<SymbolMap>(env.get(Env::ops))->assign(symbol, make_shared<Real>(precedence));
 }
 
-float Function::defaultPrecedence = 0;
-
 template <class T>
-static void def(Env* env, const string& name, float precedence = Function::defaultPrecedence, bool specialForm = false) {
+static void def(Env* env, const string& name, double precedence = Env::defaultPrecedence, bool specialForm = false) {
+    static_assert(std::is_base_of<Function, T>::value, "T is not derived from Function");
     def(*env, name, make_shared<T>(), precedence, specialForm);
 }
 
 Env::Env() : outerEnv(nullptr) {
+    assign(ops, make_shared<SymbolMap>());
+
     def<AddFunction>(this, "+", 40);
     def<SubFunction>(this, "-", 39);
     def<MulFunction>(this, "*", 25);
     def<DivFunction>(this, "/", 25);
-    def<IfFunction>(this, "?", Function::defaultPrecedence, true);
-    def<FnDefinition>(this, "fn", Function::defaultPrecedence, true);
+    def<IfFunction>(this, "?", defaultPrecedence, true);
+    def<FnDefinition>(this, "fn", defaultPrecedence, true);
     def<SemicolonFunction>(this, ";", 100, true);
     def<AssignFunction>(this, "=", 90, true);
-    def<MapFunction>(this, "map", Function::defaultPrecedence, true);
+    def<MapFunction>(this, "map", defaultPrecedence, true);
     def<PrintFunction>(this, "print");
     def<ExitFunction>(this, "quit");
 }

@@ -14,6 +14,24 @@ shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
     }
 }
 
+shared_ptr<Symbol> Env::ops = Symbol::create("ops");
+double Env::defaultPrecedence = 0;
+
+double Env::getPrecedence(shared_ptr<Function> fn) {
+    auto ops = dynamic_pointer_cast<SymbolMap>(get(Env::ops));
+    if(ops && !fn->symbol.expired()) {
+        auto name = fn->symbol.lock();
+        auto op = ops->entries.find(name);
+        if (op != ops->entries.end()) {
+            auto op_precedence = op->second;
+            if (instanceof<Real>(op_precedence)) {
+                return (*dynamic_pointer_cast<Real>(op_precedence))();
+            }
+        }
+    }
+    return Env::defaultPrecedence;
+}
+
 shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
     if (instanceof<List>(v)) {
         auto vList = dynamic_pointer_cast<List>(v);
@@ -32,7 +50,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
                     possibleFn = dynamic_pointer_cast<Function>(env.get(symbol));
                 }
             }
-            if (possibleFn && (!fn || fn->precedence < possibleFn->precedence)) {
+            if (possibleFn && (!fn || env.getPrecedence(fn) < env.getPrecedence(possibleFn))) {
                 fn = possibleFn;
                 pos = it;
             }

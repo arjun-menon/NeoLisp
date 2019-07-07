@@ -12,6 +12,10 @@ struct Env : SymbolMap
         return entries.find(symbol) != entries.end() || (outerEnv != nullptr ? outerEnv->check(symbol) : false);
     }
 
+    static shared_ptr<Symbol> ops;
+    static double defaultPrecedence;
+    double getPrecedence(shared_ptr<Function> fn);
+
     shared_ptr<Value> get(shared_ptr<Symbol> symbol);
 };
 

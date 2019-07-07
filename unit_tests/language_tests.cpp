@@ -6,7 +6,7 @@ using Catch::Matchers::Contains;
 
 static string eval(const char *inputExpression) {
     Env env;
-    return toString(*eval(parse(inputExpression), env));
+    return toString(*env.eval(parse(inputExpression)));
 }
 
 TEST_CASE("Eval basic arithmetic expressions") {

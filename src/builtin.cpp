@@ -54,11 +54,11 @@ struct Fn : Function {
         Env fnEnv(env);
         auto param = params.begin();
         for (auto &arg : args) {
-            fnEnv.assign(*param, eval(arg, env));
+            fnEnv.assign(*param, env.eval(arg));
             param++;
         }
 
-        return eval(expr, fnEnv);
+        return fnEnv.eval(expr);
     }
 };
 
@@ -95,12 +95,12 @@ struct SemicolonFunction : Function {
         auto lhs = getArgs(env, Function::lhs);
         auto rhs = getArgs(env);
 
-        auto lhsResult = eval(lhs, env);
+        auto lhsResult = env.eval(lhs);
         if (rhs->lst.empty()) {
             return lhsResult;
         }
         env.assign(Symbol::create("_"), lhsResult);
-        return eval(rhs, env);
+        return env.eval(rhs);
     }
 };
 
@@ -112,7 +112,7 @@ struct AddFunction : Function {
 
         Real sum(0.0f);
         for (auto &k : args->lst) {
-            auto x = eval(k, env);
+            auto x = env.eval(k);
             Real& val = *vCast<Real>(x);
 
             sum = sum + val;
@@ -132,7 +132,7 @@ struct SubFunction : Function {
         Real right_sum(0.0f);
 
         for (auto &k : args->lst) {
-            auto x = eval(k, env);
+            auto x = env.eval(k);
             Real& val = *vCast<Real>(x);
 
             if (pivot-- > 0)
@@ -153,7 +153,7 @@ struct MulFunction : Function {
 
         Real product(1.0f);
         for (auto &k : args->lst) {
-            auto x = eval(k, env);
+            auto x = env.eval(k);
             Real& val = *vCast<Real>(x);
 
             product = product * val;
@@ -173,7 +173,7 @@ struct DivFunction : Function {
         Real right_product(1.0f);
 
         for (auto &k : args->lst) {
-            auto x = eval(k, env);
+            auto x = env.eval(k);
             Real& val = *vCast<Real>(x);
 
             if (pivot-- > 0)
@@ -204,16 +204,16 @@ struct IfFunction : Function {
         auto alt = args->lst.front();
         args->lst.pop_front();
 
-        auto cond_result = eval(cond, env);
+        auto cond_result = env.eval(cond);
 
         // TODO: create Boolean type, require/expect it here
 
         auto result_bool = (*vCast<Real>(cond_result))() != 0.0;
 
         if (result_bool)
-            return eval(conseq, env);
+            return env.eval(conseq);
         else
-            return eval(alt, env);
+            return env.eval(alt);
     }
 };
 
@@ -236,7 +236,7 @@ struct AssignFunction : Function {
             throw Error("The variable name must be a symbol.");
 
         auto var = dynamic_pointer_cast<Symbol>(var_name);
-        auto val = eval(var_val, env);
+        auto val = env.eval(var_val);
 
         Env* outerEnv = env.outerEnv;
         if (outerEnv) {

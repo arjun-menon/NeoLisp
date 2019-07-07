@@ -17,6 +17,6 @@ struct Env : SymbolMap
     double getPrecedence(shared_ptr<Function> fn);
 
     shared_ptr<Value> get(shared_ptr<Symbol> symbol);
-};
 
-shared_ptr<Value> eval(shared_ptr<Value>, Env&, bool reified=false);
+    shared_ptr<Value> eval(shared_ptr<Value> v, bool reified=false);
+};

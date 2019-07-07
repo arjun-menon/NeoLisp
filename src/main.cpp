@@ -14,7 +14,7 @@ int repl() {
         } else {
             try {
                 shared_ptr<Value> ast = parse(input);
-                cout << *eval(ast, env) << endl;
+                cout << *env.eval(ast) << endl;
             }
             catch(ExitNow &e) {
                 return e.exit_code;

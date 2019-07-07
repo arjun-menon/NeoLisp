@@ -2,6 +2,7 @@
 
 int repl() {
     Env env;
+    env.eval(parse("import 'std.neolisp'"));
 
     for (string input; true; cout << endl) {
         cout << "> ";

@@ -1,9 +1,11 @@
 {
-   Leak in the C++ runtime libstdc++.so.6.0.25
+   # See: https://stackoverflow.com/questions/30376601/valgrind-memory-still-reachable-with-trivial-program-using-iostream/30403709
+   # Also, see: https://bugs.kde.org/show_bug.cgi?id=345307
+   Either a leak in the C++ runtime, or a Valgrind bug
    Memcheck:Leak
    match-leak-kinds: reachable
    fun:malloc
-   obj:/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25
+   obj:/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.26
    fun:call_init.part.0
    fun:call_init
    fun:_dl_init

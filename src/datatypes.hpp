@@ -16,7 +16,7 @@ inline ostream& operator<<(ostream &o, const Value &value) {
     return value.display(o);
 }
 
-class Env;
+struct Env;
 
 struct Symbol : Value {
     static shared_ptr<Symbol> create(const string &name);
@@ -66,6 +66,9 @@ struct UserBool : Value {
 
 struct SymbolMap : Value {
     map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> entries;
+    inline void assign(shared_ptr<Symbol> symbol, shared_ptr<Value> value) {
+        entries[symbol] = value;
+    }
     ostream& display(ostream &o) const override {
         o << "Map[" << entries.size() << "]";
         if (entries.size() > 0) {

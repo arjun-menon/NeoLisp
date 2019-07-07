@@ -265,7 +265,7 @@ struct MapFunction : Function {
             if (!instanceof<Symbol>(key))
                 throw Error(errMsg);
             auto keySym = dynamic_pointer_cast<Symbol>(key);
-            (symMap->m)[keySym] = value;
+            (symMap->entries)[keySym] = value;
         }
         return symMap;
     }

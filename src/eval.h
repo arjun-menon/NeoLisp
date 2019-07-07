@@ -1,9 +1,7 @@
 #pragma once
 
-class Env
+class Env : private SymbolMap
 {
-    map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> variables;
-
 public:
     Env* const outerEnv;
     explicit Env();  // defined in builtin.cpp
@@ -12,11 +10,11 @@ public:
     Env(const Env&) = delete;
 
     inline void assign(shared_ptr<Symbol> symbol, shared_ptr<Value> value) {
-        variables[symbol] = value;
+        entries[symbol] = value;
     }
 
     inline bool check(shared_ptr<Symbol> symbol) {
-        return variables.find(symbol) != variables.end() || (outerEnv != nullptr ? outerEnv->check(symbol) : false);
+        return entries.find(symbol) != entries.end() || (outerEnv != nullptr ? outerEnv->check(symbol) : false);
     }
 
     shared_ptr<Value> get(shared_ptr<Symbol> symbol);

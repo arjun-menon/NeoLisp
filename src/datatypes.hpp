@@ -65,13 +65,13 @@ struct UserBool : Value {
 };
 
 struct SymbolMap : Value {
-    map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> m;
+    map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> entries;
     ostream& display(ostream &o) const override {
-        o << "Map[" << m.size() << "]";
-        if (m.size() > 0) {
+        o << "Map[" << entries.size() << "]";
+        if (entries.size() > 0) {
             o << "{ ";
             bool first = true;
-            for (const auto &pair : m) {
+            for (const auto &pair : entries) {
                 if (!first) o << ", "; else first = false;
                 o << "'" << *pair.first << "': " << *pair.second;
             }

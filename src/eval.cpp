@@ -1,8 +1,8 @@
 #include "common.hpp"
 
 shared_ptr<Value> Env::get(shared_ptr<Symbol> symbol) {
-    if(variables.find(symbol) != variables.end()) {
-        return variables.at(symbol);
+    if(entries.find(symbol) != entries.end()) {
+        return entries.at(symbol);
     }
     else {
         if (outerEnv) {

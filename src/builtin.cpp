@@ -321,5 +321,5 @@ Env::Env() : outerEnv(nullptr) {
     def<AssignFunction>(this, "=", 90, true);
     def<MapFunction>(this, "map", defaultPrecedence, true);
     def<PrintFunction>(this, "print");
-    def<ExitFunction>(this, "quit");
+    def<ExitFunction>(this, "exit");
 }

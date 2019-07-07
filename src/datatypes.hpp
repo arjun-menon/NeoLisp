@@ -68,7 +68,7 @@ struct SymbolMap : Value {
         entries[symbol] = value;
     }
     ostream& display(ostream &o) const override {
-        o << "Map[" << entries.size() << "]";
+        // o << "Map[" << entries.size() << "]";
         if (entries.size() > 0) {
             o << "{ ";
             bool first = true;

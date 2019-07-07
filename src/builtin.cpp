@@ -313,6 +313,6 @@ Env::Env() : outerEnv(nullptr) {
     def<SemicolonFunction>(this, ";", 0, true);
     def<AssignFunction>(this, "=", 3, true);
     def<StrMapFunction>(this, "map");
-    def<PrintFunction>(this, "p");
-    def<ExitFunction>(this, "q");
+    def<PrintFunction>(this, "print");
+    def<ExitFunction>(this, "quit");
 }

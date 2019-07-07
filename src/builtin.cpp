@@ -337,7 +337,17 @@ struct PrintFunction : Function {
         auto args = getArgs(env);
         auto lhs = getArgs(env, Function::lhs);
         args->lst.splice(args->lst.begin(), lhs->lst);
-        string result = toString(*args);
+        string result;
+        if (args->lst.size() == 1) {
+            auto val = args->lst.front();
+            auto possibleUserString = dynamic_pointer_cast<UserString>(val);
+            if (possibleUserString)
+                result = toString(possibleUserString->text);
+            else
+                result = toString(*val);
+        } else {
+            result = toString(*args);
+        }
         cout << result << endl;
         return make_shared<List>();
     }

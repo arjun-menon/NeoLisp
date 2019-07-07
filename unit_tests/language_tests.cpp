@@ -72,6 +72,6 @@ TEST_CASE("Eval simple lambda expressions") {
 }
 
 TEST_CASE("Test Map") {
-    CHECK_THAT(eval("(map (a 1) (b 2))"), Equals("({ 'a': 1, 'b': 2 })"));
-    CHECK_THAT(eval("(map (a (+ 3 4)) (b (* 3 4)))"), Equals("({ 'a': 7, 'b': 12 })"));
+    CHECK_THAT(eval("map (a 1) (b 2)"), Equals("{ 'a': 1, 'b': 2 }"));
+    CHECK_THAT(eval("map (a (+ 3 4)) (b (* 3 4))"), Equals("{ 'a': 7, 'b': 12 }"));
 }

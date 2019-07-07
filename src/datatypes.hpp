@@ -64,16 +64,16 @@ struct UserBool : Value {
     ostream& display(ostream &o) const override { return o << (b ? "true" : "false"); }
 };
 
-struct StrMap : Value {
-    map<string, shared_ptr<Value>> strMap;
+struct SymbolMap : Value {
+    map<shared_ptr<Symbol>, shared_ptr<Value>, shared_ptr_comparator<Symbol>> m;
     ostream& display(ostream &o) const override {
-        o << "StrMap[" << strMap.size() << "]";
-        if (strMap.size() > 0) {
+        o << "Map[" << m.size() << "]";
+        if (m.size() > 0) {
             o << "{ ";
             bool first = true;
-            for (const auto &pair : strMap) {
+            for (const auto &pair : m) {
                 if (!first) o << ", "; else first = false;
-                o << "'" << pair.first << "': " << *pair.second;
+                o << "'" << *pair.first << "': " << *pair.second;
             }
             o << " }";
         }

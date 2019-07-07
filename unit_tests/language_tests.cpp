@@ -59,13 +59,13 @@ TEST_CASE("Eval simple lambda expressions") {
         cube 3;
     )code"), Equals("27"));
 
-    // foo = (fn (x) (? x (* x (foo (x - 1))) 1))
+    // foo = (fn (x) (if x (* x (foo (x - 1))) 1))
     CHECK_THAT(eval(R"code(
-        factorial = (fn (n) (? n (* n (factorial (n - 1))) 1));
+        factorial = (fn (n) (if n (* n (factorial (n - 1))) 1));
         factorial 8;
     )code"), Equals("40320"));
-    CHECK_THAT(eval("factorial = (fn (x) (? x (* x (factorial (x - 1))) 1)); factorial 10"), Equals("3.6288e+06"));
-    CHECK_THAT(eval("factorial = (fn (x) (? x (* x (factorial (x - 1))) 1)); factorial 100"), Equals("9.33262e+157"));
+    CHECK_THAT(eval("factorial = (fn (x) (if x (* x (factorial (x - 1))) 1)); factorial 10"), Equals("3.6288e+06"));
+    CHECK_THAT(eval("factorial = (fn (x) (if x (* x (factorial (x - 1))) 1)); factorial 100"), Equals("9.33262e+157"));
 
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1"), Contains("This functions expects 2 arguments"));
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This functions expects 2 arguments"));

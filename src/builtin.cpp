@@ -193,7 +193,7 @@ struct IfFunction : Function {
         args->lst.splice(args->lst.begin(), lhs->lst);
 
         if (args->lst.size() != 3)
-            throw Error("The ? function expects exactly 3 arguments: cond, conseq, alt.");
+            throw Error("The if function expects exactly 3 arguments: cond, conseq, alt.");
 
         auto cond = args->lst.front();
         args->lst.pop_front();
@@ -315,7 +315,7 @@ Env::Env() : outerEnv(nullptr) {
     def<SubFunction>(this, "-", 39);
     def<MulFunction>(this, "*", 25);
     def<DivFunction>(this, "/", 25);
-    def<IfFunction>(this, "?", defaultPrecedence, true);
+    def<IfFunction>(this, "if", defaultPrecedence, true);
     def<FnDefinition>(this, "fn", defaultPrecedence, true);
     def<SemicolonFunction>(this, ";", 100, true);
     def<AssignFunction>(this, "=", 90, true);

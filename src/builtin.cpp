@@ -2,12 +2,12 @@
 
 static shared_ptr<List> getArgs(Env &env, shared_ptr<Symbol>& whichArgs = Function::args) {
     auto args = env.get(whichArgs);
-    if (!instanceof<List>(args)) {
-        auto argsList = make_shared<List>();
+    auto argsList = dynamic_pointer_cast<List>(args);
+    if (!argsList) {
+        argsList = make_shared<List>();
         argsList->lst.push_back(args);
-        return argsList;
     }
-    return dynamic_pointer_cast<List>(args);
+    return argsList;
 }
 
 // Remove the numerical prefix (if any) from the RTTI type name
@@ -75,12 +75,12 @@ struct FnDefinition : Function {
         auto fn_expr = args.front();
         args.pop_front();
 
-        if (!instanceof<List>(param_names_list))
+        if (!dynamic_pointer_cast<List>(param_names_list))
             throw Error("The lambda parameters must be a list.");
 
         vector<shared_ptr<Symbol>> params;
         for (auto param_name : dynamic_pointer_cast<List>(param_names_list)->lst) {
-            if (!instanceof<Symbol>(param_name))  {
+            if (!dynamic_pointer_cast<Symbol>(param_name))  {
                 throw Error("The lambda parameter names must all be symbols. This is not a symbol: " + toString(*param_name));
             }
             params.push_back(dynamic_pointer_cast<Symbol>(param_name));
@@ -232,10 +232,10 @@ struct AssignFunction : Function {
         auto var_val = args->lst.front();
         args->lst.pop_front();
 
-        if (!instanceof<Symbol>(var_name))
+        auto var = dynamic_pointer_cast<Symbol>(var_name);
+        if (!var)
             throw Error("The variable name must be a symbol.");
 
-        auto var = dynamic_pointer_cast<Symbol>(var_name);
         auto val = eval(var_val, env);
 
         Env* outerEnv = env.outerEnv;

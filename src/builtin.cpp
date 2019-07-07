@@ -186,6 +186,34 @@ struct DivFunction : Function {
     }
 };
 
+struct QuoteFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
+        if (args->lst.size() != 1)
+            throw Error("The quote function expects exactly one argument.");
+
+        auto expr = args->lst.front();
+        return expr;
+    }
+};
+
+struct RevalFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
+        if (args->lst.size() != 1)
+            throw Error("The eval function expects exactly one argument.");
+
+        auto expr = args->lst.front();
+        return env.eval(env.eval(expr));
+    }
+};
+
 struct IfFunction : Function {
     shared_ptr<Value> apply(Env &env) override {
         auto args = getArgs(env);
@@ -315,6 +343,8 @@ Env::Env() : outerEnv(nullptr) {
     def<SubFunction>(this, "-", 39);
     def<MulFunction>(this, "*", 25);
     def<DivFunction>(this, "/", 25);
+    def<QuoteFunction>(this, "quote", defaultPrecedence, true);
+    def<RevalFunction>(this, "reval", defaultPrecedence, true);
     def<IfFunction>(this, "if", defaultPrecedence, true);
     def<FnDefinition>(this, "fn", defaultPrecedence, true);
     def<SemicolonFunction>(this, ";", 100, true);

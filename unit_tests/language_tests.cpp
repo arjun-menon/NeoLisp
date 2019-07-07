@@ -71,6 +71,19 @@ TEST_CASE("Eval simple lambda expressions") {
     CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This functions expects 2 arguments"));
 }
 
+TEST_CASE("Test Quote") {
+    CHECK_THAT(eval("quote (+ 1 2)"), Equals("(+ 1 2)"));
+    CHECK_THAT(eval("(quote (+ 1 2))"), Equals("((+ 1 2))"));
+    CHECK_THAT(eval("((quote (+ 1 2)))"), Equals("(((+ 1 2)))"));
+
+    auto unexpctedPlus = "Expected a value of type Real, but instead got the value `function<+>`";
+    CHECK_THROWS_WITH(eval("2 * quote (+ 1 2)"), Contains(unexpctedPlus));
+}
+
+TEST_CASE("Test Reval") {
+    CHECK_THAT(eval("2 * (reval (quote (+ 1 2)))"), Equals("6"));
+}
+
 TEST_CASE("Test Map") {
     CHECK_THAT(eval("map (a 1) (b 2)"), Equals("{ 'a': 1, 'b': 2 }"));
     CHECK_THAT(eval("map (a (+ 3 4)) (b (* 3 4))"), Equals("{ 'a': 7, 'b': 12 }"));

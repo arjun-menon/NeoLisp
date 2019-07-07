@@ -255,16 +255,17 @@ struct MapFunction : Function {
         auto symMap = make_shared<SymbolMap>();
         for (auto &entry : args->lst) {
             auto errMsg = "A map must be made up of a list of pairs of symbols and values, like (map (a 1) (b 2)).";
-            if (!instanceof<List>(entry))
+            auto entryList = dynamic_pointer_cast<List>(entry);
+            if (!entryList)
                 throw Error(errMsg);
-            auto entryList = dynamic_pointer_cast<List>(entry)->lst;
-            if (entryList.size() != 2)
+            auto l = entryList->lst;
+            if (l.size() != 2)
                 throw Error(errMsg);
-            auto key = entryList.front();
-            auto value = entryList.back();
-            if (!instanceof<Symbol>(key))
-                throw Error(errMsg);
+            auto key = l.front();
+            auto value = l.back();
             auto keySym = dynamic_pointer_cast<Symbol>(key);
+            if (!keySym)
+                throw Error(errMsg + string(" `") + toString(*key) + string("` is not a symbol."));
             (symMap->entries)[keySym] = value;
         }
         return symMap;

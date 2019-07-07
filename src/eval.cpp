@@ -32,7 +32,7 @@ shared_ptr<Value> eval(shared_ptr<Value> v, Env& env, bool reified) {
                     possibleFn = dynamic_pointer_cast<Function>(env.get(symbol));
                 }
             }
-            if (possibleFn && (!fn || fn->precedence > possibleFn->precedence)) {
+            if (possibleFn && (!fn || fn->precedence < possibleFn->precedence)) {
                 fn = possibleFn;
                 pos = it;
             }

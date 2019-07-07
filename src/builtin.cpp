@@ -296,7 +296,7 @@ static void def(Env& env, const string& name, shared_ptr<Function> fn, float pre
     fn->specialForm = specialForm;
 }
 
-float Function::defaultPrecedence = 19;
+float Function::defaultPrecedence = 0;
 
 template <class T>
 static void def(Env* env, const string& name, float precedence = Function::defaultPrecedence, bool specialForm = false) {
@@ -304,14 +304,14 @@ static void def(Env* env, const string& name, float precedence = Function::defau
 }
 
 Env::Env() : outerEnv(nullptr) {
-    def<AddFunction>(this, "+", 13);
-    def<SubFunction>(this, "-", 13.1);
-    def<MulFunction>(this, "*", 14);
-    def<DivFunction>(this, "/", 14);
+    def<AddFunction>(this, "+", 40);
+    def<SubFunction>(this, "-", 39);
+    def<MulFunction>(this, "*", 25);
+    def<DivFunction>(this, "/", 25);
     def<IfFunction>(this, "?", Function::defaultPrecedence, true);
     def<FnDefinition>(this, "fn", Function::defaultPrecedence, true);
-    def<SemicolonFunction>(this, ";", 0, true);
-    def<AssignFunction>(this, "=", 3, true);
+    def<SemicolonFunction>(this, ";", 100, true);
+    def<AssignFunction>(this, "=", 90, true);
     def<StrMapFunction>(this, "map");
     def<PrintFunction>(this, "print");
     def<ExitFunction>(this, "quit");

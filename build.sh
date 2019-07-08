@@ -11,16 +11,18 @@ if [[ $* == *--clean* ]]; then
   exit 0
 fi
 
-if ! [ -x "$(command -v cppcheck)" ]; then
-    printf "Install cppcheck to perform additional code quality checks.\n\n"
-  else
-    printf "Running `cppcheck --version`...\n"
-    # Run cppcheck:
-    # Note: Cppcheck sometimes generates false positives and does not support C++17 yet, so we ignore its exit code.
-    #       We use it just to bring attention to potential bugs. Also, you can add `unusedFunction` to the list of
-    #       checks enabled below, if the `-j 8` parallelism flag has been removed (as `j -8` disables the  check).
-    cppcheck -j 8 --language=c++ --enable=warning,performance,portability --platform=unix64 --error-exitcode=5 src || true
-    printf "\n"
+if [[ $* != *--notest* ]]; then
+  if ! [ -x "$(command -v cppcheck)" ]; then
+      printf "Install cppcheck to perform additional code quality checks.\n\n"
+    else
+      printf "Running `cppcheck --version`...\n"
+      # Run cppcheck:
+      # Note: Cppcheck sometimes generates false positives and does not support C++17 yet, so we ignore its exit code.
+      #       We use it just to bring attention to potential bugs. Also, you can add `unusedFunction` to the list of
+      #       checks enabled below, if the `-j 8` parallelism flag has been removed (as `j -8` disables the  check).
+      cppcheck -j 8 --language=c++ --enable=warning,performance,portability --platform=unix64 --error-exitcode=5 src || true
+      printf "\n"
+  fi
 fi
 
 # Create build directory
@@ -44,25 +46,33 @@ printf "%s\n" "$NUMCPUS"
 
 # Run make
 echo "Compiling..."
-make -j$NUMCPUS
+if [[ $* != *--notest* ]]; then
+  make -j$NUMCPUS
+else
+  make -j$NUMCPUS NeoLisp
+fi
 
 cd ..
 
 # Symlink from base dir
 echo "Done compiling."
 ln -sf cbuild/NeoLisp
-ln -sf cbuild/NeoLisp-tests
+if [[ $* != *--notest* ]]; then
+  ln -sf cbuild/NeoLisp-tests
+fi
 
-TESTS=./cbuild/NeoLisp-tests
-if [ -f $TESTS ]; then
-  # Run unit tests
-  printf "\nRunning unit tests...\n\n"
-  if ! [ -x "$(command -v valgrind)" ]; then
-    printf "Install Valgrind to perform memory leak checks.\n\n"
-    $TESTS
-  else
-    # Run valgrind
-    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=.valgrind-false-positives.supp --gen-suppressions=all --error-exitcode=999 $TESTS
+# Run unit tests
+if [[ $* != *--notest* ]]; then
+  TESTS=./cbuild/NeoLisp-tests
+  if [ -f $TESTS ]; then
+    printf "\nRunning unit tests...\n\n"
+    if ! [ -x "$(command -v valgrind)" ]; then
+      printf "Install Valgrind to perform memory leak checks.\n\n"
+      $TESTS
+    else
+      # Run valgrind
+      valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=.valgrind-false-positives.supp --gen-suppressions=all --error-exitcode=999 $TESTS
+    fi
   fi
 fi
 

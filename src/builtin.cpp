@@ -293,7 +293,7 @@ struct MapFunction : Function {
             auto key = l.front();
             auto keySym = dynamic_pointer_cast<Symbol>(key);
             if (!keySym)
-                throw Error(errMsg + string(" `") + toString(*key) + string("` is not a symbol."));
+                throw Error(errMsg + string(" The following is not a symbol: " + toString(key)));
 
             auto valExpr = l.back();
             auto val = env.eval(valExpr);
@@ -301,6 +301,66 @@ struct MapFunction : Function {
             (symMap->entries)[keySym] = val;
         }
         return symMap;
+    }
+};
+
+struct MapGetFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
+        string errMsg = "The map_get function expects exactly 2 arguments: a map, and a symbol.";
+        if (args->lst.size() != 2)
+            throw Error(errMsg);
+
+        auto arg1 = args->lst.front();
+        args->lst.pop_front();
+        auto smap = dynamic_pointer_cast<SymbolMap>(env.eval(arg1));
+        if (!smap)
+            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(smap));
+
+        auto arg2 = args->lst.front();
+        args->lst.pop_front();
+        auto sym = dynamic_pointer_cast<Symbol>(arg2);
+        if (!sym)
+            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(sym));
+
+        try {
+            return smap->entries.at(sym);
+        } catch (const out_of_range &e) {
+            throw Error("The queried key " + toString(sym) + " could not be found in the map: " + toString(smap));
+        }
+    }
+};
+
+struct MapInsFunction : Function {
+    shared_ptr<Value> apply(Env &env) override {
+        auto args = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        args->lst.splice(args->lst.begin(), lhs->lst);
+
+        string errMsg = "The map_ins function expects exactly 3 arguments: a map, a symbol, and a value.";
+        if (args->lst.size() != 3)
+            throw Error(errMsg);
+
+        auto arg1 = args->lst.front();
+        args->lst.pop_front();
+        auto smap = dynamic_pointer_cast<SymbolMap>(env.eval(arg1));
+        if (!smap)
+            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(smap));
+
+        auto arg2 = args->lst.front();
+        args->lst.pop_front();
+        auto sym = dynamic_pointer_cast<Symbol>(arg2);
+        if (!sym)
+            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(sym));
+
+        auto val = args->lst.front();
+        args->lst.pop_front();
+
+        (smap->entries)[sym] = env.eval(val);
+        return smap;
     }
 };
 
@@ -388,6 +448,8 @@ Env::Env() : outerEnv(nullptr) {
     def<SemicolonFunction>(this, ";", 100, true);
     def<AssignFunction>(this, "=", 90, true);
     def<MapFunction>(this, "map", defaultPrecedence, true);
+    def<MapGetFunction>(this, "map_get", defaultPrecedence, true);
+    def<MapInsFunction>(this, "map_ins", defaultPrecedence, true);
     def<ImportFunction>(this, "import");
     def<PrintFunction>(this, "print");
     def<ExitFunction>(this, "exit");

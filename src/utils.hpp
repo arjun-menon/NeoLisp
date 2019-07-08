@@ -39,6 +39,13 @@ string toString(const T& obj) {
     return oss.str();
 }
 
+template <typename T>
+string toString(const shared_ptr<T>& obj) {
+    ostringstream oss;
+    oss << *obj;
+    return oss.str();
+}
+
 #define ASSERT(X) if(!(X)) throw Error((string)("Assertion failure ( ")+(string)(#X)+(string)(" )"))
 
 class Error : public exception

@@ -24,9 +24,8 @@ double Env::getPrecedence(shared_ptr<Function> fn) {
         auto op = ops->entries.find(name);
         if (op != ops->entries.end()) {
             auto op_precedence = op->second;
-            if (instanceof<Real>(op_precedence)) {
+            if (instanceof<Real>(op_precedence))
                 return (*dynamic_pointer_cast<Real>(op_precedence))();
-            }
         }
     }
     return Env::defaultPrecedence;

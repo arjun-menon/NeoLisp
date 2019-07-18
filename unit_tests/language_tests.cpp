@@ -6,6 +6,7 @@ using Catch::Matchers::Contains;
 
 static string eval(const char *inputExpression) {
     Env env;
+    env.eval(parse("import 'std.neolisp'"));
     return toString(*env.eval(parse(inputExpression)));
 }
 
@@ -67,8 +68,8 @@ TEST_CASE("Eval simple lambda expressions") {
     CHECK_THAT(eval("factorial = (fn (x) (if x (* x (factorial (x - 1))) 1)); factorial 10"), Equals("3.6288e+06"));
     CHECK_THAT(eval("factorial = (fn (x) (if x (* x (factorial (x - 1))) 1)); factorial 100"), Equals("9.33262e+157"));
 
-    CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1"), Contains("This functions expects 2 arguments"));
-    CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This functions expects 2 arguments"));
+    CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1"), Contains("This function expects 2 arguments"));
+    CHECK_THROWS_WITH(eval("(fn (a b) (+ a b)) 1 5 7"), Contains("This function expects 2 arguments"));
 }
 
 TEST_CASE("Test Quote") {

@@ -45,10 +45,13 @@ struct Fn : Function {
     Fn(vector<shared_ptr<Symbol>> &_params, shared_ptr<Value> _expr) : params(move(_params)), expr(_expr) {}
 
     shared_ptr<Value> apply(Env &env) override {
-        auto args = getArgs(env)->lst;
+        auto rhs = getArgs(env);
+        auto lhs = getArgs(env, Function::lhs);
+        rhs->lst.splice(rhs->lst.begin(), lhs->lst);
+        auto args = rhs->lst;
 
         if (args.size() != params.size()) {
-            throw Error("This functions expects " + toString(params.size()) + " arguments.");
+            throw Error("This function expects " + toString(params.size()) + " arguments.");
         }
 
         Env fnEnv(env);
@@ -269,6 +272,11 @@ struct AssignFunction : Function {
         Env* outerEnv = env.outerEnv;
         if (outerEnv) {
             outerEnv->assign(var, val);
+
+            auto fnVal = dynamic_pointer_cast<Function>(val);
+            if (fnVal) {
+                fnVal->symbol = var;
+            }
         }
 
         return var_name;
@@ -291,9 +299,9 @@ struct MapFunction : Function {
                 throw Error(errMsg);
 
             auto key = l.front();
-            auto keySym = dynamic_pointer_cast<Symbol>(key);
-            if (!keySym)
+            if (!instanceof<Symbol>(key))
                 throw Error(errMsg + string(" The following is not a symbol: " + toString(key)));
+            auto keySym = dynamic_pointer_cast<Symbol>(key);
 
             auto valExpr = l.back();
             auto val = env.eval(valExpr);
@@ -318,13 +326,13 @@ struct MapGetFunction : Function {
         args->lst.pop_front();
         auto smap = dynamic_pointer_cast<SymbolMap>(env.eval(arg1));
         if (!smap)
-            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(smap));
+            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(arg1));
 
         auto arg2 = args->lst.front();
         args->lst.pop_front();
         auto sym = dynamic_pointer_cast<Symbol>(arg2);
         if (!sym)
-            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(sym));
+            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(arg2));
 
         try {
             return smap->entries.at(sym);
@@ -348,13 +356,13 @@ struct MapInsFunction : Function {
         args->lst.pop_front();
         auto smap = dynamic_pointer_cast<SymbolMap>(env.eval(arg1));
         if (!smap)
-            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(smap));
+            throw Error(errMsg + string("The first argument must be a map, but instead got: ") + toString(arg1));
 
         auto arg2 = args->lst.front();
         args->lst.pop_front();
         auto sym = dynamic_pointer_cast<Symbol>(arg2);
         if (!sym)
-            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(sym));
+            throw Error(errMsg + string("The second argument must be a symbol, but instead got: ") + toString(arg2));
 
         auto val = args->lst.front();
         args->lst.pop_front();

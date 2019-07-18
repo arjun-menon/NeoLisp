@@ -2,7 +2,10 @@
 
 int repl() {
     Env env;
+
+    cout<<"Loading standard definitions..."<<endl;
     env.eval(parse("import 'std.neolisp'"));
+    cout<<"Done. Welcome to NeoLisp."<<endl;
 
     for (string input; true; cout << endl) {
         cout << "> ";

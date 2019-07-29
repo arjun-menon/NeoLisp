@@ -54,12 +54,15 @@ fi
 
 cd ..
 
-# Symlink from base dir
-echo "Done compiling."
+# Symlink from base dir, and strip
+echo "Done compiling. Stripping..."
 ln -sf cbuild/NeoLisp
+strip cbuild/NeoLisp
 if [[ $* != *--notest* ]]; then
   ln -sf cbuild/NeoLisp-tests
+  strip cbuild/NeoLisp-tests
 fi
+echo "Done."
 
 # Run unit tests
 if [[ $* != *--notest* ]]; then

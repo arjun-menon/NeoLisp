@@ -69,7 +69,7 @@ struct SymbolMap : Value {
     }
     ostream& display(ostream &o) const override {
         // o << "Map[" << entries.size() << "]";
-        if (entries.size() > 0) {
+        if (!entries.empty()) {
             o << "{ ";
             bool first = true;
             for (const auto &pair : entries) {

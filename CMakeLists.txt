@@ -14,6 +14,7 @@ set(SOURCE_FILES
         src/utils.hpp src/common.hpp)
 
 add_executable(NeoLisp ${SOURCE_FILES} src/main.cpp)
+target_link_libraries(NeoLisp LLVM-8)
 
 set_property(TARGET NeoLisp PROPERTY CXX_STANDARD 17)
 set_property(TARGET NeoLisp PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -28,6 +29,7 @@ check_include_file_cxx(catch.hpp HAVE_CATCH)
 
 if(HAVE_CATCH)
     add_executable(NeoLisp-tests ${SOURCE_FILES} ${UNIT_TEST_FILES})
+    target_link_libraries(NeoLisp-tests LLVM-8)
     enable_testing()
     add_test(NAME NeoLisp-tests COMMAND NeoLisp-tests)
 else(Y)

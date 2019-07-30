@@ -28,3 +28,10 @@
    fun:_ZL22copySwiftV1MangledNamePKcb
    fun:_ZL22copySwiftV1MangledNamePKcb
 }
+{
+   LLVM leaks suppresion
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/libLLVM-8.so
+   ...
+}

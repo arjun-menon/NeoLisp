@@ -1,3 +1,5 @@
+# Ref: https://wiki.wxwidgets.org/Valgrind_Suppression_File_Howto
+
 {
    # See: https://stackoverflow.com/questions/30376601/valgrind-memory-still-reachable-with-trivial-program-using-iostream/30403709
    # Also, see: https://bugs.kde.org/show_bug.cgi?id=345307
@@ -5,12 +7,10 @@
    Memcheck:Leak
    match-leak-kinds: reachable
    fun:malloc
-   obj:/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.26
-   fun:call_init.part.0
-   fun:call_init
-   fun:_dl_init
-   obj:/lib/x86_64-linux-gnu/ld-2.19.so
+   ...
+   obj:/*lib*/ld*
 }
+
 {
    macOS leak suppresion
    Memcheck:Leak
@@ -28,10 +28,12 @@
    fun:_ZL22copySwiftV1MangledNamePKcb
    fun:_ZL22copySwiftV1MangledNamePKcb
 }
+
 {
    LLVM leaks suppresion
    Memcheck:Leak
    ...
-   obj:/usr/lib/libLLVM-8.so
+   obj:/usr/*lib*/libLLVM*
    ...
 }
+

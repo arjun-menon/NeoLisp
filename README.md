@@ -52,7 +52,8 @@ to match parentheses by setting `set blink-matching-paren on` in your
 To re-iterate, the dependencies are:
 
  * [CMake](https://cmake.org/) 3.5+
- * GCC 7+ or Clang 5+
+ * [GCC](https://gcc.gnu.org/) 9+ or [Clang](https://clang.llvm.org/) 8+
+ * [LLVM](https://llvm.org/) Core 8+ (the development libraries)
  * [catch.hpp](https://github.com/catchorg/Catch2) (optional, for testing)
  * [Cppcheck](https://en.wikipedia.org/wiki/Cppcheck) (optional, for testing)
  * [Valgrind](https://en.wikipedia.org/wiki/Valgrind) (optional, for testing)
@@ -62,6 +63,6 @@ After building, you can run the REPL with `rlwrap ./NeoLisp`.
 
 ## Credit & License
 
-Many thanks to Peter's Norvig's Lispy guides([1](https://norvig.com/lispy.html), [2](http://norvig.com/lispy2.html)) and the LLVM [Kaleidoscope](https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/index.html) language tutorial.
+Many thanks to Peter Norvig's Lispy guides ([1](https://norvig.com/lispy.html), [2](http://norvig.com/lispy2.html)) and the [LLVM Tutorial](https://llvm.org/docs/tutorial/).
 
 The code herein is made available under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).

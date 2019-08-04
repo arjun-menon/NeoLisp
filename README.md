@@ -59,3 +59,9 @@ To re-iterate, the dependencies are:
  * [rlwrap](https://github.com/hanslub42/rlwrap) (optional, for a better REPL experience)
 
 After building, you can run the REPL with `rlwrap ./NeoLisp`.
+
+## Credit & License
+
+Many thanks to Peter's Norvig's Lispy guides([1](https://norvig.com/lispy.html), [2](http://norvig.com/lispy2.html)) and the LLVM [Kaleidoscope](https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/index.html) language tutorial.
+
+The code herein is made available under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).

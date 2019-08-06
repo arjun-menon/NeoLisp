@@ -5,7 +5,8 @@ using Catch::Matchers::Equals;
 using Catch::Matchers::Contains;
 
 static string eval(const char *inputExpression) {
-    Env env;
+    Matter m("NeoLisp-tests");
+    Env env(m);
     env.eval(parse("import 'std.neolisp'"));
     return toString(*env.eval(parse(inputExpression)));
 }

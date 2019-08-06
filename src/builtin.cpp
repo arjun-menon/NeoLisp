@@ -442,7 +442,7 @@ static void def(Env* env, const string& name, double precedence = Env::defaultPr
     def(*env, name, make_shared<T>(), precedence, specialForm);
 }
 
-Env::Env() : outerEnv(nullptr) {
+Env::Env(Matter &_m) : m(_m), outerEnv(nullptr) {
     assign(ops, make_shared<SymbolMap>());
 
     def<AddFunction>(this, "+", 40);

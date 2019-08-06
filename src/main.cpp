@@ -1,7 +1,8 @@
 #include "common.hpp"
 
 int repl() {
-    Env env;
+    Matter m("NeoLisp");
+    Env env(m);
 
     cout<<"Loading standard definitions..."<<endl;
     env.eval(parse("import 'std.neolisp'"));

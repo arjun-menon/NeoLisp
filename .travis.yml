@@ -42,6 +42,10 @@ matrix:
 before_install:
     - sudo wget https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp -O /usr/include/catch.hpp
 
+before_script:
+    - sudo ln -s /usr/include/llvm-8/llvm /usr/include/llvm
+    - sudo ln -s /usr/include/llvm-c-8/llvm-c /usr/include/llvm-c
+
 install: true
 
 script: ./build.sh

@@ -61,6 +61,10 @@ To re-iterate, the dependencies are:
 
 After building, you can run the REPL with `rlwrap ./NeoLisp`.
 
+### Work In Progress
+
+I'm currently working on getting NeoLisp to a point where it **compiles to machine code via LLVM**.
+
 ## Credit & License
 
 Many thanks to Peter Norvig's Lispy guides ([1](https://norvig.com/lispy.html), [2](http://norvig.com/lispy2.html)) and the [LLVM Tutorial](https://llvm.org/docs/tutorial/).

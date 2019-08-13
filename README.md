@@ -6,7 +6,7 @@ and toy around with a few new language ideas.
 
 I'll expand this readme, and document the language thoroughly
 once it's a bit more mature. In the meanwhile, you can find
-NeoLisp code samples/snippets in `unit_tests/language_tests.cpp`.
+NeoLisp code samples/snippets in [`unit_tests/language_tests.cpp`](https://github.com/arjun-menon/NeoLisp/blob/master/unit_tests/language_tests.cpp).
 
 ## Language Notes
 
@@ -14,14 +14,22 @@ NeoLisp code samples/snippets in `unit_tests/language_tests.cpp`.
 
 One interesting aspect of NeoLisp is its function application rules.
 In addition to supporting LISP-style S-expression function application,
-it has a novel set of function application rules that allow traditional
+it has a novel approach to function application that allows traditional
 *precedence-based infix expressions*.
 
 Functions in NeoLisp can have a floating-point precedence value
 associated with them. When NeoLisp evaluates a list, it finds the
 function with the lowest precedence, and applies the list against
-this function, exposing in the items on the left as `lhs`, and the
-ones on the right as `args`.
+this function, passing in the items on the left as `lhs`, and the
+ones on the right as `args`. Traditional LISP-style function invokation
+in the form of `(+ 1 2)` also works. The arguments on the right are
+simply passed as `args` to the function. As a result, both `(+ 1 2)`
+and `1 + 2` are valid and equivalent.
+
+Different precedence each operators means that an expression
+like `1 + 2 * 3 + 4` is evaluated in the expected mathematical
+order. This novel approach to function application means that it
+is trivially easy to add new binary operators, for the end-user.
 
 ##### The Semicolon
 
@@ -29,7 +37,7 @@ NeoLisp doesn't have a `progn` (Common LISP) or `begin` (Scheme) special form.
 Instead, it has `;`, an equivalent that is internally implemented as a
 delayed-evaluation function of zero precedence. For example, to evaluate
 `exprA ; exprB`, the `;` function first evaluates `exprA` and binds its
-result to `_`, then evaluates `exprB` and returns it as the result
+result to `_`, then evaluates `exprB` and returns its result as the result
 of the `;` function. This allows `exprA ; exprB ; exprC ; exprD` to
 be executed in the implied order.
 

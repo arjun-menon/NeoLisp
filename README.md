@@ -24,12 +24,10 @@ this function, passing in the items on the left as `lhs`, and the
 ones on the right as `args`. Traditional LISP-style function invokation
 in the form of `(+ 1 2)` also works. The arguments on the right are
 simply passed as `args` to the function. As a result, both `(+ 1 2)`
-and `1 + 2` are valid and equivalent.
-
-Different precedence each operators means that an expression
-like `1 + 2 * 3 + 4` is evaluated in the expected mathematical
-order. This novel approach to function application means that it
-is trivially easy to add new binary operators, for the end-user.
+and `1 + 2` are valid and equivalent. Differing precedence operators
+means that an expression like `1 + 2 * 3 + 4` is evaluated in the
+expected. This novel approach to function application means that it's
+trivially easy to define new binary operators in a NeoLisp program.
 
 ##### The Semicolon
 
